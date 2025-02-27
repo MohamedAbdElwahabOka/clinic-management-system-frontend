@@ -1,6 +1,20 @@
 {
-    "HomePage": {
-      "title": "Hello world!",
-      "about": "Go to the about page"
+    "Header": {
+      "Dashboard": "Dashboard",
+      "Search": "Search Your Data here",
+      "English":"English",
+      "Arabic":"Arabic"
+    },
+    "Sidbar": {
+      "Dashboard": "Dashboard",
+      "patients": "patients",
+      "appointments":"appointments",
+      "Medical-Records":"Medical Records",
+      "Payments":"Payments",
+      "Notifications":"Notifications",
+      "Settings":"Settings",
+      "Support":"Support",
+      "Welcome-back":"Welcome back",
+      "Upgrade":"Upgrade for Free"
     }
   }
