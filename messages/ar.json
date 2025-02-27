@@ -1,6 +1,20 @@
 {
-    "HomePage": {
-      "title": "مرحبا بالعالم!",
-      "about": "انتقل إلى صفحة حول"
+  "Header": {
+    "Dashboard": "لوحة التحكم ",
+    "Search": "ابحث عن بياناتك هنا",
+    "Arabic":" عربي",
+    "English":"انجليزي"
+  },
+  "Sidbar": {
+      "Dashboard": "لوحة التحكم",
+      "patients": "المرضى",
+      "appointments":"المواعيد",
+      "Medical-Records":"السجلات الطبية",
+      "Payments":"المدفوعات",
+      "Notifications":"الإشعارات",
+      "Settings":"الإعدادات",
+      "Support":"الدعم",
+      "Welcome-back":"مرحبا بعودتك",
+      "Upgrade":"احصل علي النسخة الأحدث"
     }
-  }
+}
