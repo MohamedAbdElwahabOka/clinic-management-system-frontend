@@ -27,7 +27,7 @@ export default async function LocaleLayout({
   // Determine the direction of the document
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
-  console.log("messages   " + locale);
+  // console.log("messages   " + locale);
 
   return (
     <html lang={locale} dir={dir}>
