@@ -2,16 +2,25 @@
 
 import { useState } from 'react';
 import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, Calendar, FileText, DollarSign, Settings, HelpCircle } from 'lucide-react';
-import Link from 'next/link';
+import {Link} from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-
-
+import { usePathname } from 'next/navigation';
 export default function Sidebar() {
   const t = useTranslations('Sidbar');
+
+
+  const pathname = usePathname();
+
+  const parts = pathname.split("/"); 
+  const lastPart = parts.pop();
+  console.log(lastPart)
+
+
+
   const menuItems = [
     { name: t('Dashboard'), icon: LayoutDashboard, link: '/' },
     { name: t('patients'), icon: Users, link: '/patients' },
-    { name: t('appointments'), icon: Calendar, link: '/appointments' },
+    { name: t('appointments'), icon: Calendar, link: '/appointments', hasNotification: true },
     { name: t('Medical-Records'), icon: FileText, link: '/records' },
     { name: t('Payments'), icon: DollarSign, link: '/payments' }
   ];
@@ -23,6 +32,8 @@ export default function Sidebar() {
   ];
   
   const [collapsed, setCollapsed] = useState(false);
+
+  // #A3A7AC
 
   return (
     <div className="flex h-screen">
@@ -44,9 +55,14 @@ export default function Sidebar() {
         {/* Menu Items */}
         <nav className="space-y-3 pb-3">
           {menuItems.map((item) => (
-            <Link href={item.link} key={item.name} className="flex items-center space-x-3 p-1.5 rounded-md hover:bg-[#0582EB]">
-              <item.icon className={`transition-all ${collapsed ? 'w-5 h-5 rounded-full' : 'w-4 h-4'}`} />
-              {!collapsed && <span className="text-sm pr-2">{item.name}</span>}
+            <Link href={item.link} key={item.name} className={`flex items-center space-x-3 p-1.5 rounded-md hover:bg-[#0582EB] ${ item.link == "/" + lastPart ? 'bg-[#0582EB]' : ''}`}>
+              <div className="relative">
+              <item.icon className={` transition-all ${collapsed ? 'w-5 h-5 text-center ' : 'w-4 h-4'}`} />
+              {item.hasNotification && (
+                  <span className="absolute bottom-0 right-2.3 bg-orange-500 w-2.5 h-2.5 rounded-full border border-black"></span>
+                )}
+              </div>
+              {!collapsed && <span className="text-sm pr-2 ">{item.name}</span>}
             </Link>
           ))}
         </nav>
@@ -58,12 +74,12 @@ export default function Sidebar() {
           {menuItemstwo.map((item) => (
             <Link href={item.link} key={item.name} className="flex items-center space-x-3 p-1.5 rounded-md hover:bg-[#0582EB]">
               <div className="relative">
-                <item.icon className={`transition-all ${collapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
+                <item.icon className={`  transition-all ${collapsed ? 'w-5 h-5' : 'w-4 h-4'}`} />
                 {item.hasNotification && (
-                  <span className="absolute top-0 right-0 bg-orange-500 w-2.5 h-2.5 rounded-full"></span>
+                  <span className="absolute bottom-0 right-2.3 bg-orange-500 w-2.5 h-2.5 rounded-full border border-black"></span>
                 )}
               </div>
-              {!collapsed && <span className="text-sm pr-2">{item.name}</span>}
+              {!collapsed && <span className="text-sm pr-2 ">{item.name}</span>}
             </Link>
           ))}
         </nav>

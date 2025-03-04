@@ -16,5 +16,15 @@
       "Support":"Support",
       "Welcome-back":"Welcome back",
       "Upgrade":"Upgrade for Free"
+    },
+    "Dashboard" :{
+      "Welcome":"Welcome Back",
+      "dis":"Lets recap your data for the past period",
+      "Pick a date":"Pick a date",
+      "Line Chart - Dots":"Line Chart - Dots",
+      "date":"January - June 2024",
+      "Trending":"Trending up by 5.2% this month",
+      "Showing total visitors":"Showing total visitors for the last 6 months",
+      "Number":"Number of patients"
     }
   }

@@ -1,29 +1,29 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Check } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-
-
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 export default function LocalSwitcher() {
-
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const localeActive = useLocale();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const t = useTranslations('Header');
   const languages = [
     { code: 'en', label: t('English'), flag: '/flags/uk.png' },
     { code: 'ar', label: t('Arabic'), flag: '/flags/ar.png' }
   ];
 
-
   const onSelectChange = (locale: string) => {
     startTransition(() => {
-      router.replace(`/${locale}`);
+      const currentPath = pathname.replace(`/${localeActive}`, `/${locale}`);
+      const currentQuery = searchParams.toString();
+      router.replace(`${currentPath}?${currentQuery}`);
       setIsOpen(false);
     });
   };
