@@ -11,12 +11,12 @@ export default async function LocaleLayout({
   params
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: { locale: "en" | "ar" }; // Explicitly type the locale
 }) {
-  const { locale } = await params;
+  const { locale } = params;
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale)) {
     notFound();
   }
 
@@ -26,8 +26,6 @@ export default async function LocaleLayout({
 
   // Determine the direction of the document
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
-
-  // console.log("messages   " + locale);
 
   return (
     <html lang={locale} dir={dir}>
