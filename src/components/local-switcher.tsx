@@ -21,6 +21,7 @@ export default function LocalSwitcher() {
 
   const onSelectChange = (locale: string) => {
     startTransition(() => {
+      localStorage.setItem('lang', locale);
       const currentPath = pathname.replace(`/${localeActive}`, `/${locale}`);
       const currentQuery = searchParams.toString();
       router.replace(`${currentPath}?${currentQuery}`);

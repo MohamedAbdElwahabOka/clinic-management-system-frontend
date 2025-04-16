@@ -1,30 +1,40 @@
 {
-    "Header": {
-      "Dashboard": "Dashboard",
-      "Search": "Search Your Data here",
-      "English":"English",
-      "Arabic":"Arabic"
-    },
-    "Sidbar": {
-      "Dashboard": "Dashboard",
-      "patients": "patients",
-      "appointments":"appointments",
-      "Medical-Records":"Medical Records",
-      "Payments":"Payments",
-      "Notifications":"Notifications",
-      "Settings":"Settings",
-      "Support":"Support",
-      "Welcome-back":"Welcome back",
-      "Upgrade":"Upgrade for Free"
-    },
-    "Dashboard" :{
-      "Welcome":"Welcome Back",
-      "dis":"Lets recap your data for the past period",
-      "Pick a date":"Pick a date",
-      "Line Chart - Dots":"Line Chart - Dots",
-      "date":"January - June 2024",
-      "Trending":"Trending up by 5.2% this month",
-      "Showing total visitors":"Showing total visitors for the last 6 months",
-      "Number":"Number of patients"
-    }
+  "Header": {
+    "Dashboard": "Dashboard",
+    "Search": "Search Your Data here",
+    "English": "English",
+    "Arabic": "Arabic"
+  },
+  "OfficialHeader": {
+    "HomePage": "Home Page",
+    "Services": "Services",
+    "AboutUs": "About Us",
+    "ContactUs": "Contact Us",
+    "English": "English",
+    "Arabic": "Arabic",
+    "Join": "Join Us",
+    "Login": "Login"
+  },
+  "Sidbar": {
+    "Dashboard": "Dashboard",
+    "patients": "patients",
+    "appointments": "appointments",
+    "Medical-Records": "Medical Records",
+    "Payments": "Payments",
+    "Notifications": "Notifications",
+    "Settings": "Settings",
+    "Support": "Support",
+    "Welcome-back": "Welcome back",
+    "Upgrade": "Upgrade for Free"
+  },
+  "Dashboard": {
+    "Welcome": "Welcome Back",
+    "dis": "Lets recap your data for the past period",
+    "Pick a date": "Pick a date",
+    "Line Chart - Dots": "Line Chart - Dots",
+    "date": "January - June 2024",
+    "Trending": "Trending up by 5.2% this month",
+    "Showing total visitors": "Showing total visitors for the last 6 months",
+    "Number": "Number of patients"
   }
+}

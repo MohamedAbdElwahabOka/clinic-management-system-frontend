@@ -5,6 +5,16 @@
     "Arabic":" عربي",
     "English":"انجليزي"
   },
+  "OfficialHeader": {
+    "HomePage": "الرئيسية",
+    "Services": "الخدمات",
+    "AboutUs":" من نحن",
+    "ContactUs":"تواصل معنا",
+    "Arabic":" عربي",
+    "English":"انجليزي",
+    "Join":"انضم إلينا",
+    "Login":"تسجيل الدخول"
+  },
   "Sidbar": {
       "Dashboard": "لوحة التحكم",
       "patients": "المرضى",
