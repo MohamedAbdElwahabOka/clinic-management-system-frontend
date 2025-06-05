@@ -3,11 +3,11 @@
 
 import * as React from 'react';
 import { Link } from '@/i18n/navigation';
-import { Building, Menu, HeartPulse } from 'lucide-react';
+import {  Menu, HeartPulse, Bell, Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { UserNav } from '@/components/layout/user-nav'; 
 import { useTranslations } from 'next-intl';
+import LocalSwitcher from '../local-switcher';
 
 interface NavLinkDef {
   href: string; 
@@ -16,6 +16,7 @@ interface NavLinkDef {
 }
 
 export function LandingHeader() {
+   const [darkMode, setDarkMode] = React.useState(false);
   const t= useTranslations("Landing");
   const tHeader = useTranslations("Header");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -30,7 +31,23 @@ export function LandingHeader() {
     // If the translation is the same as the key, use the default value
     return translation === key ? defaultValue : translation;
   };
+ React.useEffect(() => {
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+      setDarkMode(true);
+    }
+  }, []);
 
+  const toggleDarkMode = () => {
+    if (darkMode) {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+    setDarkMode(!darkMode);
+  };
   const navLinks: NavLinkDef[] = [
     { href: '#financial-features', labelKey: 'landingHeaderNavFeatures', defaultLabel: 'Features' },
     { href: '#testimonials', labelKey: 'landingHeaderNavTestimonials', defaultLabel: 'Testimonials' },
@@ -85,7 +102,20 @@ export function LandingHeader() {
               <Link href="/signup">{translate('landingHeaderSignUp', 'Sign Up')}</Link>
             </Button>
           </div>
-          <UserNav /> 
+          <div className="flex items-center space-x-3">
+        <div className='p-2'>
+          <LocalSwitcher />
+        </div>
+
+        <div className="relative border border-blue-500 p-1.5 rounded-full">
+          <Bell className="h-5 w-5 text-gray-500 dark:text-gray-300 cursor-pointer" />
+          <span className="absolute top-0 right-0 h-1.5 w-1.5 bg-red-500 rounded-full"></span>
+        </div>
+
+        <button onClick={toggleDarkMode} className="flex items-center justify-center rounded-full border border-blue-500 p-1.5">
+          {darkMode ? <Moon className="h-5 w-5 text-gray-300" /> : <Sun className="h-5 w-5 text-yellow-400" />}
+        </button>
+      </div>
           <div className="md:hidden">
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>

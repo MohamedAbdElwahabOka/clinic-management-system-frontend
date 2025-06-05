@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -17,19 +16,37 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, Link } from "@/i18n/navigation";
 import { LogIn, HeartPulse, Apple, Facebook, Twitter as XIcon } from "lucide-react";
-import { useLanguage } from "@/context/language-context";
-import type { Locale } from "@/types";
-import { Trans } from "@/components/trans";
+import { useTranslations } from 'next-intl';
+import type { Locale } from '@/types';
 
 interface LoginPageProps {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }
 
-export default function LoginPage({ params }: LoginPageProps) {
-  const { toast } = useToast();
-  const router = useRouter();
-  const { translate, locale } = useLanguage();
+export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
+  const params = React.use(paramsPromise);
+  const locale = params?.locale || 'en';
+
+  const t = useTranslations('Auth');
+  const tHeader = useTranslations('Header');
+  const tLanding= useTranslations('Landing');
   const [isLoading, setIsLoading] = React.useState(false);
+  const translate = React.useCallback((key: string, defaultValue?: string) => {
+    const translation = t(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  }, [t]);
+
+  const translateHeader = React.useCallback((key: string, defaultValue?: string) => {
+    const translation = tHeader(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  }, [tHeader]);
+  const translateLanding = React.useCallback((key: string, defaultValue?: string) => {
+    const translation = tLanding(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  }, [tLanding]);
+
+  const router = useRouter();
+  const { toast } = useToast();
 
   const getLoginFormSchema = () => z.object({
     email: z.string().email(translate('errorEmailInvalid')).min(1, translate('errorEmailRequired')),
@@ -76,7 +93,7 @@ export default function LoginPage({ params }: LoginPageProps) {
         <Link href="/" className="flex items-center gap-2 text-primary mb-4">
           <HeartPulse className="h-10 w-10" />
           <h1 className="text-3xl font-bold">
-            {translate('clinicaName', 'Clinica')}
+            {translateHeader('name', 'Clinica')}
           </h1>
         </Link>
         <h2 className="text-2xl font-semibold text-foreground">
@@ -125,12 +142,10 @@ export default function LoginPage({ params }: LoginPageProps) {
       </Form>
 
       <p className="mt-4 text-xs text-muted-foreground text-center">
-        <Trans k="authAgreementLogin"
-               components={{
-                 1: <Link href="/terms" className="underline hover:text-primary" />,
-                 2: <Link href="/privacy" className="underline hover:text-primary" />
-               }}
-        />
+        {/* {translate('authAgreementLogin', 'By continuing, you agree to our {terms} and {privacy}', {
+          terms: <Link href="/terms" className="underline hover:text-primary" />,
+          privacy: <Link href="/privacy" className="underline hover:text-primary" />
+        })} */}
       </p>
 
       <div className="flex items-center my-6">
@@ -162,7 +177,7 @@ export default function LoginPage({ params }: LoginPageProps) {
           </Button>
         </p>
          <p className="mt-2 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} {translate('smartClinicPro', 'SmartClinic Pro')}. {translate('allRightsReserved', 'All rights reserved.')}
+          © {new Date().getFullYear()} {translateHeader('name', 'Clinica')}. {translateLanding('allRightsReserved', 'All rights reserved.')}
         </p>
     </div>
   );

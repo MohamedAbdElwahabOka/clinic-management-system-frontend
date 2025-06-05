@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from 'react';
-import { LandingHeader } from '@/components/landing/landing-header';
 import { HeroSection } from '@/components/landing/hero-section';
 import { FeatureSection } from '@/components/landing/feature-section';
 import { TestimonialCard } from '@/components/landing/testimonial-card';
@@ -101,7 +100,7 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-      <LandingHeader />
+
       <main className="flex-grow">
         <HeroSection
           titleKey="landingHeroTitle"
@@ -186,7 +185,7 @@ export default function LandingPage() {
           titleKey="landingCtaBottomTitle"
           defaultTitle="Transform Your Clinic Today"
           subtitleKey="landingCtaBottomSubtitle"
-          defaultSubtitle="Join hundreds of satisfied clinics. Get started with SmartClinic Pro and revolutionize your practice management."
+          defaultSubtitle="Join hundreds of satisfied clinics. Get started with Clinica and revolutionize your practice management."
           cta1Key="landingCtaBottomButton1"
           defaultCta1="Request a Demo"
           cta1Href="#"

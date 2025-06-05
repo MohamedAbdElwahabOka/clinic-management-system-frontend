@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -29,9 +28,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, Link } from "@/i18n/navigation";
 import { UserPlus, HeartPulse, User, CalendarDays, Stethoscope, Fingerprint, Phone, Users as GenderIcon, Lock, Mail } from "lucide-react";
-import { useLanguage } from "@/context/language-context";
+import { useTranslations } from 'next-intl';
 import type { Locale } from "@/types";
-import { Trans } from "@/components/trans";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { arSA } from 'date-fns/locale/ar-SA';
@@ -88,15 +86,48 @@ const ValidatedPopoverTriggerButton: React.FC<React.ComponentProps<typeof Button
 
 
 export default function SignupPage({ params }: SignupPageProps) {
+  const t = useTranslations('Auth');
+  const tGlobal = useTranslations('Global');
+  const tHeader = useTranslations('Header');
+  const tLanding = useTranslations('Landing');
+  // Helper translate function
+
+
+  const translate = React.useCallback((key: string, defaultValue?: string, values?: Record<string, string | number>) => {
+    let translation = t(key);
+    if (translation === key && defaultValue) translation = defaultValue;
+    // Only interpolate if values are provided and translation contains curly braces
+    if (values && translation && /\{\w+\}/.test(translation)) {
+      Object.entries(values).forEach(([k, v]) => {
+        translation = translation.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+      });
+    } else if (translation && /\{\w+\}/.test(translation)) {
+      // If translation expects a variable but none provided, replace with empty string
+      translation = translation.replace(/\{\w+\}/g, '');
+    }
+    return translation;
+  }, [t]);
+  const translateGlobal = React.useCallback((key: string, defaultValue?: string) => {
+    const translation = tGlobal(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  }, [tGlobal]);
+  const translateHeader = React.useCallback((key: string, defaultValue?: string) => {
+    const translation = tHeader(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  }, [tHeader]);
+  const translateLanding = React.useCallback((key: string, defaultValue?: string) => {
+    const translation = tLanding(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  }, [tLanding]);
+
   const { toast } = useToast();
   const router = useRouter();
-  const { translate, locale, direction } = useLanguage(); 
+  const direction = params.locale === 'ar' ? 'rtl' : 'ltr';
   const [isLoading, setIsLoading] = React.useState(false);
 
   const genderOptions = [
     { value: "Male", labelKey: "genderMale", default: "Male" },
     { value: "Female", labelKey: "genderFemale", default: "Female" },
-    { value: "Other", labelKey: "genderOther", default: "Other" },
   ];
 
   const specialtyOptions = [
@@ -112,14 +143,14 @@ export default function SignupPage({ params }: SignupPageProps) {
   const getSignupFormSchema = () => z.object({
     firstName: z.string().min(2, translate('errorFirstNameMin')),
     lastName: z.string().min(2, translate('errorLastNameMin')),
-    dateOfBirth: z.date({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('dateOfBirth')}) }),
-    specialty: z.string({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('specialty')}) }),
+    dateOfBirth: z.date({ required_error: translate('requiredField', "{{field}} is required.", { field: translateGlobal('dateOfBirth') }) }),
+    specialty: z.string({ required_error: translate('requiredField', "{{field}} is required.", { field: translateGlobal('specialty') }) }),
     nationalId: z.string()
       .min(1, translate('errorNationalIdRequired'))
       .length(14, translate('errorNationalIdDigits'))
       .regex(/^[0-9]+$/, translate('errorNationalIdNumbersOnly')),
     phoneNumber: z.string().min(1, translate('errorPhoneNumberRequired')).min(10, translate('errorPhoneMin')).regex(/^\S+$/, translate('errorPhoneNoSpaces')),
-    gender: z.enum(["Male", "Female", "Other"], { required_error: translate('requiredField', "{{field}} is required.", { field: translate('gender')}) }),
+    gender: z.enum(["Male", "Female"], { required_error: translate('requiredField', "{{field}} is required.", { field: translateGlobal('gender') }) }),
     email: z.string().email(translate('errorEmailInvalid')).min(1, translate('errorEmailRequired')),
     password: z.string().min(6, translate('errorPasswordMin')),
     confirmPassword: z.string().min(6, translate('errorConfirmPasswordMin')),
@@ -159,8 +190,8 @@ export default function SignupPage({ params }: SignupPageProps) {
       keepDirty: form.formState.isDirty,
       keepErrors: true, // Keep existing errors but they might be re-evaluated with new messages
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [locale, translate]); // form is not added to avoid re-creating it unnecessarily
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.locale, translate]); // form is not added to avoid re-creating it unnecessarily
 
   async function onSubmit(data: SignupFormValues) {
     setIsLoading(true);
@@ -179,18 +210,18 @@ export default function SignupPage({ params }: SignupPageProps) {
 
   return (
     <div className="w-full">
-       <div className="flex flex-col items-center mb-6 text-center">
+      <div className="flex flex-col items-center mb-6 text-center">
         <Link href="/" className="flex items-center gap-2 text-primary mb-4">
           <HeartPulse className="h-10 w-10" />
           <h1 className="text-3xl font-bold">
-            {translate('clinicaName', 'Clinica')}
+            {translateHeader('name', 'Clinica')}
           </h1>
         </Link>
         <h2 className="text-2xl font-semibold text-foreground">
           {translate('authSignupTitle', 'Create Your Account')}
         </h2>
         <p className="text-sm text-muted-foreground mt-2">
-          {translate('authSignupSubtitle1', 'Start and manage all your clinic affairs with ease now!')} <br/>
+          {translate('authSignupSubtitle1', 'Start and manage all your clinic affairs with ease now!')} <br />
           {translate('authSignupSubtitle2', "Let's start by registering all your data, then you can start managing your clinic.")}
         </p>
       </div>
@@ -207,7 +238,7 @@ export default function SignupPage({ params }: SignupPageProps) {
                   <div className="relative">
                     <User className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <ValidatedInput placeholder={translate('firstNamePlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                      <ValidatedInput placeholder={translate('firstNamePlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -220,10 +251,10 @@ export default function SignupPage({ params }: SignupPageProps) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{translate('lastName')}</FormLabel>
-                   <div className="relative">
+                  <div className="relative">
                     <User className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <ValidatedInput placeholder={translate('lastNamePlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                      <ValidatedInput placeholder={translate('lastNamePlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -235,7 +266,7 @@ export default function SignupPage({ params }: SignupPageProps) {
               name="dateOfBirth"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>{translate('dateOfBirth')}</FormLabel>
+                  <FormLabel>{translateGlobal('dateOfBirth')}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -249,9 +280,9 @@ export default function SignupPage({ params }: SignupPageProps) {
                         >
                           <CalendarDays className="mr-2 rtl:ml-2 rtl:mr-0 h-4 w-4 opacity-50" />
                           {field.value ? (
-                            format(field.value, "PPP", { locale: locale === 'ar' ? arSA : undefined })
+                            format(field.value, "PPP", { locale: params.locale === 'ar' ? arSA : undefined })
                           ) : (
-                            <span>{translate('pickDate')}</span>
+                            <span>{translateGlobal('pickDate')}</span>
                           )}
                         </ValidatedPopoverTriggerButton>
                       </FormControl>
@@ -265,8 +296,8 @@ export default function SignupPage({ params }: SignupPageProps) {
                           date > new Date() || date < new Date("1900-01-01")
                         }
                         initialFocus
-                        dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                        locale={locale === 'ar' ? arSA : undefined}
+                        dir={params.locale === 'ar' ? 'rtl' : 'ltr'}
+                        locale={params.locale === 'ar' ? arSA : undefined}
                       />
                     </PopoverContent>
                   </Popover>
@@ -279,9 +310,9 @@ export default function SignupPage({ params }: SignupPageProps) {
               name="specialty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{translate('specialty')}</FormLabel>
+                  <FormLabel>{translateGlobal('specialty')}</FormLabel>
                   <div className="relative">
-                     <Stethoscope className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Stethoscope className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading} dir={direction}>
                       <FormControl>
                         <ValidatedSelectTrigger className="h-12 pl-10 rtl:pr-10">
@@ -308,7 +339,7 @@ export default function SignupPage({ params }: SignupPageProps) {
                   <div className="relative">
                     <Fingerprint className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <ValidatedInput placeholder={translate('nationalIdPlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                      <ValidatedInput placeholder={translate('nationalIdPlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -324,20 +355,20 @@ export default function SignupPage({ params }: SignupPageProps) {
                   <div className="relative">
                     <Phone className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <ValidatedInput type="tel" placeholder={translate('phoneNumberPlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                      <ValidatedInput type="tel" placeholder={translate('phoneNumberPlaceholder')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                     </FormControl>
                   </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="gender"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{translate('gender')}</FormLabel>
-                   <div className="relative">
+                  <FormLabel>{translateGlobal('gender')}</FormLabel>
+                  <div className="relative">
                     <GenderIcon className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isLoading} dir={direction}>
                       <FormControl>
@@ -346,8 +377,8 @@ export default function SignupPage({ params }: SignupPageProps) {
                         </ValidatedSelectTrigger>
                       </FormControl>
                       <SelectContent>
-                         {genderOptions.map(opt => (
-                          <SelectItem key={opt.value} value={opt.value}>{translate(opt.labelKey, opt.default)}</SelectItem>
+                        {genderOptions.map(opt => (
+                          <SelectItem key={opt.value} value={opt.value}>{translateGlobal(opt.labelKey, opt.default)}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -356,16 +387,16 @@ export default function SignupPage({ params }: SignupPageProps) {
                 </FormItem>
               )}
             />
-             <FormField
+            <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{translate('email')}</FormLabel>
+                  <FormLabel>{translateGlobal('email')}</FormLabel>
                   <div className="relative">
                     <Mail className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <FormControl>
-                      <ValidatedInput type="email" placeholder={translate('authEmailPlaceholder', 'Email account')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                      <ValidatedInput type="email" placeholder={translate('authEmailPlaceholder', 'Email account')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                     </FormControl>
                   </div>
                   <FormMessage />
@@ -383,7 +414,7 @@ export default function SignupPage({ params }: SignupPageProps) {
                 <div className="relative">
                   <Lock className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <FormControl>
-                    <ValidatedInput type="password" placeholder={translate('authPasswordPlaceholder', 'Password')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                    <ValidatedInput type="password" placeholder={translate('authPasswordPlaceholder', 'Password')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                   </FormControl>
                 </div>
                 <FormMessage />
@@ -396,17 +427,17 @@ export default function SignupPage({ params }: SignupPageProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{translate('confirmPassword')}</FormLabel>
-                 <div className="relative">
+                <div className="relative">
                   <Lock className="absolute left-3 rtl:left-auto rtl:right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <FormControl>
-                    <ValidatedInput type="password" placeholder={translate('authConfirmPasswordPlaceholder', 'Confirm Password')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10"/>
+                    <ValidatedInput type="password" placeholder={translate('authConfirmPasswordPlaceholder', 'Confirm Password')} {...field} disabled={isLoading} className="h-12 pl-10 rtl:pr-10" />
                   </FormControl>
                 </div>
                 <FormMessage />
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="agreeTerms"
@@ -422,12 +453,9 @@ export default function SignupPage({ params }: SignupPageProps) {
                 </FormControl>
                 <div className="space-y-1 leading-none">
                   <FormLabel id="agree-terms-label" className="text-sm font-normal text-muted-foreground">
-                    <Trans k="agreeToTerms"
-                          components={{
-                            C1: <Link href="/terms" className="underline hover:text-primary" />,
-                            C2: <Link href="/privacy" className="underline hover:text-primary" />
-                          }}
-                    />
+                    <span>
+                      {translate('agreeToTerms', 'I agree to the Terms and Privacy Policy')}
+                    </span>
                   </FormLabel>
                   <FormMessage />
                 </div>
@@ -470,10 +498,9 @@ export default function SignupPage({ params }: SignupPageProps) {
         </Button>
       </p>
       <p className="mt-2 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} {translate('smartClinicPro', 'SmartClinic Pro')}. {translate('allRightsReserved', 'All rights reserved.')}
+        © {new Date().getFullYear()} {translateHeader('name', 'Clinica')}. {translateLanding('allRightsReserved', 'All rights reserved.')}
       </p>
     </div>
   );
 }
 
-    

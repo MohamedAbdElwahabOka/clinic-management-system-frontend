@@ -57,7 +57,7 @@ export function FeatureSection({
   gridCols = "md:grid-cols-2",
   sectionId,
 }: FeatureSectionProps) {
-  const t = useTranslations('Dashboard');
+  const t = useTranslations('Landing');
   const translate = (key: string, fallback?: string) => t(key, { default: fallback });
 
   const content = (

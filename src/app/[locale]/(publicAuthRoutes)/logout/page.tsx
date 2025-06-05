@@ -1,19 +1,17 @@
-
 "use client";
 
 import { useEffect } from 'react';
 import { useRouter } from '@/i18n/navigation'; // Use next-intl's useRouter
 import { Loader2 } from 'lucide-react';
-import { useLanguage } from '@/context/language-context';
-import type { Locale } from '@/types';
+import { useTranslations } from 'next-intl';
 
-interface LogoutPageProps {
-  params: { locale: Locale };
-}
-
-export default function LogoutPage({ params }: LogoutPageProps) {
+export default function LogoutPage() {
   const router = useRouter();
-  const { translate } = useLanguage();
+  const t = useTranslations('Auth');
+  const translate = (key: string, defaultValue?: string) => {
+    const translation = t(key);
+    return translation === key && defaultValue ? defaultValue : translation;
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {

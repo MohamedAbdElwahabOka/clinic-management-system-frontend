@@ -2,17 +2,18 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import Header from '@/components/header';
-import Sidebar from '@/components/Sidebar';
+
 import "../globals.css";
+import { LandingHeader } from '@/components/landing/landing-header';
 
 export default async function LocaleLayout({
   children,
-  params
+  params: paramsPromise
 }: {
   children: React.ReactNode;
-  params: { locale: "en" | "ar" };
+  params: Promise<{ locale: "en" | "ar" }>;
 }) {
+  const params = await paramsPromise;
   const { locale } = params;
 
   if (!routing.locales.includes(locale)) {
@@ -26,9 +27,9 @@ export default async function LocaleLayout({
     <html lang={locale} dir={dir}>
       <body className="flex h-screen overflow-hidden">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <Sidebar />
+          {/* <Sidebar /> */}
           <div className="flex flex-col flex-1">
-            <Header />
+            <LandingHeader />
             <main className="flex-1 overflow-auto">
               {children}
             </main>

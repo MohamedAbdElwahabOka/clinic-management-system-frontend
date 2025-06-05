@@ -20,8 +20,23 @@ interface FooterLinkGroup {
 }
 
 export function LandingFooter() {
-  const t = useTranslations('Dashboard');
-  const translate = (key: string, fallback?: string) => t(key, { default: fallback });
+  const t = useTranslations('Landing');
+  const tHeader = useTranslations('Header');
+  const translate = React.useCallback((key: string, defaultValue?: string, values?: Record<string, string | number>) => {
+    let translation = t(key);
+    if (translation === key && defaultValue) translation = defaultValue;
+    // Only interpolate if values are provided and translation contains curly braces
+    if (values && translation && /\{\w+\}/.test(translation)) {
+      Object.entries(values).forEach(([k, v]) => {
+        translation = translation.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+      });
+    } else if (translation && /\{\w+\}/.test(translation)) {
+      // If translation expects a variable but none provided, replace with empty string
+      translation = translation.replace(/\{\w+\}/g, '');
+    }
+    return translation;
+  }, [t]);
+  const translateHeader = (key: string, fallback?: string) => tHeader(key, { default: fallback });
   const [currentYear, setCurrentYear] = React.useState<number | null>(null);
 
   React.useEffect(() => {
@@ -56,7 +71,7 @@ export function LandingFooter() {
         { href: "#", labelKey: "landingFooterTerms", defaultLabel: "Terms" },
       ],
     },
-     {
+    {
       titleKey: "landingFooterSocial", defaultTitle: "Social",
       links: [
         { href: "#", labelKey: "landingFooterFacebook", defaultLabel: "Facebook" },
@@ -69,9 +84,9 @@ export function LandingFooter() {
 
   // Helper for copyright with year
   const copyright = currentYear
-    ? (translate('landingFooterCopyright', `© ${currentYear} SmartClinic Pro. All rights reserved.`))
-    : translate('loading');
-
+    ? translate('landingFooterCopyright', undefined, { year: currentYear })
+    : translateHeader('loading');
+  // "{{field}} is required.", { field: translateGlobal('dateOfBirth') }
   return (
     <footer id="footer-contact" className="bg-muted text-muted-foreground py-12 lg:py-16">
       <div className="container mx-auto px-4">
@@ -80,7 +95,7 @@ export function LandingFooter() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               <Building className="h-7 w-7 text-primary" />
               <span className="text-xl font-semibold text-primary">
-                {translate('smartClinicPro', 'SmartClinic Pro')}
+                {translateHeader('name', 'Clinica')}
               </span>
             </Link>
             <p className="text-sm mb-4 max-w-sm">
@@ -109,7 +124,7 @@ export function LandingFooter() {
                 {group.links.map((link) => (
                   <li key={link.labelKey}>
                     <Button variant="link" asChild className="p-0 h-auto font-normal text-muted-foreground hover:text-primary hover:no-underline">
-                       <Link href={link.href}>{translate(link.labelKey, link.defaultLabel)}</Link>
+                      <Link href={link.href}>{translate(link.labelKey, link.defaultLabel)}</Link>
                     </Button>
                   </li>
                 ))}

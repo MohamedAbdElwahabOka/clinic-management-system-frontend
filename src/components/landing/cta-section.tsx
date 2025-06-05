@@ -30,7 +30,7 @@ export function CtaSection({
   defaultCta2,
   cta2Href,
 }: CtaSectionProps) {
-  const t = useTranslations('Dashboard');
+  const t = useTranslations('Landing');
   const translate = (key: string, fallback?: string) => t(key, { default: fallback });
 
   return (
@@ -47,7 +47,7 @@ export function CtaSection({
             <Link href={cta1Href}>{translate(cta1Key, defaultCta1)}</Link>
           </Button>
           {cta2Key && defaultCta2 && cta2Href && (
-             <Button size="lg" variant="outline" className="border-primary-foreground/50 text-primary-foreground hover:bg-primary-foreground/10" asChild>
+             <Button size="lg" variant="secondary" className="bg-primary border-primary-foreground/50 text-primary-foreground hover:bg-primary-foreground/10" asChild>
               <Link href={cta2Href}>{translate(cta2Key, defaultCta2)}</Link>
             </Button>
           )}

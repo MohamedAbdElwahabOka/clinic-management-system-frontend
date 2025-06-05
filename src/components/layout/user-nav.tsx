@@ -14,7 +14,7 @@ import {
   DropdownMenuRadioItem
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User, Globe, Check } from "lucide-react";
-import { Link, useRouter } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import { useTranslations, useLocale } from 'next-intl';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import React from "react";
@@ -28,7 +28,6 @@ export function UserNav() {
     setSelectedLocale(newLocale);
     // Optionally, add logic to update the app's locale using next-intl router if needed
   };
-  const router = useRouter();
 
   const user = {
     name: "Dr. John Doe", 
