@@ -49,7 +49,9 @@ export function HeroSection({
         </p>
         <div className="flex justify-center gap-4 mb-16">
           <Button size="lg" asChild>
-            <Link href="/auth/signup">{translate(cta1Key, defaultCta1)}</Link>
+            <Link href={`/${typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : ''}/signup`}>
+              {translate(cta1Key, defaultCta1)}
+            </Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
             <Link href="#management-features">{translate(cta2Key, defaultCta2)}</Link>

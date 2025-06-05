@@ -34,7 +34,7 @@ export function CtaSection({
   const translate = (key: string, fallback?: string) => t(key, { default: fallback });
 
   return (
-    <section id="cta" className="py-16 lg:py-24 bg-primary text-primary-foreground">
+    <section id="cta" className="py-16 lg:py-24 bg-primary text-primary-foreground dark:bg-secondary/30 dark:text-secondary-foreground">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           {translate(titleKey, defaultTitle)}

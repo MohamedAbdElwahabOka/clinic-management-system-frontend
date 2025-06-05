@@ -22,6 +22,8 @@ interface FooterLinkGroup {
 export function LandingFooter() {
   const t = useTranslations('Landing');
   const tHeader = useTranslations('Header');
+  const tGlobal = useTranslations('Global');
+  
   const translate = React.useCallback((key: string, defaultValue?: string, values?: Record<string, string | number>) => {
     let translation = t(key);
     if (translation === key && defaultValue) translation = defaultValue;
@@ -37,6 +39,7 @@ export function LandingFooter() {
     return translation;
   }, [t]);
   const translateHeader = (key: string, fallback?: string) => tHeader(key, { default: fallback });
+  const translateGlobal = (key: string, fallback?: string) => tGlobal(key, { default: fallback });
   const [currentYear, setCurrentYear] = React.useState<number | null>(null);
 
   React.useEffect(() => {
@@ -84,8 +87,8 @@ export function LandingFooter() {
 
   // Helper for copyright with year
   const copyright = currentYear
-    ? translate('landingFooterCopyright', undefined, { year: currentYear })
-    : translateHeader('loading');
+    ? translate('landingFooterCopyright')
+    : translateGlobal('loading');
   // "{{field}} is required.", { field: translateGlobal('dateOfBirth') }
   return (
     <footer id="footer-contact" className="bg-muted text-muted-foreground py-12 lg:py-16">

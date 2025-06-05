@@ -142,7 +142,7 @@ export default function LandingPage() {
           cta1Href="#"
           cta2Key="landingFeaturePaymentsCtaSignUp"
           defaultCta2="Sign Up"
-          cta2Href="/auth/signup"
+          cta2Href={`/${typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : ''}/signup`}
           sectionId="payment-features"
         />
 
@@ -158,11 +158,11 @@ export default function LandingPage() {
           cta1Href="#"
           cta2Key="landingFeatureClinicMgmtCtaTryFree"
           defaultCta2="Try for Free"
-          cta2Href="/auth/signup"
+          cta2Href={`/${typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : ''}/signup`}
           sectionId="management-features"
         />
 
-        <section id="testimonials" className="py-16 lg:py-24 bg-secondary">
+        <section id="testimonials" className="py-16 lg:py-24 bg-secondary dark:bg-secondary/10 text-secondary-foreground">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
               {translate('landingTestimonialsTitle', "Customer Testimonials")}
