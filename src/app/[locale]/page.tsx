@@ -8,10 +8,11 @@ import { CtaSection } from '@/components/landing/cta-section';
 import { LandingFooter } from '@/components/landing/landing-footer';
 // import { useLanguage } from '@/context/language-context';
 import { DollarSign, BarChart, ShieldCheck, Users, FileText as FileTextIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 export default function LandingPage() {
   const t = useTranslations("Landing");
+  const locale = useLocale();
 
   // Helper translate function
   const translate = (key: string, defaultValue: string) => {
@@ -142,7 +143,7 @@ export default function LandingPage() {
           cta1Href="#"
           cta2Key="landingFeaturePaymentsCtaSignUp"
           defaultCta2="Sign Up"
-          cta2Href={`/${typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : ''}/signup`}
+          cta2Href={`/${locale}/signup`}
           sectionId="payment-features"
         />
 
@@ -158,7 +159,7 @@ export default function LandingPage() {
           cta1Href="#"
           cta2Key="landingFeatureClinicMgmtCtaTryFree"
           defaultCta2="Try for Free"
-          cta2Href={`/${typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : ''}/signup`}
+          cta2Href={`/${locale}/signup`}
           sectionId="management-features"
         />
 

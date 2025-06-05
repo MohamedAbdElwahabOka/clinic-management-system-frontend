@@ -83,7 +83,7 @@ export function LandingHeader() {
           aria-label={translateHeader('name', 'Clinica Home')}
           data-test-id="landing-header-logo-link"
         >
-          <HeartPulse className="h-7 w-7 text-primary" />
+          <img src="/logo/logo.svg" alt="Logo" className="h-9 w-9" />
           <span className="text-xl font-semibold text-primary">
             {translateHeader('name', 'Clinica')}
           </span>

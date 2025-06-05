@@ -35,6 +35,7 @@ export default function AuthLayout({
         <div className={`hidden lg:flex flex-col items-center justify-center bg-primary text-primary-foreground p-12 ${direction === 'rtl' ? 'lg:order-first' : ''}`}>
           <div className="flex flex-col items-center text-center">
             <HeartPulse className="h-24 w-24 mb-6" />
+            {/* <img src="/logo/logo.svg" alt="Logo" className="h-20 w- bg-white text-white" /> */}
             <h1 className="text-5xl font-bold">
               {t('clinicaName', { default: 'Clinica' })}
             </h1>

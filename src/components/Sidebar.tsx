@@ -18,7 +18,7 @@ export default function Sidebar() {
 
 
   const menuItems = [
-    { name: t('Dashboard'), icon: LayoutDashboard, link: '/' },
+    { name: t('Dashboard'), icon: LayoutDashboard, link: '/dashboard' },
     { name: t('patients'), icon: Users, link: '/patients' },
     { name: t('appointments'), icon: Calendar, link: '/appointments', hasNotification: true },
     { name: t('Medical-Records'), icon: FileText, link: '/records' },

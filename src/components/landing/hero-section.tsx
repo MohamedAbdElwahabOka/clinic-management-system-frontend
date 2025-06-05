@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 interface HeroSectionProps {
@@ -37,6 +37,7 @@ export function HeroSection({
 }: HeroSectionProps) {
   const t = useTranslations('Landing');
   const translate = (key: string, fallback?: string) => t(key, { default: fallback });
+  const { locale } = useLocale();
 
   return (
     <section className="py-16 lg:py-24 bg-gradient-to-br from-background to-secondary/30">
@@ -49,7 +50,7 @@ export function HeroSection({
         </p>
         <div className="flex justify-center gap-4 mb-16">
           <Button size="lg" asChild>
-            <Link href={`/${typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : ''}/signup`}>
+            <Link href={`/${locale}/signup`}>
               {translate(cta1Key, defaultCta1)}
             </Link>
           </Button>
