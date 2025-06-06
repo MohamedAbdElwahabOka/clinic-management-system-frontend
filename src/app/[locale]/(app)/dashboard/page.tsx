@@ -27,7 +27,6 @@ import {
   ListFilter,
   CalendarDays,
   BedDouble,
-  UserCircle,
   BriefcaseMedical,
   CheckSquare,
 } from "lucide-react";
@@ -115,7 +114,7 @@ const DashboardStatCard: React.FC<DashboardStatCardProps> = ({
         </div>
         <div className="flex items-baseline gap-2 pt-2">
           <p className="text-3xl font-bold">{value}</p>
-          <Badge variant={percentagePositive ? "success" : "destructive"} className="text-xs">
+          <Badge variant={percentagePositive ? "default" : "destructive"} className="text-xs">
             {percentagePositive ? '+' : ''}{percentageChange}
           </Badge>
         </div>
@@ -134,8 +133,8 @@ interface DashboardPageProps {
 }
 
 export default function DashboardPage({ params }: DashboardPageProps) {
+  const { locale } = params;
   const t = useTranslations('Dashboard');
-  const locale = params.locale;
   const translate = React.useCallback((key: string, defaultValue?: string) => {
     const translation = t(key);
     return translation === key && defaultValue ? defaultValue : translation;
@@ -152,14 +151,14 @@ export default function DashboardPage({ params }: DashboardPageProps) {
     return format(parseISO(dateString), "p", { locale: locale === 'ar' ? arSA : undefined });
   };
 
-  const getStatusBadgeVariant = (status: Appointment['status']): "default" | "success" | "destructive" | "outline" => {
+  const getStatusBadgeVariant = (status: Appointment['status']): "default" | "destructive" | "outline" => {
     switch (status) {
       case "Scheduled":
       case "Confirmed":
       case "Arrived": // 'Booked' in screenshot, assuming this maps to Arrived or Confirmed
         return "default"; // Blue
       case "Completed": // 'Done' in screenshot
-        return "success"; // Green
+        return "default"; // Use default, apply green class below
       case "Cancelled":
       case "No Show":
         return "destructive"; // Red
@@ -301,8 +300,9 @@ export default function DashboardPage({ params }: DashboardPageProps) {
                         <TableCell>{formatTime(app.dateTime)}</TableCell>
                         <TableCell className="flex items-center justify-center">
                           <Badge variant={getStatusBadgeVariant(app.status)} className={cn(
-                             getStatusBadgeVariant(app.status) === 'default' && 'bg-blue-500 hover:bg-blue-600 text-white',
-                             getStatusBadgeVariant(app.status) === 'success' && 'bg-green-500 hover:bg-green-600 text-white'
+                             app.status === "Completed"
+                               ? 'bg-green-500 hover:bg-green-600 text-white'
+                               : getStatusBadgeVariant(app.status) === 'default' && 'bg-blue-500 hover:bg-blue-600 text-white'
                           )}>
                             {app.status === "Completed" ? translate("statusDone", "Done") : 
                              (app.status === "Scheduled" || app.status === "Confirmed" || app.status === "Arrived" ? translate("statusBooked", "Booked") : 
@@ -359,7 +359,9 @@ export default function DashboardPage({ params }: DashboardPageProps) {
                   <BedDouble className="h-5 w-5" />
                   {translate("nextPatientTitle", "Next Patient")}
                 </CardTitle>
-                <Badge variant="success">{translate("statusNormal", "Normal")}</Badge>
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600 text-white">
+                  {translate("statusNormal", "Normal")}
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-3 text-sm">

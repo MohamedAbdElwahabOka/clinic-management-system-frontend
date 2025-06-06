@@ -375,6 +375,13 @@
     "viewDetails": "عرض التفاصيل",
     "delete": "حذف",
     "male": "ذكر",
-    "female": "أنثى"
+    "female": "أنثى",
+    "searchPatientPlaceholder": "ابحث عن مريض",
+    "filterButton": "تصفية",
+    "patientIdColumn": "معرف المريض",
+    "patientNameColumn": "اسم المريض",
+    "dateColumn": "التاريخ",
+    "timeColumn": "الوقت",
+    "revisitLabel": "زيارة متابعة"
   }
 }

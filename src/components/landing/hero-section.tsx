@@ -37,7 +37,7 @@ export function HeroSection({
 }: HeroSectionProps) {
   const t = useTranslations('Landing');
   const translate = (key: string, fallback?: string) => t(key, { default: fallback });
-  const { locale } = useLocale();
+  const locale  = useLocale();
 
   return (
     <section className="py-16 lg:py-24 bg-gradient-to-br from-background to-secondary/30">

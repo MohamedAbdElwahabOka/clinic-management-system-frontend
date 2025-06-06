@@ -1,4 +1,3 @@
-
 import { dummyPatients, dummyAppointments } from "@/lib/dummy-data";
 import { notFound } from "next/navigation";
 import { parseISO } from "date-fns"; // Removed format as it's handled client-side
@@ -21,7 +20,8 @@ function differenceInYears(dateLeft: Date, dateRight: Date): number {
 }
 
 export default async function PatientDetailPage({ params }: PatientDetailPageProps) {
-    const patient = dummyPatients.find((p) => p.id === params.id);
+    const { id } = await params;
+    const patient = dummyPatients.find((p) => p.id === id);
 
     if (!patient) {
         notFound();
@@ -34,7 +34,6 @@ export default async function PatientDetailPage({ params }: PatientDetailPagePro
 
     return (
         <div className="p-5">
-
             <PatientDetailContent
                 patient={patient}
                 age={age}
