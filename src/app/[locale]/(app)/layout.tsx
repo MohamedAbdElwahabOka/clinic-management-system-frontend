@@ -29,7 +29,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir}>
+    {/* <div lang={locale} dir={dir} className="flex h-screen overflow-hidden"> */}
       <body className="flex h-screen overflow-hidden">
+
         <NextIntlClientProvider messages={messages}>
           <Sidebar />
           <div className="flex flex-col flex-1">
@@ -40,6 +42,7 @@ export default async function LocaleLayout({
           </div>
         </NextIntlClientProvider>
       </body>
-    </html>
+    {/* </div> */}
+  </html>
   );
 }

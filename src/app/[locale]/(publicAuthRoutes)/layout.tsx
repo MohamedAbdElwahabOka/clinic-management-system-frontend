@@ -21,8 +21,10 @@ export default async function AuthLayout({
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={direction}>
-      <body className="min-h-screen p-4 bg-background flex items-center justify-center">
+    // <html lang={locale} dir={direction}>
+    <body className="min-h-screen p-4 bg-background flex items-center justify-center">
+      <div dir={direction} lang={locale} className="min-h-screen p-4 bg-background flex items-center justify-center">
+
         <NextIntlClientProvider messages={messages} locale={locale}>
           <div className="w-full max-w-7xl lg:grid lg:grid-cols-2 shadow-xl rounded-lg overflow-hidden">
             {/* Form Section */}
@@ -42,7 +44,8 @@ export default async function AuthLayout({
             </div>
           </div>
         </NextIntlClientProvider>
-      </body>
-    </html>
+      </div>
+    </body>
+    // </html>
   );
 }

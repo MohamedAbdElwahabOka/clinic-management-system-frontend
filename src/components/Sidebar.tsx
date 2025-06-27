@@ -22,7 +22,7 @@ export default function Sidebar() {
     { name: t('patients'), icon: Users, link: '/patients' },
     { name: t('appointments'), icon: Calendar, link: '/appointments', hasNotification: true },
     { name: t('Medical-Records'), icon: FileText, link: '/records' },
-    { name: t('Payments'), icon: DollarSign, link: '/payments' }
+    { name: t('Payments'), icon: DollarSign, link: '/financials' }
   ];
   
   const menuItemstwo = [
