@@ -61,12 +61,12 @@ export function PatientTable({ patients: initialPatients }: PatientTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t('patientID')}</TableHead>
-              <TableHead>{t('name')}</TableHead>
-              <TableHead>{t('dateOfBirth')}</TableHead>
-              <TableHead>{t('gender')}</TableHead>
-              <TableHead>{t('contactPhone')}</TableHead>
-              <TableHead>{t('lastVisit')}</TableHead>
+              <TableHead className="text-right ltr:text-left">{t('patientID')}</TableHead>
+              <TableHead className="text-right ltr:text-left">{t('name')}</TableHead>
+              <TableHead className="text-right ltr:text-left">{t('dateOfBirth')}</TableHead>
+              <TableHead className="text-right ltr:text-left">{t('gender')}</TableHead>
+              <TableHead className="text-right ltr:text-left">{t('contactPhone')}</TableHead>
+              <TableHead className="text-right ltr:text-left">{t('lastVisit')}</TableHead>
               <TableHead className="text-right rtl:text-left">{t('actions')}</TableHead>
             </TableRow>
           </TableHeader>

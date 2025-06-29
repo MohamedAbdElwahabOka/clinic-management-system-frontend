@@ -25,8 +25,10 @@ export default async function EditPatientPage({ params }: EditPatientPageProps) 
       <PageHeader 
         titleKey="editPatientPageTitle"
         title="Edit Patient: {{name}}"
+        titleValues={{ name: patient.name }}
         descriptionKey="editPatientPageDescription"
         descriptionValues={{ name: patient.name }}
+        translation="Patient"
       >
         <Button variant="outline" asChild>
           {/* The Link component from next-intl handles locale automatically */}

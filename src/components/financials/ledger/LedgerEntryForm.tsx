@@ -183,6 +183,7 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                   <FormLabel>{translate('entryType')}</FormLabel>
                   <FormControl>
                     <RadioGroup
+                      dir={locale === 'ar' ? 'rtl' : 'ltr'}
                       onValueChange={(value) => {
                         field.onChange(value);
                         form.setValue("categoryId", undefined);

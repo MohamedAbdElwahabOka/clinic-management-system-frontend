@@ -383,7 +383,21 @@
     "patientNameColumn": "Patient Name",
     "dateColumn": "Date",
     "timeColumn": "Time",
-    "revisitLabel": "Revisit"
+    "revisitLabel": "Revisit",
+    "actions": "Actions",
+    "lastVisit": "Last Visit",
+    "name": "Name",
+    "confirmDeletePatientTitle": "Are you absolutely sure?",
+    "confirmDeletePatientDesc": "This action cannot be undone. This will permanently delete the patient record for {name}.",
+    "cancel": "Cancel",
+    "errorFullNameMin": "Full name must be at least 2 characters.",
+    "requiredField": "{field} is required.",
+    "errorPhoneMin": "Phone number must be at least 10 digits.",
+    "errorPhoneNoSpaces": "Phone number should not contain spaces.",
+    "errorEmailInvalid": "Invalid email address.",
+    "errorAddressMin": "Address must be at least 5 characters.",
+    "pickDate": "Pick a date",
+    "address": "Address"
   },
   "Financial": {
     "financials": "Financials",
@@ -505,6 +519,10 @@
     "error": "Error",
     "requiredField": "{field} is required.",
     "allTypes": "All Types",
-    "clearFilters": "Clear Filters"
+    "clearFilters": "Clear Filters",
+    "patient": "Patient",
+    "edit": "Edit",
+    "filter": "Filter",
+    "filterByType": "Filter by type"
   }
 }

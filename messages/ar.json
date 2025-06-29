@@ -382,7 +382,23 @@
     "patientNameColumn": "اسم المريض",
     "dateColumn": "التاريخ",
     "timeColumn": "الوقت",
-    "revisitLabel": "زيارة متابعة"
+    "revisitLabel": "زيارة متابعة",
+    "addNewPatient": "إضافة مريض جديد",
+    "actions": "الإجراءات",
+    "lastVisit": "آخر زيارة",
+    "name": "الاسم",
+    "searchPatients": "بحث عن مرضى...",
+    "confirmDeletePatientTitle": "هل أنت متأكد تمامًا؟",
+    "confirmDeletePatientDesc": "لا يمكن التراجع عن هذا الإجراء. سيؤدي هذا إلى حذف سجل المريض {name} بشكل دائم.",
+    "cancel": "إلغاء",
+    "errorFullNameMin": "يجب أن يتكون الاسم الكامل من حرفين على الأقل.",
+    "requiredField": "{field} مطلوب.",
+    "errorPhoneMin": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل.",
+    "errorPhoneNoSpaces": "يجب ألا يحتوي رقم الهاتف على مسافات.",
+    "errorEmailInvalid": "عنوان بريد إلكتروني غير صالح.",
+    "errorAddressMin": "يجب أن يتكون العنوان من 5 أحرف على الأقل.",
+    "pickDate": "اختر تاريخًا",
+    "address": "العنوان"
   },
   "Financial": {
     "financials": "المالية",
@@ -503,6 +519,10 @@
     "error": "خطأ",
     "requiredField": "{field} مطلوب.",
     "allTypes": "جميع الأنواع",
-    "clearFilters": "مسح الفلاتر"
+    "clearFilters": "مسح الفلاتر",
+    "patient": "المريض",
+    "edit": "تعديل",
+    "filter": "تصفية",
+    "filterByType": "تصفية حسب النوع"
   }
 }

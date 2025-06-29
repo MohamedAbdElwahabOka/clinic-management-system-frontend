@@ -173,11 +173,11 @@ export function PatientDetailContent({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="whitespace-nowrap">{t('appointmentIdCol')}</TableHead>
-                      <TableHead className="whitespace-nowrap">{t('pastTreatmentCol')}</TableHead>
-                      <TableHead className="whitespace-nowrap">{t('dateColumn')}</TableHead>
-                      <TableHead className="whitespace-nowrap">{t('timeColumn')}</TableHead>
-                      <TableHead className="whitespace-nowrap">{t('paymentStatusCol')}</TableHead>
+                      <TableHead className="text-right ltr:text-left whitespace-nowrap">{t('appointmentIdCol')}</TableHead>
+                      <TableHead className="text-right ltr:text-left whitespace-nowrap">{t('pastTreatmentCol')}</TableHead>
+                      <TableHead className="text-right ltr:text-left whitespace-nowrap">{t('dateColumn')}</TableHead>
+                      <TableHead className="text-right ltr:text-left whitespace-nowrap">{t('timeColumn')}</TableHead>
+                      <TableHead className="text-right ltr:text-left whitespace-nowrap">{t('paymentStatusCol')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

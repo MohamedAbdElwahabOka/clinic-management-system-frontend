@@ -112,7 +112,7 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
         description={translate('assistantPayoutsPageDescription', 'Track and manage payouts for assistants.')}
       >
         <Button variant="outline" asChild>
-          <Link href={`/${locale}/financials`}>
+          <Link href={`/financials`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             {translate('backToFinancials', "Back to Financials")}
           </Link>
@@ -197,9 +197,9 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>{translate('patient', "Patient")}</TableHead>
-                        <TableHead>{translate('payoutsTime', "Time")}</TableHead>
-                        <TableHead>{translate('payoutsServiceType', "Service Type")}</TableHead>
+                        <TableHead className="text-right ltr:text-left">{translate('patient', "Patient")}</TableHead>
+                        <TableHead className="text-right ltr:text-left">{translate('payoutsTime', "Time")}</TableHead>
+                        <TableHead className="text-right ltr:text-left">{translate('payoutsServiceType', "Service Type")}</TableHead>
                         <TableHead className="text-right rtl:text-left">{translate('payoutsAmountEGP', "Payout (EGP)")}</TableHead>
                       </TableRow>
                     </TableHeader>

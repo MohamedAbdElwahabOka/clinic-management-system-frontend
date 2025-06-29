@@ -28,9 +28,9 @@ export default async function LocaleLayout({
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir}>
-    {/* <div lang={locale} dir={dir} className="flex h-screen overflow-hidden"> */}
-      <body className="flex h-screen overflow-hidden">
+    // <html lang={locale} dir={dir}>
+    <div  className="flex h-screen overflow-hidden">
+      {/* <body className="flex h-screen overflow-hidden"> */}
 
         <NextIntlClientProvider messages={messages}>
           <Sidebar />
@@ -41,8 +41,8 @@ export default async function LocaleLayout({
             </main>
           </div>
         </NextIntlClientProvider>
-      </body>
-    {/* </div> */}
-  </html>
+      {/* </body> */}
+    </div>
+  // </html>
   );
 }

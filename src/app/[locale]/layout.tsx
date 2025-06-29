@@ -5,6 +5,8 @@ import { routing } from '@/i18n/routing';
 
 import "../globals.css";
 import { LandingHeader } from '@/components/landing/landing-header';
+import DynamicHeader from '@/components/dynamic-header'; // Import the dynamic header component
+// Remove server headers import, use client component for header switching
 
 export default async function LocaleLayout({
   children,
@@ -21,19 +23,20 @@ export default async function LocaleLayout({
   }
 
   const messages = await getMessages();
+
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
     <html lang={locale} dir={dir}>
       <body className="flex h-screen overflow-hidden">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          {/* <Sidebar /> */}
           <div className="flex flex-col flex-1">
-            <LandingHeader />
+            <DynamicHeader />
             <main className="flex-1 overflow-auto">
               {children}
             </main>
           </div>
+
         </NextIntlClientProvider>
       </body>
     </html>

@@ -49,9 +49,9 @@ export function ServicePricingTable({ servicePrices, onEdit, onDelete }: Service
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('serviceName')}</TableHead>
-                  <TableHead>{t('price')}</TableHead>
-                  <TableHead>{t('description')}</TableHead>
+                  <TableHead className="text-right ltr:text-left">{t('serviceName')}</TableHead>
+                  <TableHead className="text-right ltr:text-left">{t('price')}</TableHead>
+                  <TableHead className="text-right ltr:text-left">{t('description')}</TableHead>
                   <TableHead className="text-right rtl:text-left">{t('actions')}</TableHead>
                 </TableRow>
               </TableHeader>
