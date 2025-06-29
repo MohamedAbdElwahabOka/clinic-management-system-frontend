@@ -17,6 +17,7 @@ export default function NewPatientPage({ params }: NewPatientPageProps) {
       <PageHeader 
         titleKey="newPatientPageTitle" 
         descriptionKey="newPatientPageDescription"
+        translation="Patient"
       >
         <Button variant="outline" asChild>
           <Link href="/patients">

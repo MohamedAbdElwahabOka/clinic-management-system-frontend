@@ -283,10 +283,10 @@ export default function DashboardPage({ params }: DashboardPageProps) {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{translate("patientIdColumn", "Patient ID")}</TableHead>
-                      <TableHead>{translate("patientNameColumn", "Patient Name")}</TableHead>
-                      <TableHead>{translate("dateColumn", "Date")}</TableHead>
-                      <TableHead>{translate("timeColumn", "Time")}</TableHead>
+                      <TableHead className="text-right ltr:text-left">{translate("patientIdColumn", "Patient ID")}</TableHead>
+                      <TableHead className="text-right ltr:text-left">{translate("patientNameColumn", "Patient Name")}</TableHead>
+                      <TableHead className="text-right ltr:text-left">{translate("dateColumn", "Date")}</TableHead>
+                      <TableHead className="text-right ltr:text-left">{translate("timeColumn", "Time")}</TableHead>
                       <TableHead className="justify-center items-center flex">{translate("appointmentStatusColumn", "Appointment Status")}</TableHead>
                       <TableHead className="text-right rtl:text-left">{translate("actionColumn", "Action")}</TableHead>
                     </TableRow>

@@ -6,6 +6,7 @@ import * as React from 'react';
 interface PageHeaderProps {
   titleKey?: string; // Explicit key for title
   title?: string; // Fallback or direct title
+  titleValues?: Record<string, string | number>; // For dynamic values in title
   descriptionKey?: string; // Explicit key for description
   description?: string; // Fallback or direct description
   descriptionValues?: Record<string, string | number>; // For dynamic values in description
@@ -13,24 +14,16 @@ interface PageHeaderProps {
   translation?: string; // Optional translation namespace
 }
 
-export function PageHeader({ titleKey, title, descriptionKey, description, children, descriptionValues,translation }: PageHeaderProps) {
+export function PageHeader({ titleKey, title, titleValues, descriptionKey, description, children, descriptionValues,translation }: PageHeaderProps) {
   const t = useTranslations(translation || 'Dashboard');
 
-  const translate = React.useCallback((key: string, defaultValue?: string) => {
-    const translation = t(key);
+  const translate = React.useCallback((key: string, values?: Record<string, any>, defaultValue?: string) => {
+    const translation = t(key, values);
     return translation === key && defaultValue ? defaultValue : translation;
   }, [t]);
 
-  const headerTitle = titleKey ? translate(titleKey, title) : title;
-  
-  let headerDescription = descriptionKey ? translate(descriptionKey, description) : description;
-
-  if (headerDescription && descriptionValues) {
-    Object.keys(descriptionValues).forEach(key => {
-      const regex = new RegExp(`{{${key}}}`, 'g');
-      headerDescription = headerDescription?.replace(regex, String(descriptionValues[key]));
-    });
-  }
+  const headerTitle = titleKey ? translate(titleKey, titleValues, title) : title;
+  const headerDescription = descriptionKey ? translate(descriptionKey, descriptionValues, description) : description;
 
 
   return (

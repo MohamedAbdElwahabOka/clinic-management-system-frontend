@@ -105,12 +105,12 @@ export function LedgerTable({ entries, onEdit, onDelete }: LedgerTableProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="cursor-pointer group" onClick={() => requestSort('date')}>{translate('dateRequired', "Date")} {getSortIndicator('date')}</TableHead>
-                  <TableHead className="cursor-pointer group" onClick={() => requestSort('description')}>{translate('descriptionRequired', "Description")} {getSortIndicator('description')}</TableHead>
-                  <TableHead className="cursor-pointer group" onClick={() => requestSort('categoryName')}>{translate('categoryName', "Category")} {getSortIndicator('categoryName')}</TableHead>
-                  <TableHead className="cursor-pointer group" onClick={() => requestSort('type')}>{translate('entryType', "Type")} {getSortIndicator('type')}</TableHead>
+                  <TableHead className="text-right ltr:text-left cursor-pointer group" onClick={() => requestSort('date')}>{translate('dateRequired', "Date")} {getSortIndicator('date')}</TableHead>
+                  <TableHead className="text-right ltr:text-left cursor-pointer group" onClick={() => requestSort('description')}>{translate('descriptionRequired', "Description")} {getSortIndicator('description')}</TableHead>
+                  <TableHead className="text-right ltr:text-left cursor-pointer group" onClick={() => requestSort('categoryName')}>{translate('categoryName', "Category")} {getSortIndicator('categoryName')}</TableHead>
+                  <TableHead className="text-right ltr:text-left cursor-pointer group" onClick={() => requestSort('type')}>{translate('entryType', "Type")} {getSortIndicator('type')}</TableHead>
                   <TableHead className="text-right rtl:text-left cursor-pointer group" onClick={() => requestSort('amount')}>{translate('amountEGPRequired', "Amount (EGP)")} {getSortIndicator('amount')}</TableHead>
-                  <TableHead className="text-right rtl:text-left w-[100px]">{translate('actions', "Actions")}</TableHead>
+                  <TableHead className="text-center w-[100px]">{translate('actions', "Actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -127,7 +127,7 @@ export function LedgerTable({ entries, onEdit, onDelete }: LedgerTableProps) {
                     <TableCell className={`text-right rtl:text-left font-semibold ${entry.type === 'income' ? 'text-green-600' : 'text-destructive'}`}>
                       {entry.type === 'expense' ? '-' : ''}{entry.amount.toLocaleString(locale === 'ar' ? 'ar-EG' : undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </TableCell>
-                    <TableCell className="text-right rtl:text-left">
+                    <TableCell className="text-right rtl:text-left flex">
                       <Button variant="ghost" size="icon" onClick={() => onEdit(entry)} className="mr-1 rtl:ml-1 rtl:mr-0" title={`${translate('edit', "Edit")} ${entry.description}`}>
                         <Edit3 className="h-4 w-4" />
                       </Button>

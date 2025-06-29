@@ -22,8 +22,10 @@ export default async function AuthLayout({
 
   return (
     // <html lang={locale} dir={direction}>
-    <body className="min-h-screen p-4 bg-background flex items-center justify-center">
-      <div dir={direction} lang={locale} className="min-h-screen p-4 bg-background flex items-center justify-center">
+    // <body className="min-h-screen p-4 bg-background flex items-center justify-center">
+    <section>
+
+      <div className="min-h-screen p-4 bg-background flex items-center justify-center">
 
         <NextIntlClientProvider messages={messages} locale={locale}>
           <div className="w-full max-w-7xl lg:grid lg:grid-cols-2 shadow-xl rounded-lg overflow-hidden">
@@ -45,7 +47,8 @@ export default async function AuthLayout({
           </div>
         </NextIntlClientProvider>
       </div>
-    </body>
+    </section>
+    // </body>
     // </html>
   );
 }

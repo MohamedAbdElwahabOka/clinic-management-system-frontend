@@ -105,7 +105,7 @@ export default function LedgerPage({ params }: LedgerPageProps) {
         description={translate('ledgerDescription', 'Manage the clinic\'s financial ledger.')}
       >
         <Button variant="outline" asChild>
-          <Link href={`/${locale}/financials`}>
+          <Link href={`/financials`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             {translate('backToFinancials', 'Back to Financials')}
           </Link>
