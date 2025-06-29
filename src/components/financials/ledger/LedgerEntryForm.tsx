@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -34,29 +33,34 @@ import { arSA } from 'date-fns/locale/ar-SA';
 import { useToast } from "@/hooks/use-toast";
 import type { LedgerEntry, LedgerCategory, LedgerEntryType } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useLanguage } from "@/context/language-context";
+import { useTranslations, useLocale } from 'next-intl';
 
 interface LedgerEntryFormProps {
   categories: LedgerCategory[];
   onSubmitEntry: (data: LedgerEntry) => void;
-  initialEntry?: LedgerEntry | null; 
+  initialEntry?: LedgerEntry | null;
   onClearForm: () => void;
 }
-
 export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onClearForm }: LedgerEntryFormProps) {
+
   const { toast } = useToast();
-  const { translate, locale } = useLanguage();
+  const t = useTranslations('Financial');
+  const locale = useLocale();
+  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+    const translation = values ? t(key, values) : t(key);
+    return translation === key && fallback ? fallback : translation;
+  };
 
   const getLedgerEntryFormSchema = () => z.object({
     id: z.string().optional(),
-    date: z.date({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('dateRequired')}) }),
+    date: z.date({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('dateRequired') }) }),
     description: z.string().min(3, translate('errorDescriptionMinLedger')),
-    categoryId: z.string({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('categoryRequired')}) }),
+    categoryId: z.string({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('categoryRequired') }) }),
     amount: z.coerce.number().positive(translate('errorAmountPositive')),
-    type: z.enum(["income", "expense"], { required_error: translate('requiredField', "{{field}} is required.", { field: translate('entryType')}) }),
+    type: z.enum(["income", "expense"], { required_error: translate('requiredField', "{{field}} is required.", { field: translate('entryType') }) }),
     notes: z.string().optional(),
   });
-  
+
   type LedgerEntryFormValues = z.infer<ReturnType<typeof getLedgerEntryFormSchema>>;
 
   const form = useForm<LedgerEntryFormValues>({
@@ -71,9 +75,9 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
       id: undefined,
     },
   });
-  
+
   React.useEffect(() => {
-    form.reset(undefined, { keepValues: false }); 
+    form.reset(undefined, { keepValues: false });
   }, [locale, form]);
 
 
@@ -106,14 +110,14 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
       });
     }
   }, [initialEntry, form]);
-  
+
   React.useEffect(() => {
     const selectedCategoryId = form.getValues("categoryId");
     if (selectedCategoryId) {
-        const selectedCategory = categories.find(c => c.id === selectedCategoryId);
-        if (selectedCategory && selectedCategory.type !== currentType) {
-            form.setValue("categoryId", undefined);
-        }
+      const selectedCategory = categories.find(c => c.id === selectedCategoryId);
+      if (selectedCategory && selectedCategory.type !== currentType) {
+        form.setValue("categoryId", undefined);
+      }
     }
   }, [currentType, form, categories]);
 
@@ -121,13 +125,13 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
   function handleSubmit(data: LedgerEntryFormValues) {
     const selectedCategory = categories.find(cat => cat.id === data.categoryId);
     if (!selectedCategory) {
-        toast({ title: translate('error'), description: translate('categoryNotFound', "Selected category not found."), variant: "destructive"});
-        return;
+      toast({ title: translate('error'), description: translate('categoryNotFound', "Selected category not found."), variant: "destructive" });
+      return;
     }
 
     const entryData: LedgerEntry = {
       id: data.id || `LDE${Date.now()}`,
-      date: format(data.date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"), 
+      date: format(data.date, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx"),
       description: data.description,
       categoryId: data.categoryId,
       categoryName: selectedCategory.name,
@@ -144,16 +148,16 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
   }
 
   const handleClearAndResetForm = () => {
-    onClearForm(); 
+    onClearForm();
     form.reset({
-        date: new Date(),
-        description: "",
-        categoryId: undefined,
-        amount: 0,
-        type: "expense",
-        notes: "",
-        id: undefined,
-      });
+      date: new Date(),
+      description: "",
+      categoryId: undefined,
+      amount: 0,
+      type: "expense",
+      notes: "",
+      id: undefined,
+    });
   }
 
   const isEditing = !!form.watch("id");
@@ -170,7 +174,7 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             <FormField name="id" control={form.control} render={({ field }) => <Input type="hidden" {...field} />} />
-            
+
             <FormField
               control={form.control}
               name="type"
@@ -181,7 +185,7 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                     <RadioGroup
                       onValueChange={(value) => {
                         field.onChange(value);
-                        form.setValue("categoryId", undefined); 
+                        form.setValue("categoryId", undefined);
                       }}
                       defaultValue={field.value}
                       className="flex space-x-4 rtl:space-x-reverse"
@@ -224,14 +228,14 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-                      <Calendar 
-                        mode="single" 
-                        selected={field.value} 
-                        onSelect={field.onChange} 
-                        initialFocus 
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
                         dir={locale === 'ar' ? 'rtl' : 'ltr'}
                         locale={locale === 'ar' ? arSA : undefined}
-                        />
+                      />
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -250,42 +254,42 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                 </FormItem>
               )}
             />
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+              <FormField
                 control={form.control}
                 name="categoryId"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>{translate('categoryRequired')}</FormLabel>
                     <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                        <FormControl>
+                      <FormControl>
                         <SelectTrigger>
-                            <SelectValue placeholder={translate(currentType === 'income' ? 'selectIncomeCategory' : 'selectExpenseCategory')} />
+                          <SelectValue placeholder={translate(currentType === 'income' ? 'selectIncomeCategory' : 'selectExpenseCategory')} />
                         </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                        {filteredCategories.length === 0 && <SelectItem value="-" disabled>{translate('noCategoriesForType', "", {type: translate(currentType)})}</SelectItem>}
+                      </FormControl>
+                      <SelectContent>
+                        {filteredCategories.length === 0 && <SelectItem value="-" disabled>{translate('noCategoriesForType', "", { type: translate(currentType) })}</SelectItem>}
                         {filteredCategories.map(cat => (
-                            <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                          <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
                         ))}
-                        </SelectContent>
+                      </SelectContent>
                     </Select>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
-                <FormField
+              />
+              <FormField
                 control={form.control}
                 name="amount"
                 render={({ field }) => (
-                    <FormItem>
+                  <FormItem>
                     <FormLabel>{translate('amountEGPRequired')}</FormLabel>
                     <FormControl><Input type="number" step="0.01" placeholder={translate('amountPlaceholder')} {...field} /></FormControl>
                     <FormMessage />
-                    </FormItem>
+                  </FormItem>
                 )}
-                />
+              />
             </div>
 
             <FormField
@@ -299,7 +303,7 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-end space-x-2 rtl:space-x-reverse pt-4">
               <Button type="button" variant="outline" onClick={handleClearAndResetForm} disabled={form.formState.isSubmitting}>
                 <Eraser className="mr-2 h-4 w-4" /> {translate('clearNew')}

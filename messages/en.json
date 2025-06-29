@@ -13,12 +13,12 @@
     "settings": "Settings",
     "logout": "Logout"
   },
-  "Sidbar": {
+  "Sidebar": {
     "Dashboard": "Dashboard",
-    "patients": "patients",
-    "appointments": "appointments",
+    "patients": "Patients",
+    "appointments": "Appointments",
     "Medical-Records": "Medical Records",
-    "Payments": "Payments",
+    "Financials": "Financials",
     "Notifications": "Notifications",
     "Settings": "Settings",
     "Support": "Support",
@@ -487,6 +487,24 @@
     "ledgerEntryDeletedDesc": "Entry \"{description}\" has been removed.",
     "noLedgerEntries": "No ledger entries found.",
     "noLedgerEntriesDesc": "Use the form to add new income or expense transactions.",
-    "ledgerDataNote": "Note: Data is managed client-side and will reset on page refresh. CSV/PDF export is a planned future update."
+    "ledgerDataNote": "Note: Data is managed client-side and will reset on page refresh. CSV/PDF export is a planned future update.",
+    "description": "Description",
+    "actions": "Actions",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "visitTypeExamination": "Examination ",
+    "visitTypeConsultation": "Consultation",
+    "visitTypeFollowUp": "Follow-up",
+    "visitTypeProcedure": "Procedure",
+    "visitTypeOther": "Other",
+    "errorDescriptionMinLedger": "Description must be at least 3 characters.",
+    "errorAmountPositive": "Amount must be a positive number.",
+    "errorCurrencyRequired": "Currency code is required (e.g., EGP).",
+    "errorCurrencyMax": "Currency code is too long.",
+    "errorServiceNameMin": "Service name must be at least 3 characters.",
+    "error": "Error",
+    "requiredField": "{field} is required.",
+    "allTypes": "All Types",
+    "clearFilters": "Clear Filters"
   }
 }

@@ -10,11 +10,11 @@ import { ArrowLeft, Coins, CalendarDays, DollarSign, CalendarRange } from "lucid
 import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dummyAppointments } from "@/lib/dummy-data";
-import type { Appointment, VisitType, Locale } from "@/types";
-import { format, parseISO, startOfDay, isSameDay, startOfMonth, isSameMonth, isSameYear } from "date-fns";
+import type { VisitType, Locale } from "@/types";
+import { format, parseISO, startOfDay, isSameDay, isSameMonth, isSameYear } from "date-fns";
 import { arSA } from 'date-fns/locale/ar-SA';
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/context/language-context";
+import { useTranslations, useLocale } from 'next-intl';
 
 interface PayoutDetail {
   appointmentId: string;
@@ -34,12 +34,13 @@ const PAYOUT_AMOUNTS: Partial<Record<VisitType, number>> = {
 };
 
 export default function AssistantPayoutsPage({ params }: AssistantPayoutsPageProps) {
-  const { translate, locale } = useLanguage();
+  const t = useTranslations('Financial');
+  const locale = useLocale();
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());
   const [dailyPayoutDetails, setDailyPayoutDetails] = React.useState<PayoutDetail[]>([]);
   const [totalDailyPayout, setTotalDailyPayout] = React.useState<number>(0);
   const [totalMonthlyPayout, setTotalMonthlyPayout] = React.useState<number>(0);
-  const { toast } = useToast(); 
+  // const { toast } = useToast(); 
 
   React.useEffect(() => {
     if (!selectedDate) {
@@ -84,6 +85,10 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
 
   }, [selectedDate]);
 
+  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+    const translation = values ? t(key, values) : t(key);
+    return translation === key && fallback ? fallback : translation;
+  };
   const visitTypeLabels: Record<VisitType, string> = {
     Examination: translate('visitTypeExamination', "Examination (كشف)"),
     Consultation: translate('visitTypeConsultation', "Consultation (استشارة)"),
@@ -101,13 +106,13 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
   }
 
   return (
-    <>
+    <div className="m-5">
       <PageHeader
-        titleKey="assistantPayoutsTitle"
-        descriptionKey="assistantPayoutsPageDescription"
+        title={translate('assistantPayoutsTitle', 'Assistant Payouts')}
+        description={translate('assistantPayoutsPageDescription', 'Track and manage payouts for assistants.')}
       >
         <Button variant="outline" asChild>
-          <Link href="/financials">
+          <Link href={`/${locale}/financials`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             {translate('backToFinancials', "Back to Financials")}
           </Link>
@@ -125,14 +130,14 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
               <CardDescription>{translate('payoutsSelectDateDesc', "View payouts for a specific day and its month.")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                className="rounded-md border w-full"
-                dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                locale={locale === 'ar' ? arSA : undefined}
-              />
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  className="rounded-md border w-full"
+                  dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                  locale={locale === 'ar' ? arSA : undefined}
+                />
             </CardContent>
           </Card>
           <Card>
@@ -219,6 +224,6 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 }

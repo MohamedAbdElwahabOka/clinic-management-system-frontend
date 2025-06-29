@@ -25,14 +25,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { useLanguage } from "@/context/language-context";
+import { useTranslations, useLocale } from 'next-intl';
 
 interface LedgerPageProps {
   params: { locale: Locale };
 }
-
 export default function LedgerPage({ params }: LedgerPageProps) {
-  const { translate, locale } = useLanguage();
+  const t = useTranslations('Financial');
+  const locale = useLocale();
+  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+    const translation = values ? t(key, values) : t(key);
+    return translation === key && fallback ? fallback : translation;
+  };
   const [ledgerEntries, setLedgerEntries] = React.useState<LedgerEntry[]>(dummyLedgerEntries);
   const [categories] = React.useState<LedgerCategory[]>(dummyLedgerCategories);
   const [editingEntry, setEditingEntry] = React.useState<LedgerEntry | null>(null);
@@ -95,15 +99,15 @@ export default function LedgerPage({ params }: LedgerPageProps) {
   };
 
   return (
-    <>
+    <div className="m-5">
       <PageHeader
-        titleKey="ledgerTitle"
-        descriptionKey="ledgerDescription"
+        title={translate('ledgerTitle', 'Income & Expense Ledger')}
+        description={translate('ledgerDescription', 'Manage the clinic\'s financial ledger.')}
       >
         <Button variant="outline" asChild>
-          <Link href="/financials">
+          <Link href={`/${locale}/financials`}>
             <ArrowLeft className="mr-2 h-4 w-4" />
-            {translate('backToFinancials')}
+            {translate('backToFinancials', 'Back to Financials')}
           </Link>
         </Button>
       </PageHeader>
@@ -122,11 +126,11 @@ export default function LedgerPage({ params }: LedgerPageProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center"><Filter className="mr-2 h-5 w-5 text-accent"/>{translate('filter')}</CardTitle>
+            <CardTitle className="flex items-center"><Filter className="mr-2 h-5 w-5 text-accent"/>{translate('filter', 'Filter')}</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div>
-              <Label htmlFor="date-range-picker" className="text-sm font-medium">{translate('dateRange')}</Label>
+              <Label htmlFor="date-range-picker" className="text-sm font-medium">{translate('dateRange', 'Date Range')}</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -144,7 +148,7 @@ export default function LedgerPage({ params }: LedgerPageProps) {
                         formatDate(dateRange.from, "LLL dd, y")
                       )
                     ) : (
-                      <span>{translate('pickDateRange')}</span>
+                      <span>{translate('pickDateRange', 'Pick a date range')}</span>
                     )}
                   </Button>
                 </PopoverTrigger>
@@ -163,8 +167,8 @@ export default function LedgerPage({ params }: LedgerPageProps) {
               </Popover>
             </div>
             <div>
-                <Label htmlFor="type-filter" className="text-sm font-medium">{translate('entryType')}</Label>
-                <Select value={filterType} onValueChange={(value) => setFilterType(value as LedgerEntryType | "all")}>
+                <Label htmlFor="type-filter" className="text-sm font-medium">{translate('entryType', 'Entry Type')}</Label>
+                <Select value={filterType} onValueChange={(value) => setFilterType(value as LedgerEntryType | "all")}> 
                   <SelectTrigger id="type-filter" className="mt-1">
                     <SelectValue placeholder={translate('filterByType', "Filter by type")} />
                   </SelectTrigger>
@@ -175,7 +179,7 @@ export default function LedgerPage({ params }: LedgerPageProps) {
                   </SelectContent>
                 </Select>
             </div>
-            <Button onClick={handleClearFilters} variant="outline">{translate('clearFilters')}</Button>
+            <Button onClick={handleClearFilters} variant="outline">{translate('clearFilters', 'Clear Filters')}</Button>
           </CardContent>
         </Card>
 
@@ -186,8 +190,9 @@ export default function LedgerPage({ params }: LedgerPageProps) {
         />
       </div>
        <p className="text-xs text-muted-foreground mt-6 text-center">
-            {translate('ledgerDataNote')}
+            {translate('ledgerDataNote', 'This data is for demonstration purposes only.')}
        </p>
-    </>
+    </div>
   );
 }
+

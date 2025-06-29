@@ -49,13 +49,13 @@ export default function ServicePricingPage() {
   }
 
   return (
-    <div>
+    <div className="m-5">
       <PageHeader
         title={t('pricingConfigTitle') || 'Service Pricing'}
         description={t('pricingConfigDescription') || 'Configure prices for medical services and procedures.'}
       >
         <Button variant="outline">
-          <Link href="/financials">
+          <Link href="/financials" className="flex items-center">
             <ArrowLeft className="mr-2 h-4 w-4" />
             {t('backToFinancials') || 'Back to Financials'}
           </Link>

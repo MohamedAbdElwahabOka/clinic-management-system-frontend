@@ -22,8 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/context/language-context";
-
+import { useTranslations ,useLocale} from "next-intl";
 interface LedgerTableProps {
   entries: LedgerEntry[];
   onEdit: (entry: LedgerEntry) => void;
@@ -35,7 +34,12 @@ type SortOrder = "asc" | "dsc";
 
 export function LedgerTable({ entries, onEdit, onDelete }: LedgerTableProps) {
   const { toast } = useToast();
-  const { translate, locale } = useLanguage();
+  const t = useTranslations('Financial');
+  const locale = useLocale();
+  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+    const translation = values ? t(key, values) : t(key);
+    return translation === key && fallback ? fallback : translation;
+  };
   const [sortKey, setSortKey] = React.useState<SortKey>("date");
   const [sortOrder, setSortOrder] = React.useState<SortOrder>("dsc");
 

@@ -9,7 +9,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { ArrowRight } from 'lucide-react';
 
 function Payments() {
-  const params = useLocale();
+  const locale = useLocale();
   const t = useTranslations('Financial');
   const translate = (key: string, fallback?: string) => {
     const translation = t(key);
@@ -62,7 +62,7 @@ function Payments() {
               </CardHeader>
               <CardContent className="mt-auto flex w-full">
                 <Button variant="outline" className="w-full flex" asChild={false}>
-                  <Link href={`${mod.href}`} className='flex items-center justify-between w-full'>
+                  <Link href={`/${locale}${mod.href}`} className='flex items-center justify-between w-full'>
                     {t('goToModule', { moduleTitle: title })} <ArrowRight className="rtl:mr-2 rtl:ml-0 h-4 w-4" />
                   </Link>
                 </Button>
