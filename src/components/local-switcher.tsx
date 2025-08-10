@@ -16,7 +16,8 @@ export default function LocalSwitcher() {
   const t = useTranslations('Header');
   const languages = [
     { code: 'en', label: t('English'), flag: '/flags/uk.png' },
-    { code: 'ar', label: t('Arabic'), flag: '/flags/ar.png' }
+    { code: 'ar', label: t('Arabic'), flag: '/flags/ar.png' },
+    { code: 'de', label: 'Deutsch', flag: '/flags/uk.png' } // Added German language
   ];
 
   const onSelectChange = (locale: string) => {
