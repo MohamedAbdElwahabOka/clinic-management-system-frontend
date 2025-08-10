@@ -11,7 +11,7 @@ export default async function LocaleLayout({
   params
 }: {
   children: React.ReactNode;
-  params: { locale: "en" | "ar" }; // Explicitly type the locale
+  params: { locale: "en" | "ar" | "de" }; // Explicitly type the locale
 }) {
   const { locale } = params;
 

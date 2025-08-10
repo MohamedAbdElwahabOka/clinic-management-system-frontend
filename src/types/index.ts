@@ -15,7 +15,7 @@ export interface Patient {
   id: string;
   name: string;
   dateOfBirth: string;
-  gender: 'Male' | 'Female' | 'Other';
+  gender: 'Male' | 'Female';
   contactPhone: string;
   contactEmail: string;
   address: string;
@@ -60,7 +60,7 @@ export interface QueueItem {
   doctorName: string;
 }
 
-export type Locale = 'en' | 'ar';
+export type Locale = 'en' | 'ar' | 'de';
 export type Direction = 'ltr' | 'rtl';
 
 export interface NavItem {

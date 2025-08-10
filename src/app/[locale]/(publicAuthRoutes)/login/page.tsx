@@ -25,7 +25,7 @@ interface LoginPageProps {
 
 export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
   const params = React.use(paramsPromise);
-  const locale = params?.locale || 'en';
+  const locale = params?.locale || 'en' || 'de';
 
   const t = useTranslations('Auth');
   const tHeader = useTranslations('Header');

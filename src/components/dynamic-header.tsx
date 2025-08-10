@@ -9,7 +9,7 @@ export default function DynamicHeader() {
   const pathname = usePathname();
   // You can adjust this logic for your app's needs
   // Show LandingHeader only for root and landing pages
-  const localeMatch = pathname?.match(/^\/(en|ar)(\/)?$/);
+  const localeMatch = pathname?.match(/^\/(en|ar|de)(\/)?$/);
   if (localeMatch) {
     return <LandingHeader />;
   }
