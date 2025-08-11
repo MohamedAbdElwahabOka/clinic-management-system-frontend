@@ -68,7 +68,7 @@ const revenueChartData = [
   { name: "Jun", revenue: 600 },
 ];
 
-const labTestsData = [
+const labTestsData = [ 
   { name: "Complete Blood Count", progress: 70 },
   { name: "Lipid Panel", progress: 50 },
   { name: "Basic Metabolic Panel", progress: 85 },
