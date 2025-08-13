@@ -6,13 +6,13 @@ import { dummyPatients } from "@/lib/dummy-data";
 import { PlusCircle } from "lucide-react";
 import { Link } from "@/i18n/navigation"; // Use next-intl's Link
 import { Trans } from "@/components/trans";
-import type { Locale } from '@/types';
+// import type { Locale } from '@/types';
 
-interface PatientsPageProps {
-  params: { locale: Locale };
-}
-
-export default async function PatientsPage({ params }: PatientsPageProps) {
+// interface PatientsPageProps {
+//   params: { locale: Locale };
+// }
+// export default async function PatientsPage({ params }: PatientsPageProps) {
+export default async function PatientsPage() {
   const patients = dummyPatients;
 
   return (

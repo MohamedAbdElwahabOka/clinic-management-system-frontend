@@ -10,7 +10,8 @@ import { ArrowLeft, Coins, CalendarDays, DollarSign, CalendarRange } from "lucid
 import { Calendar } from "@/components/ui/calendar";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { dummyAppointments } from "@/lib/dummy-data";
-import type { VisitType, Locale } from "@/types";
+// import type { VisitType, Locale } from "@/types";
+import type { VisitType } from "@/types";
 import { format, parseISO, startOfDay, isSameDay, isSameMonth, isSameYear } from "date-fns";
 import { arSA } from 'date-fns/locale/ar-SA';
 // import { useToast } from "@/hooks/use-toast";
