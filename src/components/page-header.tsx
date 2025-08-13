@@ -17,7 +17,7 @@ interface PageHeaderProps {
 export function PageHeader({ titleKey, title, titleValues, descriptionKey, description, children, descriptionValues,translation }: PageHeaderProps) {
   const t = useTranslations(translation || 'Dashboard');
 
-  const translate = React.useCallback((key: string, values?: Record<string, any>, defaultValue?: string) => {
+  const translate = React.useCallback((key: string, values?: Record<string, unknown>, defaultValue?: string) => {
     const translation = t(key, values);
     return translation === key && defaultValue ? defaultValue : translation;
   }, [t]);
