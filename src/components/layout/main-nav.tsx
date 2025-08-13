@@ -16,8 +16,7 @@ import {
   ClipboardCheck,
   SettingsIcon,
   Sparkles,
-  Landmark,
-  UserCog, 
+  Landmark 
 } from "lucide-react";
 import { useTranslations } from 'next-intl';
 

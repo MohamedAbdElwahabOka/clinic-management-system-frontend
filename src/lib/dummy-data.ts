@@ -1,5 +1,5 @@
 
-import type { Patient, Appointment, QueueItem, AppointmentStatus, QueueStatus, VisitType, ServicePrice, LedgerCategory, LedgerEntry, LedgerEntryType } from '@/types';
+import type { Patient, Appointment, QueueItem, AppointmentStatus,  VisitType, ServicePrice, LedgerCategory, LedgerEntry } from '@/types';
 
 export const dummyPatients: Patient[] = [
   {
