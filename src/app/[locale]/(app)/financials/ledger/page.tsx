@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation"; // Use next-intl's Link
 import { ArrowLeft, Filter, CalendarRange } from "lucide-react";
 import { dummyLedgerEntries, dummyLedgerCategories } from "@/lib/dummy-data";
-import type { LedgerEntry, LedgerCategory, LedgerEntryType, Locale } from "@/types";
+// import type { LedgerEntry, LedgerCategory, LedgerEntryType, Locale } from "@/types";
+import type { LedgerEntry, LedgerCategory, LedgerEntryType } from "@/types";
+
 import { LedgerEntryForm } from "@/components/financials/ledger/LedgerEntryForm";
 import { LedgerTable } from "@/components/financials/ledger/LedgerTable";
 import { LedgerSummary } from "@/components/financials/ledger/LedgerSummary";

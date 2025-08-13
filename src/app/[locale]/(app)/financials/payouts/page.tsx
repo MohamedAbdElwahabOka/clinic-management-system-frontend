@@ -24,16 +24,16 @@ interface PayoutDetail {
   payoutAmount: number;
 }
 
-interface AssistantPayoutsPageProps {
-  params: { locale: Locale };
-}
+// interface AssistantPayoutsPageProps {
+//   params: { locale: Locale };
+// }
 
 const PAYOUT_AMOUNTS: Partial<Record<VisitType, number>> = {
   Examination: 10, 
   Consultation: 5,   
 };
-
-export default function AssistantPayoutsPage({ params }: AssistantPayoutsPageProps) {
+// export default function AssistantPayoutsPage({ params }: AssistantPayoutsPageProps) {
+export default function AssistantPayoutsPage() {
   const t = useTranslations('Financial');
   const locale = useLocale();
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(new Date());

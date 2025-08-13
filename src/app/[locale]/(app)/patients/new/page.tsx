@@ -5,13 +5,13 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "@/i18n/navigation"; // Use next-intl's Link
 import { Button } from "@/components/ui/button";
 import { Trans } from "@/components/trans";
-import type { Locale } from '@/types';
+// import type { Locale } from '@/types';
 
-interface NewPatientPageProps {
-  params: { locale: Locale };
-}
-
-export default function NewPatientPage({ params }: NewPatientPageProps) {
+// interface NewPatientPageProps {
+//   params: { locale: Locale };
+// }
+// export default function NewPatientPage({ params }: NewPatientPageProps) {
+export default function NewPatientPage() {
   return (
     <div className="p-5">
       <PageHeader 
