@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 
 import "../globals.css";
-import { LandingHeader } from '@/components/landing/landing-header';
+// import { LandingHeader } from '@/components/landing/landing-header';
 import DynamicHeader from '@/components/dynamic-header'; // Import the dynamic header component
 // Remove server headers import, use client component for header switching
 
