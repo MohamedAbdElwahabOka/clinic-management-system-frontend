@@ -187,7 +187,7 @@ export default function MedicalRecordModalExample() {
       });
 
       const imgProps = { width: canvas.width, height: canvas.height };
-      const pdfPageWidth = pdf.internal.pageSize.getWidth();
+      // const pdfPageWidth = pdf.internal.pageSize.getWidth();
       const pdfPageHeight = pdf.internal.pageSize.getHeight();
 
       if (imgProps.height <= pdfPageHeight) {

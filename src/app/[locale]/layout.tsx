@@ -22,7 +22,8 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
+
 
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 

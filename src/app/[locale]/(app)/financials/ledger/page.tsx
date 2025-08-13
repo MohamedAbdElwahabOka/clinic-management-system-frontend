@@ -27,10 +27,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { useTranslations, useLocale } from 'next-intl';
 
-interface LedgerPageProps {
-  params: { locale: Locale };
-}
-export default function LedgerPage({ params }: LedgerPageProps) {
+// interface LedgerPageProps {
+//   params: { locale: Locale };
+// }
+// export default function LedgerPage({ params }: LedgerPageProps) {
+export default function LedgerPage() {
   const t = useTranslations('Financial');
   const locale = useLocale();
   const translate = (key: string, fallback?: string, values?: Record<string ,string | number>) => {
