@@ -418,7 +418,7 @@
     "currentServicePricesDesc": "Liste aller konfigurierten Dienste und ihrer Preise.",
     "serviceName": "Dienstname",
     "price": "Preis",
-    "currency": "Währung",
+    "currency": "EGP",
     "addNewServicePrice": "Neuen Dienstpreis hinzufügen",
     "editServicePrice": "Dienstpreis bearbeiten",
     "addNewServiceDesc": "Füllen Sie die Details aus, um einen neuen Dienstpreis hinzuzufügen.",

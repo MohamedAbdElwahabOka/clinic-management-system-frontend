@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -29,11 +28,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Save, PlusCircle, Eraser } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format, parseISO } from "date-fns";
-import { arSA } from 'date-fns/locale/ar-SA';
+import { arSA } from "date-fns/locale/ar-SA";
 import { useToast } from "@/hooks/use-toast";
 import type { LedgerEntry, LedgerCategory, LedgerEntryType } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale } from "next-intl";
 
 interface LedgerEntryFormProps {
   categories: LedgerCategory[];
@@ -41,25 +40,54 @@ interface LedgerEntryFormProps {
   initialEntry?: LedgerEntry | null;
   onClearForm: () => void;
 }
-export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onClearForm }: LedgerEntryFormProps) {
 
+export function LedgerEntryForm({
+  categories,
+  onSubmitEntry,
+  initialEntry,
+  onClearForm,
+}: LedgerEntryFormProps) {
   const { toast } = useToast();
-  const t = useTranslations('Financial');
+  const t = useTranslations("Financial");
   const locale = useLocale();
-  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+
+  const translate = (
+    key: string,
+    fallback?: string,
+    values?: Record<string, string | number>
+  ) => {
     const translation = values ? t(key, values) : t(key);
     return translation === key && fallback ? fallback : translation;
   };
 
-  const getLedgerEntryFormSchema = () => z.object({
-    id: z.string().optional(),
-    date: z.date({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('dateRequired') }) }),
-    description: z.string().min(3, translate('errorDescriptionMinLedger')),
-    categoryId: z.string({ required_error: translate('requiredField', "{{field}} is required.", { field: translate('categoryRequired') }) }),
-    amount: z.coerce.number().positive(translate('errorAmountPositive')),
-    type: z.enum(["income", "expense"], { required_error: translate('requiredField', "{{field}} is required.", { field: translate('entryType') }) }),
-    notes: z.string().optional(),
-  });
+  const getLedgerEntryFormSchema = () =>
+    z.object({
+      id: z.string().optional(),
+      date: z.date({
+        required_error: translate(
+          "requiredField",
+          "{{field}} is required.",
+          { field: translate("dateRequired") }
+        ),
+      }),
+      description: z.string().min(3, translate("errorDescriptionMinLedger")),
+      categoryId: z.string({
+        required_error: translate(
+          "requiredField",
+          "{{field}} is required.",
+          { field: translate("categoryRequired") }
+        ),
+      }),
+      amount: z.coerce.number().positive(translate("errorAmountPositive")),
+      type: z.enum(["income", "expense"], {
+        required_error: translate(
+          "requiredField",
+          "{{field}} is required.",
+          { field: translate("entryType") }
+        ),
+      }),
+      notes: z.string().optional(),
+    });
 
   type LedgerEntryFormValues = z.infer<ReturnType<typeof getLedgerEntryFormSchema>>;
 
@@ -80,11 +108,10 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
     form.reset(undefined, { keepValues: false });
   }, [locale, form]);
 
-
   const currentType = form.watch("type");
 
   const filteredCategories = React.useMemo(() => {
-    return categories.filter(cat => cat.type === currentType);
+    return categories.filter((cat) => cat.type === currentType);
   }, [categories, currentType]);
 
   React.useEffect(() => {
@@ -114,18 +141,21 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
   React.useEffect(() => {
     const selectedCategoryId = form.getValues("categoryId");
     if (selectedCategoryId) {
-      const selectedCategory = categories.find(c => c.id === selectedCategoryId);
+      const selectedCategory = categories.find((c) => c.id === selectedCategoryId);
       if (selectedCategory && selectedCategory.type !== currentType) {
         form.setValue("categoryId", undefined);
       }
     }
   }, [currentType, form, categories]);
 
-
   function handleSubmit(data: LedgerEntryFormValues) {
-    const selectedCategory = categories.find(cat => cat.id === data.categoryId);
+    const selectedCategory = categories.find((cat) => cat.id === data.categoryId);
     if (!selectedCategory) {
-      toast({ title: translate('error'), description: translate('categoryNotFound', "Selected category not found."), variant: "destructive" });
+      toast({
+        title: translate("error"),
+        description: translate("categoryNotFound", "Selected category not found."),
+        variant: "destructive",
+      });
       return;
     }
 
@@ -139,11 +169,18 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
       type: data.type as LedgerEntryType,
       notes: data.notes,
     };
+
     onSubmitEntry(entryData);
+
     toast({
-      title: data.id ? translate('entryUpdatedToast') : translate('entryAddedToast'),
-      description: translate(data.id ? 'entryUpdatedDesc' : 'entryAddedDesc', "", { description: entryData.description }),
+      title: data.id ? translate("entryUpdatedToast") : translate("entryAddedToast"),
+      description: translate(
+        data.id ? "entryUpdatedDesc" : "entryAddedDesc",
+        "",
+        { description: entryData.description }
+      ),
     });
+
     handleClearAndResetForm();
   }
 
@@ -158,11 +195,13 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
       notes: "",
       id: undefined,
     });
-  }
+  };
 
   const isEditing = !!form.watch("id");
-  const formTitle = isEditing ? translate('editLedgerEntry') : translate('addNewLedgerEntry');
-  const formDescription = isEditing ? translate('editLedgerEntryDesc') : translate('addNewLedgerEntryDesc');
+  const formTitle = isEditing ? translate("editLedgerEntry") : translate("addNewLedgerEntry");
+  const formDescription = isEditing
+    ? translate("editLedgerEntryDesc")
+    : translate("addNewLedgerEntryDesc");
 
   return (
     <Card>
@@ -173,17 +212,21 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            <FormField name="id" control={form.control} render={({ field }) => <Input type="hidden" {...field} />} />
+            <FormField
+              name="id"
+              control={form.control}
+              render={({ field }) => <Input type="hidden" {...field} />}
+            />
 
             <FormField
               control={form.control}
               name="type"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>{translate('entryType')}</FormLabel>
+                  <FormLabel>{translate("entryType")}</FormLabel>
                   <FormControl>
                     <RadioGroup
-                      dir={locale === 'ar' ? 'rtl' : 'ltr'}
+                      dir={locale === "ar" ? "rtl" : "ltr"}
                       onValueChange={(value) => {
                         field.onChange(value);
                         form.setValue("categoryId", undefined);
@@ -195,13 +238,13 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                         <FormControl>
                           <RadioGroupItem value="income" />
                         </FormControl>
-                        <FormLabel className="font-normal">{translate('income')}</FormLabel>
+                        <FormLabel className="font-normal">{translate("income")}</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-2 rtl:space-x-reverse space-y-0">
                         <FormControl>
                           <RadioGroupItem value="expense" />
                         </FormControl>
-                        <FormLabel className="font-normal">{translate('expense')}</FormLabel>
+                        <FormLabel className="font-normal">{translate("expense")}</FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -215,27 +258,32 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>{translate('dateRequired')}</FormLabel>
+                  <FormLabel>{translate("dateRequired")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
-                          className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
                         >
-                          {field.value ? format(field.value, "PPP", { locale: locale === 'ar' ? arSA : undefined }) : <span>{translate('pickDate')}</span>}
+                          {field.value
+                            ? format(field.value, "PPP", { locale: locale === "ar" ? arSA : undefined })
+                            : <span>{translate("pickDate")}</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                    <PopoverContent className="w-auto p-0" align="start" dir={locale === "ar" ? "rtl" : "ltr"}>
                       <Calendar
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
-                        dir={locale === 'ar' ? 'rtl' : 'ltr'}
-                        locale={locale === 'ar' ? arSA : undefined}
+                        dir={locale === "ar" ? "rtl" : "ltr"}
+                        locale={locale === "ar" ? arSA : undefined}
                       />
                     </PopoverContent>
                   </Popover>
@@ -249,8 +297,10 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{translate('descriptionRequired')}</FormLabel>
-                  <FormControl><Input placeholder={translate('descriptionPlaceholderLedger')} {...field} /></FormControl>
+                  <FormLabel>{translate("descriptionRequired")}</FormLabel>
+                  <FormControl>
+                    <Input placeholder={translate("descriptionPlaceholderLedger")} {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -262,17 +312,31 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{translate('categoryRequired')}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+                    <FormLabel>{translate("categoryRequired")}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={translate(currentType === 'income' ? 'selectIncomeCategory' : 'selectExpenseCategory')} />
+                          <SelectValue
+                            placeholder={translate(
+                              currentType === "income" ? "selectIncomeCategory" : "selectExpenseCategory"
+                            )}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {filteredCategories.length === 0 && <SelectItem value="-" disabled>{translate('noCategoriesForType', "", { type: translate(currentType) })}</SelectItem>}
-                        {filteredCategories.map(cat => (
-                          <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
+                        {filteredCategories.length === 0 && (
+                          <SelectItem value="-" disabled>
+                            {translate("noCategoriesForType", "", { type: translate(currentType) })}
+                          </SelectItem>
+                        )}
+                        {filteredCategories.map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -285,8 +349,10 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{translate('amountEGPRequired')}</FormLabel>
-                    <FormControl><Input type="number" step="0.01" placeholder={translate('amountPlaceholder')} {...field} /></FormControl>
+                    <FormLabel>{translate("amountEGPRequired")}</FormLabel>
+                    <FormControl>
+                      <Input type="number" step="0.01" placeholder={translate("amountPlaceholder")} {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -298,8 +364,10 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{translate('notesOptional')}</FormLabel>
-                  <FormControl><Textarea placeholder={translate('notesPlaceholder')} {...field} /></FormControl>
+                  <FormLabel>{translate("notesOptional")}</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder={translate("notesPlaceholder")} {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -307,11 +375,17 @@ export function LedgerEntryForm({ categories, onSubmitEntry, initialEntry, onCle
 
             <div className="flex justify-end space-x-2 rtl:space-x-reverse pt-4">
               <Button type="button" variant="outline" onClick={handleClearAndResetForm} disabled={form.formState.isSubmitting}>
-                <Eraser className="mr-2 h-4 w-4" /> {translate('clearNew')}
+                <Eraser className="mr-2 h-4 w-4" /> {translate("clearNew")}
               </Button>
               <Button type="submit" disabled={form.formState.isSubmitting || filteredCategories.length === 0}>
                 {isEditing ? <Save className="mr-2 h-4 w-4" /> : <PlusCircle className="mr-2 h-4 w-4" />}
-                {form.formState.isSubmitting ? (isEditing ? translate('updating') : translate('adding')) : (isEditing ? translate('updateEntry') : translate('addEntry'))}
+                {form.formState.isSubmitting
+                  ? isEditing
+                    ? translate("updating")
+                    : translate("adding")
+                  : isEditing
+                  ? translate("updateEntry")
+                  : translate("addEntry")}
               </Button>
             </div>
           </form>

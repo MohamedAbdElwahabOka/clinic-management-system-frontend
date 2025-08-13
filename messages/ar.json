@@ -419,7 +419,7 @@
     "currentServicePricesDesc": "قائمة بجميع الخدمات المكونة وأسعارها.",
     "serviceName": "اسم الخدمة",
     "price": "السعر",
-    "currency": "العملة",
+    "currency": "جنيه",
     "addNewServicePrice": "إضافة سعر خدمة جديد",
     "editServicePrice": "تعديل سعر الخدمة",
     "addNewServiceDesc": "املأ التفاصيل لإضافة سعر خدمة جديد.",
