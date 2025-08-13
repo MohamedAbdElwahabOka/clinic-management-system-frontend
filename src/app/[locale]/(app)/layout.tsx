@@ -6,14 +6,23 @@ import Header from '@/components/header';
 import Sidebar from '@/components/Sidebar';
 import "../../globals.css";
 
+// export default async function LocaleLayout({
+//   children,
+//   params
+// }: {
+//   children: React.ReactNode;
+//   params: { locale: "en" | "ar" | "de" }; // Explicitly type the locale
+// }) {
+//   const { locale } = params;
 export default async function LocaleLayout({
   children,
-  params
+  params: paramsPromise
 }: {
   children: React.ReactNode;
-  params: { locale: "en" | "ar" | "de" }; // Explicitly type the locale
+  params: Promise<{ locale: "en" | "ar" | "de" }>;
 }) {
-  const { locale } = params;
+  const { locale } = await paramsPromise; 
+
 
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale)) {

@@ -8,6 +8,15 @@ import { LandingHeader } from '@/components/landing/landing-header';
 import DynamicHeader from '@/components/dynamic-header'; // Import the dynamic header component
 // Remove server headers import, use client component for header switching
 
+// export default async function LocaleLayout({
+//   children,
+//   params: paramsPromise
+// }: {
+//   children: React.ReactNode;
+//   params: Promise<{ locale: "en" | "ar" | "de" }>;
+// }) {
+//   const params = await paramsPromise;
+//   const { locale } = params;
 export default async function LocaleLayout({
   children,
   params: paramsPromise
@@ -15,8 +24,8 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: Promise<{ locale: "en" | "ar" | "de" }>;
 }) {
-  const params = await paramsPromise;
-  const { locale } = params;
+  const { locale } = await paramsPromise; 
+
 
   if (!routing.locales.includes(locale)) {
     notFound();
