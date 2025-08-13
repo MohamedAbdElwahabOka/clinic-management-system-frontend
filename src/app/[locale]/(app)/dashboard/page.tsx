@@ -562,11 +562,11 @@ const DashboardStatCard: React.FC<DashboardStatCardProps> = ({
 };
 
 interface DashboardPageProps {
-  params: { locale: Locale };
+  params: Promise<{ locale: Locale }>;
 }
 
-export default function DashboardPage({ params }: DashboardPageProps) {
-  const { locale } = params;
+export default async function DashboardPage({ params }: DashboardPageProps) {
+  const { locale } = await params;
   const t = useTranslations('Dashboard');
   const translate = React.useCallback((key: string, defaultValue?: string) => {
     const translation = t(key);
