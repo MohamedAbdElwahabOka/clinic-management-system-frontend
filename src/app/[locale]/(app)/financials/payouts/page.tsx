@@ -13,7 +13,7 @@ import { dummyAppointments } from "@/lib/dummy-data";
 import type { VisitType, Locale } from "@/types";
 import { format, parseISO, startOfDay, isSameDay, isSameMonth, isSameYear } from "date-fns";
 import { arSA } from 'date-fns/locale/ar-SA';
-import { useToast } from "@/hooks/use-toast";
+// import { useToast } from "@/hooks/use-toast";
 import { useTranslations, useLocale } from 'next-intl';
 
 interface PayoutDetail {
@@ -85,7 +85,7 @@ export default function AssistantPayoutsPage({ params }: AssistantPayoutsPagePro
 
   }, [selectedDate]);
 
-  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+  const translate = (key: string, fallback?: string, values?: Record<string, string | number>) => {
     const translation = values ? t(key, values) : t(key);
     return translation === key && fallback ? fallback : translation;
   };

@@ -25,7 +25,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   // Determine the direction of the document
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
+  // const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
     // <html lang={locale} dir={dir}>

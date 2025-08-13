@@ -33,7 +33,7 @@ interface LedgerPageProps {
 export default function LedgerPage({ params }: LedgerPageProps) {
   const t = useTranslations('Financial');
   const locale = useLocale();
-  const translate = (key: string, fallback?: string, values?: Record<string, any>) => {
+  const translate = (key: string, fallback?: string, values?: Record<string ,string | number>) => {
     const translation = values ? t(key, values) : t(key);
     return translation === key && fallback ? fallback : translation;
   };
