@@ -1,15 +1,10 @@
 import { dummyPatients, dummyAppointments } from "@/lib/dummy-data";
 import { notFound } from "next/navigation";
-import { parseISO } from "date-fns"; // Removed format as it's handled client-side
-import type { Locale } from '@/types';
-// Removed getTranslations as it's no longer needed here for passing translateFn
+import { parseISO } from "date-fns"; 
+import type { Locale } from '@/types'; 
 import { PatientDetailContent } from '@/components/patients/patient-detail-content';
 
-interface PatientDetailPageProps {
-    params: { id: string; locale: Locale };
-}
-
-// Helper function to calculate age (can be moved to utils if needed elsewhere)
+// Helper function to calculate age
 function differenceInYears(dateLeft: Date, dateRight: Date): number {
     let years = dateLeft.getFullYear() - dateRight.getFullYear();
     const monthDiff = dateLeft.getMonth() - dateRight.getMonth();
@@ -19,8 +14,13 @@ function differenceInYears(dateLeft: Date, dateRight: Date): number {
     return years;
 }
 
-export default async function PatientDetailPage({ params }: PatientDetailPageProps) {
-    const { id } = await params;
+export default async function PatientDetailPage({
+    params,
+}: {
+    params: Promise<{ id: string; locale: Locale }>;
+}) {
+    const { id /* , locale */ } = await params; // await لأن params الآن Promise, وlocale غير مستخدم حاليًا
+
     const patient = dummyPatients.find((p) => p.id === id);
 
     if (!patient) {
@@ -29,7 +29,6 @@ export default async function PatientDetailPage({ params }: PatientDetailPagePro
 
     const age = differenceInYears(new Date(), parseISO(patient.dateOfBirth));
 
-    // Fetch patient-specific appointments. This data will be passed to the client component.
     const patientAppointments = dummyAppointments.filter(app => app.patientId === patient.id);
 
     return (
