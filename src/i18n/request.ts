@@ -4,15 +4,12 @@ import { routing } from './routing';
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
-  // تحقق من أن locale هو أحد القيم المسموح بها
-  if (!locale || !routing.locales.includes(locale as any)) {
-    locale = routing.defaultLocale;
-  }
+  // Type guard للتحقق من أن locale صالح
+  const isValidLocale = (loc: string): loc is 'en' | 'ar' | 'de' =>
+    routing.locales.includes(loc as 'en' | 'ar' | 'de');
 
-  // الآن نعرف أن locale صالح
-  const typedLocale = routing.locales.includes(locale as any)
-    ? (locale as 'en' | 'ar' | 'de')
-    : routing.defaultLocale;
+  // استخدام type guard لتحديد قيمة locale
+  const typedLocale = locale && isValidLocale(locale) ? locale : routing.defaultLocale;
 
   return {
     locale: typedLocale,
