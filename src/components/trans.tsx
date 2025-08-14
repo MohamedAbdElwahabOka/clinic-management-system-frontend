@@ -15,6 +15,7 @@ export const Trans: React.FC<TransProps> = ({ k, fallback, options, components }
   const t = useTranslations('Patient');
   let translatedString = t(k);
   if (translatedString === k && fallback) translatedString = fallback;
+
   if (options && translatedString && /\{\w+\}/.test(translatedString)) {
     Object.entries(options).forEach(([key, value]) => {
       translatedString = translatedString.replace(new RegExp(`\{${key}\}`, 'g'), String(value));
@@ -38,8 +39,8 @@ export const Trans: React.FC<TransProps> = ({ k, fallback, options, components }
           const componentContent = match[2];
           const component = components[componentIndex];
           if (component && React.isValidElement(component)) {
-            // Use type assertion to React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>>
-            const element = component as React.ReactElement<unknown, string | React.JSXElementConstructor<unknown>>;
+            // حدد نوع props على أنه any لتجنب خطأ unknown
+            const element = component as React.ReactElement<any>;
             return React.cloneElement(element, { key: index }, componentContent || element.props.children);
           }
         }
