@@ -246,7 +246,7 @@
     "errorPhoneNumberRequired": "رقم الهاتف مطلوب.",
     "errorTermsRequired": "يجب أن توافق على الشروط والأحكام.",
     "phoneNumberPlaceholder": "مثال: 555-123-4567",
-    "requiredField": "{field} مطلوب."
+    "requiredField": "مطلوب."
   },
   "Global": {
     "loading": "جار التحميل...",
@@ -393,7 +393,7 @@
     "confirmDeletePatientDesc": "لا يمكن التراجع عن هذا الإجراء. سيؤدي هذا إلى حذف سجل المريض {name} بشكل دائم.",
     "cancel": "إلغاء",
     "errorFullNameMin": "يجب أن يتكون الاسم الكامل من حرفين على الأقل.",
-    "requiredField": "{field} مطلوب.",
+    "requiredField": "مطلوب.",
     "errorPhoneMin": "يجب أن يتكون رقم الهاتف من 10 أرقام على الأقل.",
     "errorPhoneNoSpaces": "يجب ألا يحتوي رقم الهاتف على مسافات.",
     "errorEmailInvalid": "عنوان بريد إلكتروني غير صالح.",
@@ -518,7 +518,7 @@
     "errorCurrencyMax": "رمز العملة طويل جدًا.",
     "errorServiceNameMin": "يجب أن يتكون اسم الخدمة من 3 أحرف على الأقل.",
     "error": "خطأ",
-    "requiredField": "{field} مطلوب.",
+    "requiredField": "مطلوب.",
     "allTypes": "جميع الأنواع",
     "clearFilters": "مسح الفلاتر",
     "patient": "المريض",
