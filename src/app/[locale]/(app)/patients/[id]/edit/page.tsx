@@ -14,7 +14,7 @@ export default async function EditPatientPage({
 }: {
   params: Promise<{ id: string; locale: Locale }>;
 }) {
-  const { id, locale } = await params; // await لأن params الآن Promise
+  const { id} = await params; // await لأن params الآن Promise
 
   const patient = dummyPatients.find((p) => p.id === id);
 
