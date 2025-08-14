@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useTranslations } from 'next-intl';
 
 interface TransProps {
-  k: string; // translation key
+  k: string;
   fallback?: string;
   options?: Record<string, string | number>;
   components?: Record<string, React.ReactElement>;
@@ -24,9 +24,7 @@ export const Trans: React.FC<TransProps> = ({ k, fallback, options, components }
     translatedString = translatedString.replace(/\{\w+\}/g, '');
   }
 
-  if (!components) {
-    return <>{translatedString}</>;
-  }
+  if (!components) return <>{translatedString}</>;
 
   const parts = translatedString.split(/(<C\d+>.*?<\/C\d+>)/g).filter(Boolean);
 
@@ -38,10 +36,14 @@ export const Trans: React.FC<TransProps> = ({ k, fallback, options, components }
           const componentIndex = match[1];
           const componentContent = match[2];
           const component = components[componentIndex];
+
           if (component && React.isValidElement(component)) {
-            // حدد نوع props على أنه any لتجنب خطأ unknown
-            const element = component as React.ReactElement<any>;
-            return React.cloneElement(element, { key: index }, componentContent || element.props.children);
+            // استخدم النوع الصحيح لـ React.ReactElement
+            return React.cloneElement(
+              component as React.ReactElement<{ children?: React.ReactNode }>,
+              { key: index },
+              componentContent || (component.props as { children?: React.ReactNode }).children
+            );
           }
         }
         return part;
