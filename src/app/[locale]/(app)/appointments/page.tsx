@@ -178,7 +178,7 @@ export default function AppointmentsPage() {
             {appt.status}
           </span>
         </td>
-        <td className="p-2 flex gap-1 justify-center">
+         <td className="p-2 flex gap-1 justify-center">
           {(appt.status === "محجوز" || appt.status === "مؤكد") && (
             <>
               <button
@@ -188,7 +188,8 @@ export default function AppointmentsPage() {
                 <RefreshCw className="w-4 h-4" />
                 إعادة جدولة
               </button>
-              {appt.status !== "ملغي" && (
+
+              {appt.status === "محجوز" && (
                 <>
                   <button
                     onClick={() => handleCancel(appt.id)}
@@ -197,20 +198,30 @@ export default function AppointmentsPage() {
                     <XCircle className="w-4 h-4" />
                     إلغاء
                   </button>
-                  {appt.status !== "مؤكد" && (
-                    <button
-                      onClick={() => handleConfirm(appt.id)}
-                      className="flex items-center gap-1 border border-green-600 text-green-600 rounded px-2 py-1 hover:bg-green-50"
-                    >
-                      <CheckCircle className="w-4 h-4" />
-                      تأكيد
-                    </button>
-                  )}
+
+                  <button
+                    onClick={() => handleConfirm(appt.id)}
+                    className="flex items-center gap-1 border border-green-600 text-green-600 rounded px-2 py-1 hover:bg-green-50"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    تأكيد
+                  </button>
                 </>
+              )}
+
+              {appt.status === "مؤكد" && (
+                <button
+                  onClick={() => handleCancel(appt.id)}
+                  className="flex items-center gap-1 border border-red-500 text-red-500 rounded px-2 py-1 hover:bg-red-50"
+                >
+                  <XCircle className="w-4 h-4" />
+                  إلغاء
+                </button>
               )}
             </>
           )}
         </td>
+
       </tr>
     ));
   }
