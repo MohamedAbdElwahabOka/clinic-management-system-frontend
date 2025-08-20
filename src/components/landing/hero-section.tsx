@@ -36,7 +36,7 @@ export function HeroSection({
   imageHint
 }: HeroSectionProps) {
   const t = useTranslations('Landing');
-  const translate = (key: string, fallback?: string) => t(key, { default: fallback });
+  const translate = (key: string, fallback?: string) => t(key, { default: fallback ?? "" });
   const locale  = useLocale();
 
   return (
@@ -62,8 +62,8 @@ export function HeroSection({
           <Image
             src={imageUrl}
             alt={translate(imageAltKey, defaultImageAlt)} // Use key and fallback
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: 'cover' }}
             priority
             data-ai-hint={imageHint || "software dashboard"}
           />
