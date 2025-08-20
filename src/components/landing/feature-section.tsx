@@ -58,7 +58,7 @@ export function FeatureSection({
   sectionId,
 }: FeatureSectionProps) {
   const t = useTranslations('Landing');
-  const translate = (key: string, fallback?: string) => t(key, { default: fallback });
+  const translate = (key: string, fallback?: string) => t(key, { default: fallback ?? "" });
 
   const content = (
     <div className="flex flex-col justify-center">
@@ -107,8 +107,8 @@ export function FeatureSection({
       <Image
         src={imageUrl}
         alt={translate(imageAltKey, defaultImageAlt)} // Use key and fallback
-        layout="fill"
-        objectFit="cover"
+        fill
+        style={{ objectFit: 'cover' }}
         data-ai-hint={imageHint || "feature illustration"}
       />
     </div>

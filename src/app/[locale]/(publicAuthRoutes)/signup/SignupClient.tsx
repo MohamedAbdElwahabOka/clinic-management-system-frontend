@@ -96,10 +96,15 @@ export default function SignupClient({ locale }: SignupClientProps) {
     const translate = React.useCallback((key: string, defaultValue?: string, values?: Record<string, string | number>) => {
       let translation = t(key);
       if (translation === key && defaultValue) translation = defaultValue;
-      // Only interpolate if values are provided and translation contains curly braces
+      // Always replace {field} with empty string if not provided
+      if (translation && /\{field\}/.test(translation)) {
+        const fieldValue = values && values.field ? String(values.field) : '';
+        translation = translation.replace(/\{field\}/g, fieldValue);
+      }
+      // Only interpolate other variables if values are provided and translation contains curly braces
       if (values && translation && /\{\w+\}/.test(translation)) {
         Object.entries(values).forEach(([k, v]) => {
-          translation = translation.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+          if (k !== 'field') translation = translation.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
         });
       } else if (translation && /\{\w+\}/.test(translation)) {
         // If translation expects a variable but none provided, replace with empty string
@@ -143,14 +148,14 @@ export default function SignupClient({ locale }: SignupClientProps) {
     const getSignupFormSchema = () => z.object({
       firstName: z.string().min(2, translate('errorFirstNameMin')),
       lastName: z.string().min(2, translate('errorLastNameMin')),
-      dateOfBirth: z.date({ required_error: translate('requiredField', "{{field}} is required.", { field: translateGlobal('dateOfBirth') }) }),
-      specialty: z.string({ required_error: translate('requiredField', "{{field}} is required.", { field: translateGlobal('specialty') }) }),
+      dateOfBirth: z.date({ required_error: translate('requiredField', "{field} is required.", { field: translateGlobal('dateOfBirth') }) }),
+      specialty: z.string({ required_error: translate('requiredField', "{field} is required.", { field: translateGlobal('specialty') }) }),
       nationalId: z.string()
         .min(1, translate('errorNationalIdRequired'))
         .length(14, translate('errorNationalIdDigits'))
         .regex(/^[0-9]+$/, translate('errorNationalIdNumbersOnly')),
       phoneNumber: z.string().min(1, translate('errorPhoneNumberRequired')).min(10, translate('errorPhoneMin')).regex(/^\S+$/, translate('errorPhoneNoSpaces')),
-      gender: z.enum(["Male", "Female"], { required_error: translate('requiredField', "{{field}} is required.", { field: translateGlobal('gender') }) }),
+      gender: z.enum(["Male", "Female"], { required_error: translate('requiredField', "{field} is required.", { field: translateGlobal('gender') }) }),
       email: z.string().email(translate('errorEmailInvalid')).min(1, translate('errorEmailRequired')),
       password: z.string().min(6, translate('errorPasswordMin')),
       confirmPassword: z.string().min(6, translate('errorConfirmPasswordMin')),
@@ -196,15 +201,16 @@ export default function SignupClient({ locale }: SignupClientProps) {
     async function onSubmit(data: SignupFormValues) {
       setIsLoading(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
-  
+
       console.log("Attempting to sign up with data:", data);
-  
+
       toast({
         title: translate('accountCreatedSuccessToast'),
         description: translate('accountCreatedSuccessDesc'),
       });
-      router.push("/login");
-  
+      // Redirect to add-clinic page after signup, using locale-aware path
+      router.push(`/add-clinic`);
+
       setIsLoading(false);
     }
   

@@ -38,6 +38,7 @@
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.23.12",
     "jspdf": "^3.0.1",
+    "leaflet": "^1.9.4",
     "lucide-react": "^0.476.0",
     "next": "15.1.7",
     "next-intl": "^3.26.5",
@@ -54,6 +55,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/leaflet": "^1.9.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
