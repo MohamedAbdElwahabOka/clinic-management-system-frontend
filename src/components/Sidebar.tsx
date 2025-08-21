@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, Calendar, FileText, DollarSign, Settings, HelpCircle } from 'lucide-react';
+import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, Calendar, FileText, DollarSign, Settings, HelpCircle, Hospital } from 'lucide-react';
 import {Link} from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
@@ -22,7 +22,8 @@ export default function Sidebar() {
     { name: t('patients'), icon: Users, link: '/patients' },
     { name: t('appointments'), icon: Calendar, link: '/appointments', hasNotification: true },
     { name: t('Medical-Records'), icon: FileText, link: '/records' },
-    { name: t('Financials'), icon: DollarSign, link: '/financials' }
+    { name: t('Financials'), icon: DollarSign, link: '/financials' },
+    { name: t('Clinics'), icon: Hospital, link: '/clinics' }
   ];
   
   const menuItemstwo = [

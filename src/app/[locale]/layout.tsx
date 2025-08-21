@@ -38,6 +38,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir}>
+      <head>
+        <link rel="icon" type="image/x-icon" href="/logo/logo.svg" />
+        <title>Clinica</title>
+      </head>
       <body className="flex h-screen overflow-hidden">
         <NextIntlClientProvider messages={messages} locale={locale}>
           <div className="flex flex-col flex-1">
@@ -46,7 +50,6 @@ export default async function LocaleLayout({
               {children}
             </main>
           </div>
-
         </NextIntlClientProvider>
       </body>
     </html>
