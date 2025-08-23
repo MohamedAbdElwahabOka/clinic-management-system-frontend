@@ -202,7 +202,7 @@ export default function SignupClient({ locale }: SignupClientProps) {
       setIsLoading(true);
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      console.log("Attempting to sign up with data:", data);
+      console.log("Attempting  to sign up with data:", data);
 
       toast({
         title: translate('accountCreatedSuccessToast'),
