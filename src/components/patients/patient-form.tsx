@@ -74,9 +74,9 @@ export function PatientForm({ patient }: PatientFormProps) {
         contactPhone: patient.contactPhone,
         contactEmail: patient.contactEmail,
         address: patient.address,
-        allergies: patient.medicalHistory?.allergies?.join(", "),
-        conditions: patient.medicalHistory?.conditions?.join(", "),
-        medications: patient.medicalHistory?.medications?.join(", "),
+        allergies: patient.personalInfo?.allergies?.join(", "),
+        conditions: patient.personalInfo?.chronicConditions?.join(", "),
+        medications: patient.generalMedicine?.medications?.join(", "),
       }
     : {
       gender: undefined
