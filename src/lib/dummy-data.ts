@@ -1,71 +1,160 @@
 
-import type { Patient, Appointment, QueueItem, AppointmentStatus,  VisitType, ServicePrice, LedgerCategory, LedgerEntry } from '@/types';
+import type { LabTest,Patient, Appointment, QueueItem, AppointmentStatus,  VisitType, ServicePrice, LedgerCategory, LedgerEntry } from '@/types';
+
+// export const dummyPatients: Patient[] = [
+//   {
+//     id: 'PAT001',
+//     name: 'John Doe',
+//     dateOfBirth: '1985-07-20',
+//     gender: 'Male',
+//     contactPhone: '555-1234',
+//     contactEmail: 'john.doe@example.com',
+//     address: '123 Main St, Anytown, USA',
+//     lastVisit: '2023-10-15',
+//     medicalHistory: {
+//       allergies: ['Penicillin', 'Peanuts'],
+//       conditions: ['Hypertension'],
+//       medications: ['Lisinopril 10mg'],
+//     },
+//     visitNotes: [
+//       { id: 'VN001', date: '2023-10-15', doctorName: 'Dr. Smith', notes: 'Routine check-up. Blood pressure slightly elevated.' },
+//       { id: 'VN002', date: '2023-05-01', doctorName: 'Dr. Smith', notes: 'Flu symptoms. Prescribed Tamiflu.' },
+//     ],
+//   },
+//   {
+//     id: 'PAT002',
+//     name: 'Jane Smith',
+//     dateOfBirth: '1992-02-10',
+//     gender: 'Female',
+//     contactPhone: '555-5678',
+//     contactEmail: 'jane.smith@example.com',
+//     address: '456 Oak Ave, Anytown, USA',
+//     lastVisit: '2023-11-01',
+//     medicalHistory: {
+//       conditions: ['Asthma'],
+//       medications: ['Albuterol Inhaler'],
+//     },
+//   },
+//   {
+//     id: 'PAT003',
+//     name: 'Alice Johnson',
+//     dateOfBirth: '1978-12-01',
+//     gender: 'Female',
+//     contactPhone: '555-8765',
+//     contactEmail: 'alice.j@example.com',
+//     address: '789 Pine Ln, Anytown, USA',
+//     lastVisit: '2023-09-20',
+//   },
+//   {
+//     id: 'PAT004',
+//     name: 'Robert Brown',
+//     dateOfBirth: '1995-03-15',
+//     gender: 'Male',
+//     contactPhone: '555-1122',
+//     contactEmail: 'robert.b@example.com',
+//     address: '101 Maple Dr, Anytown, USA',
+//     lastVisit: new Date().toISOString(), // For testing, last visit today
+//   },
+//   {
+//     id: 'PAT005',
+//     name: 'Michael Davis',
+//     dateOfBirth: '1980-09-25',
+//     gender: 'Male',
+//     contactPhone: '555-3344',
+//     contactEmail: 'michael.d@example.com',
+//     address: '202 Birch Rd, Anytown, USA',
+//     lastVisit: new Date(new Date().setDate(new Date().getDate() - 5)).toISOString(), // 5 days ago
+//   },
+// ];
 
 export const dummyPatients: Patient[] = [
   {
-    id: 'PAT001',
-    name: 'John Doe',
-    dateOfBirth: '1985-07-20',
-    gender: 'Male',
-    contactPhone: '555-1234',
-    contactEmail: 'john.doe@example.com',
-    address: '123 Main St, Anytown, USA',
-    lastVisit: '2023-10-15',
-    medicalHistory: {
-      allergies: ['Penicillin', 'Peanuts'],
-      conditions: ['Hypertension'],
-      medications: ['Lisinopril 10mg'],
+    id: "P001",
+    name: "أحمد حسن",
+    dateOfBirth: "1985-06-12",
+    gender: "Male",
+    contactPhone: "+20 100 123 4567",
+    contactEmail: "ahmed.hassan@example.com",
+    address: "القاهرة، مصر",
+    avatar: "/avatars/ahmed.jpg",
+
+    personalInfo: {
+      chronicConditions: ["السكري النوع الثاني", "ارتفاع ضغط الدم"],
+      allergies: ["البنسلين", "الغبار"],
+      familyHistory: ["أمراض القلب", "السكري"],
+      lifestyle: {
+        smoking: false,
+        exercise: "مشي 3 مرات أسبوعياً",
+        diet: "قليل السكر والملح"
+      }
     },
-    visitNotes: [
-      { id: 'VN001', date: '2023-10-15', doctorName: 'Dr. Smith', notes: 'Routine check-up. Blood pressure slightly elevated.' },
-      { id: 'VN002', date: '2023-05-01', doctorName: 'Dr. Smith', notes: 'Flu symptoms. Prescribed Tamiflu.' },
+
+    generalMedicine: {
+      diagnoses: [
+        { code: "E11", description: "السكري النوع الثاني" },
+        { code: "I10", description: "ارتفاع ضغط الدم الأساسي" }
+      ],
+      symptoms: ["العطش المستمر", "كثرة التبول", "التعب العام"],
+      vitalSigns: {
+        bloodPressure: "140/90",
+        glucose: "180 mg/dL",
+        temperature: "36.8°C",
+        heartRate: "85 bpm"
+      },
+      medications: ["ميتفورمين 500 مجم", "انتابريد 5 مجم", "اسبرين 75 مجم"],
+      followUpNotes: ["مراقبة السكر يومياً", "قياس الضغط أسبوعياً", "زيارة بعد شهر"]
+    },
+
+    cardiology: {
+      ecgResults: "انتظام sinus مع عدم استقرار ST",
+      echocardiography: "وظيفة البطين الأيسر طبيعية",
+      bloodPressure: "140/90",
+      cardiacMeds: ["انتابريد 5 مجم", "اسبرين 75 مجم"]
+    },
+
+    labTests: [
+      {
+        testName: "HbA1c",
+        code: "4548-4",
+        result: "8.2",
+        unit: "%",
+        range: "4.0-6.0",
+        reportFile: "/reports/P001/hba1c.pdf"
+      },
+      {
+        testName: "Glucose Fasting",
+        result: "180",
+        unit: "mg/dL",
+        range: "70-110",
+        reportFile: "/reports/P001/glucose.pdf"
+      },
+      {
+        testName: "Cholesterol Total",
+        result: "220",
+        unit: "mg/dL",
+        range: "<200",
+        reportFile: "/reports/P001/cholesterol.pdf"
+      }
     ],
-  },
-  {
-    id: 'PAT002',
-    name: 'Jane Smith',
-    dateOfBirth: '1992-02-10',
-    gender: 'Female',
-    contactPhone: '555-5678',
-    contactEmail: 'jane.smith@example.com',
-    address: '456 Oak Ave, Anytown, USA',
-    lastVisit: '2023-11-01',
-    medicalHistory: {
-      conditions: ['Asthma'],
-      medications: ['Albuterol Inhaler'],
-    },
-  },
-  {
-    id: 'PAT003',
-    name: 'Alice Johnson',
-    dateOfBirth: '1978-12-01',
-    gender: 'Female',
-    contactPhone: '555-8765',
-    contactEmail: 'alice.j@example.com',
-    address: '789 Pine Ln, Anytown, USA',
-    lastVisit: '2023-09-20',
-  },
-  {
-    id: 'PAT004',
-    name: 'Robert Brown',
-    dateOfBirth: '1995-03-15',
-    gender: 'Male',
-    contactPhone: '555-1122',
-    contactEmail: 'robert.b@example.com',
-    address: '101 Maple Dr, Anytown, USA',
-    lastVisit: new Date().toISOString(), // For testing, last visit today
-  },
-  {
-    id: 'PAT005',
-    name: 'Michael Davis',
-    dateOfBirth: '1980-09-25',
-    gender: 'Male',
-    contactPhone: '555-3344',
-    contactEmail: 'michael.d@example.com',
-    address: '202 Birch Rd, Anytown, USA',
-    lastVisit: new Date(new Date().setDate(new Date().getDate() - 5)).toISOString(), // 5 days ago
-  },
+
+    visitNotes: [
+      {
+        id: "VN001",
+        date: "2024-02-01",
+        doctorName: "د. علي محمد",
+        notes: "تم بدء علاج الانسولين، وتحسين النظام الغذائي"
+      },
+      {
+        id: "VN002",
+        date: "2024-01-15",
+        doctorName: "د. علي محمد",
+        notes: "شكوى من زيادة العطش والتبول، تم طلب فحوصات السكر"
+      }
+    ],
+    lastVisit: "2024-02-01"
+  }
 ];
+
 
 const today = new Date();
 const tomorrow = new Date(today);
