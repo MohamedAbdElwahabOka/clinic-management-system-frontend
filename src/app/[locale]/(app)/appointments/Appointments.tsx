@@ -106,7 +106,7 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
       return diff > 0 && diff <= 60;
     });
     if (soonAppt) {
-      setAlertMsg(`يوجد موعد قريب للمريض ${soonAppt.patientName} في الساعة ${soonAppt.time}`);
+ setAlertMsg(t("upcomingAlert", { patient: soonAppt.patientName, time: soonAppt.time }));
     } else {
       setAlertMsg(null);
     }
@@ -123,7 +123,7 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
     setAppointments((prev) =>
       prev.map((a) => (a.id === id ? { ...a, status: "Canceled" } : a))
     );
-    alert(`تم إلغاء الموعد رقم ${id}`);
+ alert(t("canceledAlert", { id }));
   }
 
   function handleConfirm(id: number) {
@@ -134,13 +134,13 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
           : a
       )
     );
-    alert(`تم تأكيد الموعد رقم ${id}`);
+ alert(t("confirmedAlert", { id }));
   }
 
   // تحديث الموعد من المودال
   function saveModalChanges(updated: Appointment) {
     setAppointments((prev) =>
-      prev.map((a) => (a.id === updated.id ? updated : a))
+      prev.map((a) => (a.id === updated.id ? { ...updated, status: updated.status } : a))
     );
     setModalAppt(null);
   }
@@ -148,6 +148,7 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
   // أزرار تصدير (مجرد توضيح - بدون تنفيذ حقيقي)
   function exportData(type: "pdf" | "excel") {
     alert(`تم تصدير البيانات كـ ${type.toUpperCase()} (هذا تنبيه توضيحي فقط)`);
+    alert(type === "pdf" ? t("exportPdfAlert") : t("exportExcelAlert"));
   }
 
   // --- عرض المواعيد في الجدول ---
@@ -162,7 +163,7 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
       );
     }
     return filteredAppointments.map((appt) => (
-      <tr dir={locale === "ar" ? "rtl" : "ltr"} key={appt.id} className="hover:bg-gray-50">
+ <tr dir={locale === "ar" ? "rtl" : "ltr"} key={appt.id} className={`hover:bg-gray-50 ${appt.status === 'Canceled' ? 'bg-red-100' : appt.status === 'Confirmed' ? 'bg-green-100' : ''}`}>
         <td className="p-2">{appt.patientName}</td>
         <td className="p-2">{formatDateToDay(appt.date)}</td>
         <td className="p-2 flex items-center gap-1"><Clock className="w-4 h-4" />{appt.time}</td>
