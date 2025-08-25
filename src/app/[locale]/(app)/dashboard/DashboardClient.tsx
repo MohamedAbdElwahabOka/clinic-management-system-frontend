@@ -394,7 +394,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                 <p className="text-muted-foreground">{translate("medicalRecordLabel", "Medical record")}</p>
                 <Button variant="link" className="p-0 h-auto text-primary">{translate("viewButton", "View")}</Button>
               </div>
-              <div className="flex gap-2 pt-2">
+              <div className="grid grid-cols-2 gap-2 pt-2">
                 <Button variant="outline" className="w-full">
                   <BriefcaseMedical className="mr-2 h-4 w-4" />{translate("requestNurseButton", "Request Nurse")}
                 </Button>
