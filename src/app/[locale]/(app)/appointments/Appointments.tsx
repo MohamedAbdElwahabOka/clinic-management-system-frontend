@@ -19,7 +19,7 @@ import {
   Bell
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { Locale } from "@/types";
+// import type { Locale } from "@/types";
 
 interface Appointment {
   id: number;
@@ -46,24 +46,25 @@ const appointmentsData: Appointment[] = [
 
 type ViewMode = "day" | "week" | "month" | "list";
 type TimeOfDayFilter = "all" | "morning" | "afternoon";
-
-export default function AppointmentsPage({ locale }: { locale: Locale }) {
+export default function AppointmentsPage() {
+// export default function AppointmentsPage({ locale }: { locale: Locale }) {
   const t = useTranslations("Appointments");
-  const translate = React.useCallback(
-    (key: string, defaultValue?: string) => {
-      const translation = t(key);
-      return translation === key && defaultValue ? defaultValue : translation;
-    },
-    [t]
-  );
-  
+  // const translate = React.useCallback(
+  //   (key: string, defaultValue?: string) => {
+  //     const translation = t(key);
+  //     return translation === key && defaultValue ? defaultValue : translation;
+  //   },
+  //   [t]
+  // );
+
+
   const [appointments, setAppointments] = useState(appointmentsData);
   const [viewMode, setViewMode] = useState<ViewMode>("day");
   const [searchText, setSearchText] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string[]>([]);
+  const [filterStatus] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(new Date().toISOString().split('T')[0]);
-  const [timeOfDayFilter, setTimeOfDayFilter] = useState<TimeOfDayFilter>("all");
-  const [modalAppt, setModalAppt] = useState<Appointment | null>(null);
+  const [timeOfDayFilter] = useState<TimeOfDayFilter>("all");
+  // const [modalAppt, setModalAppt] = useState<Appointment | null>(null);
   const [alertMsg, setAlertMsg] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -314,17 +315,17 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
   }
 
   // تحديث الموعد من المودال
-  function saveModalChanges(updated: Appointment) {
-    setAppointments((prev) =>
-      prev.map((a) => (a.id === updated.id ? { ...updated, status: updated.status } : a))
-    );
-    setModalAppt(null);
-  }
+  // function saveModalChanges(updated: Appointment) {
+  //   setAppointments((prev) =>
+  //     prev.map((a) => (a.id === updated.id ? { ...updated, status: updated.status } : a))
+  //   );
+  //   setModalAppt(null);
+  // }
 
   // أزرار تصدير
-  function exportData(type: "pdf" | "excel") {
-    alert(`تم تصدير البيانات كـ ${type.toUpperCase()} (هذا تنبيه توضيحي فقط)`);
-  }
+  // function exportData(type: "pdf" | "excel") {
+  //   alert(`تم تصدير البيانات كـ ${type.toUpperCase()} (هذا تنبيه توضيحي فقط)`);
+  // }
 
   // التبديل بين الأشهر في التقويم
   const changeMonth = (direction: "prev" | "next") => {
@@ -352,10 +353,10 @@ export default function AppointmentsPage({ locale }: { locale: Locale }) {
   }
 
   // تنسيق الوقت للعرض
-  function formatTime(timeStr: string) {
-    const [hours, minutes] = timeStr.split(':');
-    return `${hours}:${minutes}`;
-  }
+  // function formatTime(timeStr: string) {
+  //   const [hours, minutes] = timeStr.split(':');
+  //   return `${hours}:${minutes}`;
+  // }
 
   // عرض المواعيد حسب طريقة العرض المختارة
   const renderAppointments = () => {
