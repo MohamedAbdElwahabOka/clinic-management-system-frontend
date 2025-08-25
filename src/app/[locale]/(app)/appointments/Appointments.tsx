@@ -585,7 +585,7 @@ export default function AppointmentsPage() {
                     </div>
                   </td>
                   <td className="p-3">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
+                    <span className={`px-2 py-1 rounded text-xs ${
                       appt.type === "consultation" ? "bg-blue-100 text-blue-800" :
                       appt.type === "follow-up" ? "bg-green-100 text-green-800" :
                       "bg-red-100 text-red-800"
@@ -595,7 +595,7 @@ export default function AppointmentsPage() {
                     </span>
                   </td>
                   <td className="p-3">
-                    <span className={`px-2 py-1 rounded-full text-white text-xs ${
+                    <span className={`px-2 py-1 rounded text-white text-xs ${
                       appt.status === "Booked" ? "bg-amber-500" :
                       appt.status === "Canceled" ? "bg-red-500" :
                       appt.status === "Confirmed" ? "bg-blue-500" :
