@@ -1,4 +1,4 @@
-تقرير عدد الأسطر - تم إنشاؤه بتاريخ: 8/26/2025, 2:52:13 AM
+تقرير عدد الأسطر - تم إنشاؤه بتاريخ: 8/26/2025, 8:01:58 PM
 
 عدد الأسطر لكل ملف (مرتبة من الأكبر للأصغر):
 src/app/[locale]/(app)/appointments/app.tsx: 2712 سطر
@@ -9,6 +9,7 @@ src/components/ui/sidebar.tsx: 765 سطر
 src/app/[locale]/(publicAuthRoutes)/signup/page.tsx: 526 سطر
 src/app/[locale]/(publicAuthRoutes)/signup/SignupClient.tsx: 512 سطر
 src/app/[locale]/(app)/dashboard/page.tsx: 449 سطر
+analyze-tech.js: 413 سطر
 src/app/[locale]/(app)/dashboard/DashboardClient.tsx: 411 سطر
 src/components/ui/chart.tsx: 366 سطر
 src/app/[locale]/(publicAuthRoutes)/add-clinic/page.tsx: 329 سطر
@@ -75,7 +76,7 @@ src/components/ui/card.tsx: 77 سطر
 src/components/landing/hero-section.tsx: 75 سطر
 src/app/[locale]/(app)/patients/page.tsx: 70 سطر
 src/components/local-switcher.tsx: 66 سطر
-countLinesToFileWithDate.js: 65 سطر
+countLinesToFileWithDate.js: 64 سطر
 tailwind.config.ts: 63 سطر
 src/components/ui/alert.tsx: 62 سطر
 src/components/landing/cta-section.tsx: 59 سطر
@@ -272,8 +273,8 @@ src/i18n/navigation.ts: 5 سطر
 .next/static/Sjd2d3coVzzBfoY_9dlPI/_ssgManifest.js: 1 سطر
 
 عدد الأسطر لكل نوع ملف:
-.js: 288 سطر
+.js: 700 سطر
 .ts: 2826 سطر
 .tsx: 16596 سطر
 
-الإجمالي: 19710 سطر
+الإجمالي: 20122 سطر
