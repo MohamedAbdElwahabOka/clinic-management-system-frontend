@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
-
+import RotatingText from '@/components/Ogl/RotatingText'
 interface HeroSectionProps {
   titleKey: string;
   defaultTitle: string;
@@ -54,6 +54,21 @@ export function HeroSection({
               {translate(cta1Key, defaultCta1)}
             </Link>
           </Button>
+          {/* <div className="flex items-center">
+             <RotatingText
+  texts={['React', 'Bits', 'محمد ', 'Cool!']}
+  mainClassName="px-2 sm:px-2 md:px-3 bg-cyan-300 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+  staggerFrom={"last"}
+  initial={{ y: "100%" }}
+  animate={{ y: 0 }}
+  exit={{ y: "-120%" }}
+  staggerDuration={0.025}
+  splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+  transition={{ type: "spring", damping: 30, stiffness: 400 }}
+  rotationInterval={2000}
+/>
+          </div> */}
+          
           <Button size="lg" variant="outline" asChild>
             <Link href="#management-features">{translate(cta2Key, defaultCta2)}</Link>
           </Button>
