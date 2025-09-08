@@ -24,7 +24,8 @@
     "Settings": "الإعدادات",
     "Support": "الدعم",
     "Welcome-back": "مرحبا بعودتك",
-    "Upgrade": "احصل علي النسخة الأحدث"
+    "Upgrade": "احصل علي النسخة الأحدث",
+    "Clinics": "العيادات"
   },
   "Dashboard": {
     "Welcome": "مرحبا بعودتك",
@@ -526,6 +527,11 @@
     "filter": "تصفية",
     "filterByType": "تصفية حسب النوع"
   },
+
+  "Clinics": {
+    "title": "العيادات",
+    "description": "إدارة العيادات والمرافق الصحية."
+  },
   "Appointments": {
     "appointmentsTitle": "إدارة المواعيد",
     "patientName": "اسم المريض:",
@@ -560,4 +566,5 @@
     "cards": "بطاقات",
     "timeline": "مخطط زمني"
     }
+
 }

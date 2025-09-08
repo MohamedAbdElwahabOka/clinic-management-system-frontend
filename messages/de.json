@@ -24,7 +24,8 @@
     "Settings": "Einstellungen",
     "Support": "Support",
     "Welcome-back": "Willkommen zurück",
-    "Upgrade": "Kostenlos upgraden"
+    "Upgrade": "Kostenlos upgraden",
+    "Clinics": "Kliniken"
   },
   "Dashboard": {
     "Welcome": "Willkommen zurück",
@@ -525,5 +526,9 @@
     "edit": "Bearbeiten",
     "filter": "Filtern",
     "filterByType": "Nach Typ filtern"
+  },
+  "Clinics": {
+    "title": "Kliniken",
+    "description": "Verwalten Sie Kliniken und Gesundheitseinrichtungen."
   }
 }
