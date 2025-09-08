@@ -18,6 +18,7 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { useLocale } from "next-intl";
 
 
 
@@ -27,6 +28,7 @@ import {
 
 export default function MedicalRecordModalExample() {
   const patients = dummyPatients;
+  const locale = useLocale()
   const [searchTerm, setSearchTerm] = useState("");
   // const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState('الملف الطبي العام');
@@ -259,12 +261,12 @@ const isTestResultNormal = (test: { result: string; range?: string }): boolean =
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-right">رقم المريض</TableHead>
-              <TableHead className="text-right">الاسم</TableHead>
-              <TableHead className="text-right">العمر</TableHead>
-              <TableHead className="text-right">الجنس</TableHead>
-              <TableHead className="text-right">الهاتف</TableHead>
-              <TableHead className="text-right">إجراء</TableHead>
+              <TableHead className={locale === "ar"?`text-right`:`text-left`}>رقم المريض</TableHead>
+              <TableHead className={locale === "ar"?`text-right`:`text-left`}>الاسم</TableHead>
+              <TableHead className={locale === "ar"?`text-right`:`text-left`}>العمر</TableHead>
+              <TableHead className={locale === "ar"?`text-right`:`text-left`}>الجنس</TableHead>
+              <TableHead className={locale === "ar"?`text-right`:`text-left`}>الهاتف</TableHead>
+              <TableHead className={locale === "ar"?`text-right`:`text-left`}>إجراء</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
