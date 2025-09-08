@@ -527,8 +527,44 @@
     "filter": "تصفية",
     "filterByType": "تصفية حسب النوع"
   },
+
   "Clinics": {
     "title": "العيادات",
     "description": "إدارة العيادات والمرافق الصحية."
-  }
+  },
+  "Appointments": {
+    "appointmentsTitle": "إدارة المواعيد",
+    "patientName": "اسم المريض:",
+    "searchPlaceholder": "ابحث بالاسم...",
+    "status": "الحالة",
+    "clearAll": "مسح الكل",
+    "stats": "إحصائيات",
+    "total": "إجمالي المواعيد",
+    "booked": "محجوزة",
+    "canceled": "ملغاة",
+    "confirmed": "مؤكدة",
+    "patient": "المريض",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "doctor": "الطبيب",
+    "actions": "إجراءات",
+    "noAppointments": "لا توجد مواعيد",
+    "reschedule": "إعادة جدولة",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "upcomingAlert": "يوجد موعد قريب للمريض {patient} في الساعة {time}",
+    "canceledAlert": "تم إلغاء الموعد رقم {id}",
+    "confirmedAlert": "تم تأكيد الموعد رقم {id}",
+    "editAppointment": "تعديل موعد",
+    "doctorReadOnly": "لا يمكن تغيير الطبيب",
+    "allDates": "كل التواريخ",
+    "statistics": "إحصائيات",
+    "totalAppointments": "إجمالي المواعيد",
+    "exportPdf": "تصدير PDF",
+    "exportExcel": "تصدير Excel",
+    "table": "جدول",
+    "cards": "بطاقات",
+    "timeline": "مخطط زمني"
+    }
+
 }

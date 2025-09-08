@@ -10,26 +10,196 @@ export interface User { // Added for conceptual clarity, not deeply integrated y
   specialty?: string; // Doctor-specific
   bio?: string;
 }
-
+export interface LabTest {
+  testName: string;
+  code?: string;
+  result: string;
+  unit?: string;
+  range?: string;
+  reportFile?: string;
+}
 export interface Patient {
   id: string;
   name: string;
-  dateOfBirth: string;
+  dateOfBirth: string; // ISO date
   gender: 'Male' | 'Female';
   contactPhone: string;
   contactEmail: string;
   address: string;
-  medicalHistory?: {
+  avatar?: string; 
+
+  // ===================== 1. Patient Info =====================
+  personalInfo?: {
+    chronicConditions?: string[];
     allergies?: string[];
-    conditions?: string[];
-    medications?: string[];
+    familyHistory?: string[];
+    lifestyle?: {
+      smoking?: boolean;
+      exercise?: string;
+      diet?: string;
+    };
   };
+
+  // ===================== 2. General / Internal Medicine =====================
+  generalMedicine?: {
+    diagnoses?: { code: string; description: string }[]; // ICD-10
+    symptoms?: string[];
+    vitalSigns?: {
+      bloodPressure?: string;
+      glucose?: string;
+      temperature?: string;
+      heartRate?: string;
+    };
+    medications?: string[];
+    followUpNotes?: string[];
+  };
+
+  // ===================== 3. Pediatrics =====================
+  pediatrics?: {
+    growthChart?: { height: string; weight: string; headCircumference: string }[];
+    vaccinationSchedule?: { vaccine: string; date: string; status: 'Done' | 'Pending' }[];
+    developmentalMilestones?: { age: string; milestone: string; status: string }[];
+  };
+
+  // ===================== 4. Obstetrics & Gynecology =====================
+  obstetricsGynecology?: {
+    pregnancy?: { weeks: number; ultrasoundFindings?: string };
+    delivery?: { type: string; date: string };
+    menstrualHistory?: { cycleLength?: string; lastPeriod?: string };
+    gynecologicalConditions?: string[];
+  };
+
+  // ===================== 5. Cardiology =====================
+  cardiology?: {
+    ecgResults?: string;
+    echocardiography?: string;
+    bloodPressure?: string;
+    cardiacMeds?: string[];
+  };
+
+  // ===================== 6. Pulmonology =====================
+  pulmonology?: {
+    pulmonaryFunctionTest?: string;
+    imagingReports?: { type: 'X-ray' | 'CT'; result: string }[];
+    chronicDiseases?: string[]; // Asthma, COPD
+  };
+
+  // ===================== 7. Neurology =====================
+  neurology?: {
+    eegResults?: string;
+    mriReports?: string;
+    neuroExamination?: string;
+  };
+
+  // ===================== 8. Orthopedics =====================
+  orthopedics?: {
+    imaging?: { type: 'X-ray' | 'MRI'; report: string }[];
+    fractures?: string[];
+    surgeries?: string[];
+  };
+
+  // ===================== 9. Dentistry =====================
+  dentistry?: {
+    dentalChart?: string;
+    treatmentPlans?: string[];
+    xrayImages?: string[];
+  };
+
+  // ===================== 10. Ophthalmology =====================
+  ophthalmology?: {
+    visualAcuity?: string;
+    iop?: string; // Intraocular Pressure
+    fundusExam?: string;
+    octImages?: string[];
+  };
+
+  // ===================== 11. ENT =====================
+  ent?: {
+    audiogram?: string;
+    endoscopyReports?: string[];
+    surgeries?: string[];
+  };
+
+  // ===================== 12. Dermatology =====================
+  dermatology?: {
+    skinImages?: string[];
+    diagnoses?: string[];
+    treatmentPlans?: string[];
+  };
+
+  // ===================== 13. Psychiatry / Psychology =====================
+  psychiatry?: {
+    diagnoses?: { code: string; description: string }[];
+    clinicalNotes?: string[];
+    assessments?: { phq9?: number; gad7?: number };
+    treatmentPlan?: string[];
+  };
+
+  // ===================== 14. Oncology =====================
+  oncology?: {
+    tumorType?: string; // ICD-O Code
+    staging?: string;
+    grading?: string;
+    treatmentPlan?: string[];
+    pathologyReports?: string[];
+  };
+
+  // ===================== 15. Lab Tests =====================
+
+  labTests?: LabTest[];
+  // labTests?: {
+  //   testName: string;
+  //   code?: string; // LOINC
+  //   result: string;
+  //   unit?: string;
+  //   range?: string;
+  //   reportFile?: string; // PDF
+  // }[];
+
+  // ===================== 16. Radiology =====================
+  radiology?: {
+     type: 'X-ray' | 'CT' | 'MRI' | 'Ultrasound';
+  report: string;
+  reportDate?: string; // ISO date
+  dicomFiles?: string[];
+  }[];
+
+  // ===================== 17. Surgery =====================
+  surgery?: {
+    type: string;
+    description?: string;
+    complications?: string[];
+    postOpReport?: string;
+  }[];
+
+  // ===================== 18. Nutrition & Dietetics =====================
+  nutrition?: {
+    dietPlan?: string;
+    weightEvaluation?: string;
+    followUp?: string[];
+  };
+
+  // ===================== 19. Physiotherapy & Rehabilitation =====================
+  physiotherapy?: {
+    exerciseProgram?: string[];
+    progressNotes?: string[];
+    assistiveDevices?: string[];
+  };
+
+  // ===================== 20. Emergency =====================
+  emergency?: {
+    reason?: string;
+    urgentProcedures?: string[];
+    emergencyMeds?: string[];
+  };
+
+  // ===================== Visits & Notes =====================
   visitNotes?: VisitNote[];
-  lastVisit?: string; // ISO date string
+  lastVisit?: string; // ISO date
 }
 
 export interface VisitNote {
-  id:string;
+  id: string;
   date: string; // ISO date string
   doctorName: string;
   notes: string;

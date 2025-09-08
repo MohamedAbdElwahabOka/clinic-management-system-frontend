@@ -42,7 +42,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useTranslations } from 'next-intl';
-import type { Appointment} from "@/types";
+import type { Appointment } from "@/types";
 import { Locale } from "@/types";
 import { dummyAppointments } from "@/lib/dummy-data"; // Assuming this provides appointments
 import { format, parseISO } from "date-fns";
@@ -69,7 +69,7 @@ const revenueChartData = [
   { name: "Jun", revenue: 600 },
 ];
 
-const labTestsData = [ 
+const labTestsData = [
   { name: "Complete Blood Count", progress: 70 },
   { name: "Lipid Panel", progress: 50 },
   { name: "Basic Metabolic Panel", progress: 85 },
@@ -166,11 +166,11 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
         return "outline";
     }
   };
-  
+
   // Filter appointments for today or upcoming
   const upcomingAppointmentsToday = dummyAppointments
-    .filter(app => new Date(app.dateTime) >= new Date(new Date().setHours(0,0,0,0)))
-    .sort((a,b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
+    .filter(app => new Date(app.dateTime) >= new Date(new Date().setHours(0, 0, 0, 0)))
+    .sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
     .slice(0, 5);
 
 
@@ -188,6 +188,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
           <Button>
             <Download className="mr-2 h-4 w-4" />
             {translate("export", "Export")}
+
           </Button>
         </div>
       </PageHeader>
@@ -211,7 +212,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={overallPatientsChartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
                     <Bar dataKey="patients" fill="hsl(var(--primary-foreground))" radius={[4, 4, 0, 0]} barSize={10} />
-                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fillOpacity: 0.7}} dy={5}/>
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fillOpacity: 0.7 }} dy={5} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -226,10 +227,10 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
               icon={FlaskConical}
             >
               <div className="space-y-2 mt-2 flex-grow">
-                {labTestsData.slice(0,3).map(test => (
+                {labTestsData.slice(0, 3).map(test => (
                   <div key={test.name}>
                     <div className="h-2 w-full bg-muted rounded-full">
-                       <div className="h-2 bg-blue-500 rounded-full" style={{ width: `${test.progress}%`}}></div>
+                      <div className="h-2 bg-blue-500 rounded-full" style={{ width: `${test.progress}%` }}></div>
                     </div>
                   </div>
                 ))}
@@ -247,11 +248,11 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
               <div className="h-24 mt-2">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={revenueChartData} margin={{ top: 5, right: 5, left: -30, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.3}/>
-                    <XAxis dataKey="name" tick={{fontSize: 10}} axisLine={false} tickLine={false} dy={5}/>
-                    <YAxis tick={{fontSize: 10}} axisLine={false} tickLine={false} dx={-5}/>
-                    <RechartsTooltip contentStyle={{fontSize: '12px', padding: '4px 8px', borderRadius: 'var(--radius)'}} />
-                    <Line type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3, fill: "hsl(var(--primary))" }} activeDot={{r:5}}/>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.3} />
+                    <XAxis dataKey="name" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} dy={5} />
+                    <YAxis tick={{ fontSize: 10 }} axisLine={false} tickLine={false} dx={-5} />
+                    <RechartsTooltip contentStyle={{ fontSize: '12px', padding: '4px 8px', borderRadius: 'var(--radius)' }} />
+                    <Line type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2} dot={{ r: 3, fill: "hsl(var(--primary))" }} activeDot={{ r: 5 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -263,18 +264,18 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
             <CardHeader>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
-                    <CardTitle>{translate("upcomingAppointmentsTitle", "Upcoming Appointments")}</CardTitle>
-                    <CardDescription>{translate("upcomingAppointmentsSubtitle", "Appointments booked for the upcoming week")}</CardDescription>
+                  <CardTitle>{translate("upcomingAppointmentsTitle", "Upcoming Appointments")}</CardTitle>
+                  <CardDescription>{translate("upcomingAppointmentsSubtitle", "Appointments booked for the upcoming week")}</CardDescription>
                 </div>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <div className="relative flex-grow sm:flex-grow-0">
-                        <Search className="absolute left-2.5 rtl:right-2.5 rtl:left-auto top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder={translate("searchPatientPlaceholder", "Search Patient")} className="pl-8 rtl:pr-8 w-full" />
-                    </div>
-                    <Button variant="outline">
-                        <ListFilter className="mr-2 h-4 w-4" />
-                        {translate("filterButton", "Filter")}
-                    </Button>
+                  <div className="relative flex-grow sm:flex-grow-0">
+                    <Search className="absolute left-2.5 rtl:right-2.5 rtl:left-auto top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input placeholder={translate("searchPatientPlaceholder", "Search Patient")} className="pl-8 rtl:pr-8 w-full" />
+                  </div>
+                  <Button variant="outline">
+                    <ListFilter className="mr-2 h-4 w-4" />
+                    {translate("filterButton", "Filter")}
+                  </Button>
                 </div>
               </div>
             </CardHeader>
@@ -300,13 +301,13 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                         <TableCell>{formatTime(app.dateTime)}</TableCell>
                         <TableCell className="flex items-center justify-center">
                           <Badge variant={getStatusBadgeVariant(app.status)} className={cn(
-                             app.status === "Completed"
-                               ? 'bg-green-500 hover:bg-green-600 text-white'
-                               : getStatusBadgeVariant(app.status) === 'default' && 'bg-blue-500 hover:bg-blue-600 text-white'
+                            app.status === "Completed"
+                              ? 'bg-green-500 hover:bg-green-600 text-white'
+                              : getStatusBadgeVariant(app.status) === 'default' && 'bg-blue-500 hover:bg-blue-600 text-white'
                           )}>
-                            {app.status === "Completed" ? translate("statusDone", "Done") : 
-                             (app.status === "Scheduled" || app.status === "Confirmed" || app.status === "Arrived" ? translate("statusBooked", "Booked") : 
-                             translate(`status${app.status.replace(/\s+/g, "")}`, app.status))
+                            {app.status === "Completed" ? translate("statusDone", "Done") :
+                              (app.status === "Scheduled" || app.status === "Confirmed" || app.status === "Arrived" ? translate("statusBooked", "Booked") :
+                                translate(`status${app.status.replace(/\s+/g, "")}`, app.status))
                             }
                           </Badge>
                         </TableCell>
@@ -347,7 +348,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                 className="rounded-md border items-center justify-center w-full"
                 dir={locale === 'ar' ? 'rtl' : 'ltr'}
                 locale={locale === 'ar' ? arSA : undefined}
-                
+
               />
             </CardContent>
           </Card>
@@ -367,7 +368,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
             <CardContent className="space-y-3 text-sm">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src="https://placehold.co/100x100.png?text=KO" alt="Khaled Omar" data-ai-hint="person avatar"/>
+                  <AvatarImage src="https://placehold.co/100x100.png?text=KO" alt="Khaled Omar" data-ai-hint="person avatar" />
                   <AvatarFallback>KO</AvatarFallback>
                 </Avatar>
                 <div>
@@ -393,7 +394,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                 <p className="text-muted-foreground">{translate("medicalRecordLabel", "Medical record")}</p>
                 <Button variant="link" className="p-0 h-auto text-primary">{translate("viewButton", "View")}</Button>
               </div>
-              <div className="flex gap-2 pt-2">
+              <div className="grid grid-cols-2 gap-2 pt-2">
                 <Button variant="outline" className="w-full">
                   <BriefcaseMedical className="mr-2 h-4 w-4" />{translate("requestNurseButton", "Request Nurse")}
                 </Button>

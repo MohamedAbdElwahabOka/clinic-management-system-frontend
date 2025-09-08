@@ -9,6 +9,9 @@ import { LandingFooter } from '@/components/landing/landing-footer';
 // import { useLanguage } from '@/context/language-context';
 import { DollarSign, BarChart, ShieldCheck, Users, FileText as FileTextIcon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import CircularGallery from '@/components/Ogl/CircularGallery'
+// import CurvedLoop from '@/components/Ogl/CurvedLoop';
+
 
 export default function LandingPage() {
   const t = useTranslations("Landing");
@@ -117,7 +120,28 @@ export default function LandingPage() {
           defaultImageAlt="Clinic management software interface"
           imageHint="software interface"
         />
+       
 
+      
+{/* <CurvedLoop marqueeText="222 " /> */}
+
+{/* 
+<CurvedLoop 
+  marqueeText="fgfhfgh"
+  speed={3}
+  curveAmount={500}
+  direction="right"
+  interactive={true}
+  className="custom-text-style"
+/> */}
+
+{/* 
+<CurvedLoop 
+  marqueeText="Smooth Curved Animation"
+  speed={1}
+  curveAmount={300}
+  interactive={false}
+/> */}
         <FeatureSection
           titleKey="landingFeatureFinancialTitle"
           defaultTitle="Streamline Your Clinic's Financial Management with Our Expense Tracking Feature"
@@ -181,6 +205,9 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+            <div style={{ height: '600px', position: 'relative' }}>
+            <CircularGallery bend={3} textColor="#000" borderRadius={0.05} scrollEase={0.02}/>
+            </div>  
 
         <CtaSection
           titleKey="landingCtaBottomTitle"

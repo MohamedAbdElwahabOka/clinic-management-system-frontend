@@ -527,8 +527,46 @@
     "filter": "Filter",
     "filterByType": "Filter by type"
   },
+
   "Clinics": {
     "title": "Clinics",
     "description": "Manage clinics and healthcare facilities."
-  }
+  },
+
+   "Appointments": {
+    "appointmentsTitle": "Appointments Management",
+    "save":"Save",
+    "patientName": "Patient Name",
+    "searchPlaceholder": "Search by name...",
+    "status": "Status",
+    "clearAll": "Clear all",
+    "stats": "Statistics",
+    "total": "Total appointments",
+    "booked": "Booked",
+    "canceled": "Canceled",
+    "confirmed": "Confirmed",
+    "patient": "Patient",
+    "date": "Date",
+    "time": "Time",
+    "doctor": "Doctor",
+    "actions": "Actions",
+    "noAppointments": "No appointments",
+    "reschedule": "Reschedule",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "upcomingAlert": "Upcoming appointment with {patient} at {time}",
+    "canceledAlert": "Appointment #{id} has been canceled",
+    "confirmedAlert": "Appointment #{id} has been confirmed",
+    "editAppointment": "Edit Appointment",
+    "doctorReadOnly": "Doctor cannot be changed",
+    "allDates": "All Dates",
+    "statistics": "Statistics",
+    "totalAppointments": "Total Appointments",
+    "exportPdf": "Export PDF",
+    "exportExcel": "Export Excel",
+    "table": "Table",
+    "cards": "Cards",
+    "timeline": "Timeline"
+}
+
 }
