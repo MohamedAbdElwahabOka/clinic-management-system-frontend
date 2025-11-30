@@ -37,7 +37,7 @@ export default function Sidebar() {
   // #A3A7AC
 
   return (
-    <div className="flex h-screen">
+    <div className="h-full flex flex-col">
       {/* Sidebar */}
       <div className={`bg-gray-900 text-white p-3 flex flex-col justify-between transition-all duration-300 ${collapsed ? 'w-12' : 'w-52'}`}>
         {/* Logo */}
