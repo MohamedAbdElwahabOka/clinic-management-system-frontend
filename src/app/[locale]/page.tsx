@@ -115,7 +115,7 @@ export default function LandingPage() {
           defaultCta1="Get Started"
           cta2Key="landingHeroCtaLearnMore"
           defaultCta2="Learn More"
-          imageUrl="https://placehold.co/1200x600.png"
+          imageUrl="/hero/Clinic Management1200-600.png"
           imageAltKey="landingHeroImageAlt"
           defaultImageAlt="Clinic management software interface"
           imageHint="software interface"
@@ -157,7 +157,7 @@ export default function LandingPage() {
           defaultTitle="Effortless Management of Appointment Payments"
           descriptionKey="landingFeaturePaymentsDesc"
           defaultDescription="Our secure payment processing system simplifies billing, reduces administrative work, and ensures you get paid on time. Integrated with appointment scheduling for a seamless experience."
-          imageUrl="https://placehold.co/600x400.png" 
+          imageUrl="/hero/Clinic Management600-400.png"
           imageAltKey="landingFeaturePaymentsImageAlt"
           defaultImageAlt="Secure payment processing interface"
           imageHint="payment interface"
@@ -186,6 +186,7 @@ export default function LandingPage() {
           cta2Href={`/${locale}/signup`}
           sectionId="management-features"
         />
+        
 
         <section id="testimonials" className="py-16 lg:py-24 bg-secondary dark:bg-secondary/10 text-secondary-foreground">
           <div className="container mx-auto px-4">
@@ -205,9 +206,9 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-            <div style={{ height: '600px', position: 'relative' }}>
+            {/* <div style={{ height: '600px', position: 'relative' }}>
             <CircularGallery bend={3} textColor="#000" borderRadius={0.05} scrollEase={0.02}/>
-            </div>  
+            </div>   */}
 
         <CtaSection
           titleKey="landingCtaBottomTitle"
