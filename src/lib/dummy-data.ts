@@ -277,3 +277,339 @@ export const dummyLedgerEntries: LedgerEntry[] = [
   { id: 'LDE007', date: getDaysAgo(0), description: 'Stationery Purchase', categoryId: 'CAT_EXP_005', categoryName: 'Office Supplies', amount: 45, type: 'expense', notes: 'Pens, paper, notebooks' },
   { id: 'LDE008', date: getDaysAgo(10), description: 'Assistant Salary - M. Davis', categoryId: 'CAT_EXP_004', categoryName: 'Salaries (Staff)', amount: 1500, type: 'expense' },
 ];
+
+
+//pricing-db.ts
+
+// 1. محاكاة نوع بيانات JSONB في الـ SQL
+type JsonB = {
+  [key: string]: string; // ar, en, de, etc.
+};
+
+export interface PricingFeature {
+  key: string;
+  text: JsonB; // النص نفسه (مثلا "عدد المستخدمين")
+  value?: JsonB; // قيمة مخصصة لو موجودة (مثلا "5 مستخدمين")
+  included: boolean; // هل الميزة دي متاحة في الباقة دي؟
+}
+
+export interface PricingPlan {
+  id: string;
+  name: JsonB;
+  description: JsonB;
+  monthlyPrice: number;
+  yearlyPrice: number;
+  discountPercent: number; // خصم خاص بالباقة دي
+  isPopular: boolean;
+  ctaText: JsonB;
+  features: PricingFeature[];
+}
+
+// 2. الداتا نفسها (Dummy Data acting as DB)
+export const PRICING_PLANS: PricingPlan[] = [
+  {
+    id: "free",
+    name: { ar: "مجانية", en: "Free", de: "Kostenlos" },
+    description: { 
+      ar: "للتجربة والعيادات الناشئة.", 
+      en: "Perfect for trial and startups.", 
+      de: "Perfekt zum Testen und für Startups." 
+    },
+    monthlyPrice: 0,
+    yearlyPrice: 0,
+    discountPercent: 0,
+    isPopular: false,
+    ctaText: { ar: "جرب مجاناً", en: "Try for Free", de: "Kostenlos testen" },
+    features: [
+      { key: "users", text: { ar: "عدد المستخدمين", en: "Users", de: "Benutzer" }, value: { ar: "مستخدم واحد", en: "1 User", de: "1 Benutzer" }, included: true },
+      { key: "patients", text: { ar: "عدد المرضى", en: "Patients", de: "Patienten" }, value: { ar: "100 مريض", en: "100 Patients", de: "100 Patienten" }, included: true },
+      { key: "appt", text: { ar: "إدارة المواعيد", en: "Appointment Mgmt", de: "Terminverwaltung" }, included: true },
+      { key: "insurance", text: { ar: "نظام التأمين", en: "Insurance System", de: "Versicherungssystem" }, included: false },
+      { key: "sms", text: { ar: "رسائل SMS", en: "SMS Messages", de: "SMS-Nachrichten" }, included: false },
+    ]
+  },
+  {
+    id: "starter",
+    name: { ar: "الأساسية", en: "Starter", de: "Starter" },
+    description: { 
+      ar: "للعيادات الصغيرة والدكاترة الجدد.", 
+      en: "For small clinics and new doctors.", 
+      de: "Für kleine Praxen und neue Ärzte." 
+    },
+    monthlyPrice: 499,
+    yearlyPrice: 4990,
+    discountPercent: 0,
+    isPopular: false,
+    ctaText: { ar: "ابدأ الآن", en: "Get Started", de: "Jetzt loslegen" },
+    features: [
+      { key: "users", text: { ar: "عدد المستخدمين", en: "Users", de: "Benutzer" }, value: { ar: "2 (دكتور + مساعد)", en: "2 Users", de: "2 Benutzer" }, included: true },
+      { key: "patients", text: { ar: "عدد المرضى", en: "Patients", de: "Patienten" }, value: { ar: "2000 مريض", en: "2000 Patients", de: "2000 Patienten" }, included: true },
+      { key: "appt", text: { ar: "إدارة المواعيد", en: "Appointment Mgmt", de: "Terminverwaltung" }, included: true },
+      { key: "insurance", text: { ar: "نظام التأمين", en: "Insurance System", de: "Versicherungssystem" }, included: false },
+      { key: "sms", text: { ar: "رسائل SMS", en: "SMS Messages", de: "SMS-Nachrichten" }, included: false },
+    ]
+  },
+  {
+    id: "pro",
+    name: { ar: "الاحترافية", en: "Professional", de: "Professional" },
+    description: { 
+      ar: "للعيادات النشطة التي تبحث عن النمو.", 
+      en: "For active clinics seeking growth.", 
+      de: "Für aktive Praxen." 
+    },
+    monthlyPrice: 1299,
+    yearlyPrice: 12990,
+    discountPercent: 10, // خصم خاص 10% على الباقة دي بس
+    isPopular: true,
+    ctaText: { ar: "اشترك الآن", en: "Subscribe Now", de: "Jetzt abonnieren" },
+    features: [
+      { key: "users", text: { ar: "عدد المستخدمين", en: "Users", de: "Benutzer" }, value: { ar: "5 مستخدمين", en: "5 Users", de: "5 Benutzer" }, included: true },
+      { key: "patients", text: { ar: "عدد المرضى", en: "Patients", de: "Patienten" }, value: { ar: "غير محدود", en: "Unlimited", de: "Unbegrenzt" }, included: true },
+      { key: "appt", text: { ar: "إدارة المواعيد", en: "Appointment Mgmt", de: "Terminverwaltung" }, included: true },
+      { key: "insurance", text: { ar: "نظام التأمين", en: "Insurance System", de: "Versicherungssystem" }, included: true },
+      { key: "sms", text: { ar: "رسائل SMS", en: "SMS Messages", de: "SMS-Nachrichten" }, value: { ar: "100 رسالة/شهر", en: "100 SMS/mo", de: "100 SMS/Monat" }, included: true },
+    ]
+  },
+  {
+    id: "enterprise",
+    name: { ar: "المؤسسية", en: "Enterprise", de: "Enterprise" },
+    description: { 
+      ar: "للمراكز الطبية الكبيرة.", 
+      en: "For large medical centers.", 
+      de: "Für große medizinische Zentren." 
+    },
+    monthlyPrice: 3000, // Starting price
+    yearlyPrice: 30000,
+    discountPercent: 0,
+    isPopular: false,
+    ctaText: { ar: "تواصل معنا", en: "Contact Us", de: "Kontaktieren" },
+    features: [
+      { key: "users", text: { ar: "عدد المستخدمين", en: "Users", de: "Benutzer" }, value: { ar: "غير محدود", en: "Unlimited", de: "Unbegrenzt" }, included: true },
+      { key: "patients", text: { ar: "عدد المرضى", en: "Patients", de: "Patienten" }, value: { ar: "غير محدود", en: "Unlimited", de: "Unbegrenzt" }, included: true },
+      { key: "appt", text: { ar: "إدارة المواعيد", en: "Appointment Mgmt", de: "Terminverwaltung" }, included: true },
+      { key: "insurance", text: { ar: "نظام التأمين", en: "Insurance System", de: "Versicherungssystem" }, included: true },
+      { key: "sms", text: { ar: "رسائل SMS", en: "SMS Messages", de: "SMS-Nachrichten" }, value: { ar: "باقات مخصصة", en: "Custom bundle", de: "Benutzerdefiniert" }, included: true },
+    ]
+  }
+];
+
+import { Notification } from "@/types/index";
+
+export const dummyNotifications: Notification[] = [
+  { 
+    id: 1, 
+    message: {
+      ar: "موعدك مع د. أحمد غدًا الساعة 10:00 صباحًا",
+      en: "Your appointment with Dr. Ahmed is tomorrow at 10:00 AM",
+      de: "Ihr Termin bei Dr. Ahmed ist morgen um 10:00 Uhr"
+    },
+    date: "2025-08-11", 
+    time: "09:30",
+    read: false, 
+    type: "appointment"
+  },
+  { 
+    id: 2, 
+    message: {
+      ar: "تم تأكيد الحجز الخاص بك",
+      en: "Your booking has been confirmed",
+      de: "Ihre Buchung wurde bestätigt"
+    },
+    date: "2025-08-10", 
+    time: "14:15",
+    read: true, 
+    type: "confirmation"
+  },
+  { 
+    id: 3, 
+    message: {
+      ar: "تم إلغاء الموعد بناءً على طلبك",
+      en: "Appointment cancelled as per your request",
+      de: "Termin auf Ihren Wunsch storniert"
+    },
+    date: "2025-08-09", 
+    time: "16:45",
+    read: false, 
+    type: "cancellation"
+  },
+  { 
+    id: 4, 
+    message: {
+      ar: "تذكير: موعدك بعد ساعتين مع د. محمد",
+      en: "Reminder: Your appointment with Dr. Mohamed is in 2 hours",
+      de: "Erinnerung: Ihr Termin bei Dr. Mohamed ist in 2 Stunden"
+    },
+    date: "2025-08-12", 
+    time: "08:00",
+    read: false, 
+    type: "reminder"
+  },
+  { 
+    id: 5, 
+    message: {
+      ar: "تم تحويل موعدك مع د. سارة إلى يوم الخميس",
+      en: "Your appointment with Dr. Sarah was moved to Thursday",
+      de: "Ihr Termin bei Dr. Sarah wurde auf Donnerstag verschoben"
+    },
+    date: "2025-08-08", 
+    time: "11:20",
+    read: true, 
+    type: "appointment"
+  },
+];
+// data.ts (Update)
+import { Clinic, InventoryItem } from "@/types/index";
+
+
+// ============================================
+// 1. القاموس الذكي للأصناف (Smart Presets)
+// ============================================
+export const SPECIALTY_PRESETS = {
+  dental: [
+    { ar: "بنج (ليدوكائين)", en: "Lidocaine", de: "Lidocain" },
+    { ar: "حشوات كومبوزيت", en: "Composite Filling", de: "Kompositfüllung" },
+    { ar: "إبر عصب (Files)", en: "Root Canal Files", de: "Wurzelkanalfeilen" },
+    { ar: "قطن طبي", en: "Cotton Rolls", de: "Watterollen" }
+  ],
+  cardio: [
+    { ar: "قسطرة تشخيصية 5F", en: "Diagnostic Catheter 5F", de: "Diagnosekatheter" },
+    { ar: "بالون توسيع", en: "Angioplasty Balloon", de: "Angioplastie-Ballon" },
+    { ar: "هيبارين", en: "Heparin", de: "Heparin" },
+    { ar: "سلك توجيه (Guidewire)", en: "Guidewire", de: "Führungsdraht" }
+  ],
+  eye: [
+    { ar: "قطرة توسيع", en: "Mydriatic Drops", de: "Mydriatische Tropfen" },
+    { ar: "عدسة IOL", en: "IOL Lens", de: "IOL-Linse" }
+  ],
+  general: [
+    { ar: "شاش معقم", en: "Sterile Gauze", de: "Sterile Gaze" },
+    { ar: "سرنجات 5مل", en: "Syringes 5ml", de: "Spritzen 5ml" },
+    { ar: "قفازات لاتكس", en: "Latex Gloves", de: "Latexhandschuhe" }
+  ]
+};
+
+// ============================================
+// 2. بيانات العيادات (Updated Dummy Data)
+// ============================================
+export const dummyClinics: Clinic[] = [
+  {
+    id: "CL-101",
+    name: { ar: "مركز النخبة للقلب", en: "Elite Heart Center", de: "Elite-Herzzentrum" },
+    type: { ar: "قلب وأوعية دموية", en: "Cardiology", de: "Kardiologie" },
+    specialtyKey: "cardio", // هذا المفتاح يحدد الأصناف المقترحة
+    description: { ar: "مركز متخصص...", en: "Specialized center...", de: "Spezialisiertes..." },
+    address: { ar: "القاهرة الجديدة", en: "New Cairo", de: "Neu-Kairo" },
+    phone: "+20 2 2555 1234",
+    email: "heart@telecare.com",
+    image: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600",
+    status: "active",
+    rating: 4.9,
+    openHours: "24/7",
+    stats: { doctors: 15, nurses: 40, dailyCapacity: 120, currentOccupancy: 85, monthlyVisits: 3200 },
+    amenities: [],
+    // الموظفين والرواتب
+    staff: [
+      {
+        id: "ST-001",
+        name: { ar: "د. أحمد سعيد", en: "Dr. Ahmed Saeed", de: "Dr. Ahmed Saeed" },
+        role: { ar: "استشاري قلب", en: "Cardiology Consultant", de: "Kardiologie-Berater" },
+        roleType: "doctor",
+        status: "on-duty",
+        avatar: "https://i.pravatar.cc/150?u=ST-001",
+        payroll: {
+          salary: 35000,
+          currency: "EGP",
+          frequency: "monthly",
+          nextPaymentDate: "2025-12-01",
+          status: "pending"
+        }
+      },
+      {
+        id: "ST-002",
+        name: { ar: "سارة محمد", en: "Sarah Mohamed", de: "Sarah Mohamed" },
+        role: { ar: "رئيسة التمريض", en: "Head Nurse", de: "Oberschwester" },
+        roleType: "nurse",
+        status: "on-duty",
+        avatar: "https://i.pravatar.cc/150?u=ST-002",
+        payroll: {
+          salary: 8000,
+          currency: "EGP",
+          frequency: "monthly",
+          nextPaymentDate: "2025-12-01",
+          status: "paid"
+        }
+      }
+    ],
+    // المخزون
+    inventory: [
+      {
+        id: "INV-001",
+        itemName: { ar: "قسطرة قلبية 5F", en: "Cardiac Catheter 5F", de: "Herzkatheter 5F" },
+        category: { ar: "مستهلكات جراحية", en: "Surgical", de: "Chirurgisch" },
+        quantity: 12,
+        threshold: 20,
+        unit: { ar: "وحدة", en: "Units", de: "Einheiten" },
+        status: "critical",
+        wastedCount: 2,
+        consumedCount: 45
+      },
+      {
+        id: "INV-002",
+        itemName: { ar: "أدرينالين أمبول", en: "Adrenaline Ampoules", de: "Adrenalin-Ampullen" },
+        category: { ar: "أدوية طوارئ", en: "Emergency Meds", de: "Notfallmedikamente" },
+        quantity: 150,
+        threshold: 50,
+        unit: { ar: "علبة", en: "Boxes", de: "Boxen" },
+        status: "good",
+        wastedCount: 0,
+        consumedCount: 10
+      }
+    ]
+  },
+  {
+    id: "CL-102",
+    name: { ar: "عيادات الابتسامة للأسنان", en: "Smile Dental Clinics", de: "Smile Zahnkliniken" },
+    type: { ar: "طب الأسنان", en: "Dentistry", de: "Zahnmedizin" },
+    specialtyKey: "dental", // سيقترح بنج وحشوات
+    description: { ar: "تجميل وزراعة...", en: "Cosmetic...", de: "Kosmetische..." },
+    address: { ar: "المهندسين", en: "Mohandessin", de: "Mohandessin" },
+    phone: "+20 2 3333 5678",
+    email: "dental@telecare.com",
+    image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=600",
+    status: "busy",
+    rating: 4.7,
+    openHours: "09:00 - 22:00",
+    stats: { doctors: 8, nurses: 12, dailyCapacity: 60, currentOccupancy: 95, monthlyVisits: 1500 },
+    amenities: [],
+    staff: [
+      {
+        id: "ST-003",
+        name: { ar: "د. هشام طلعت", en: "Dr. Hesham Talaat", de: "Dr. Hesham Talaat" },
+        role: { ar: "طبيب أسنان", en: "Dentist", de: "Zahnarzt" },
+        roleType: "doctor",
+        status: "on-duty",
+        avatar: "https://i.pravatar.cc/150?u=ST-003",
+        payroll: {
+          salary: 15000,
+          currency: "EGP",
+          frequency: "monthly",
+          nextPaymentDate: "2025-12-05",
+          status: "overdue"
+        }
+      }
+    ],
+    inventory: [
+      {
+        id: "INV-003",
+        itemName: { ar: "بنج (ليدوكائين)", en: "Lidocaine", de: "Lidocain" },
+        category: { ar: "أدوية", en: "Meds", de: "Medikamente" },
+        quantity: 200,
+        threshold: 50,
+        unit: { ar: "أمبول", en: "Ampoules", de: "Ampullen" },
+        status: "good",
+        wastedCount: 5,
+        consumedCount: 120
+      }
+    ]
+  }
+];
