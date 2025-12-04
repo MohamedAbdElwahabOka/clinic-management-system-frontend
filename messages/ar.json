@@ -27,6 +27,55 @@
     "Upgrade": "احصل علي النسخة الأحدث",
     "Clinics": "العيادات"
   },
+  "Pricing": {
+    "title": "اختر الخطة المناسبة لنمو عيادتك",
+    "subtitle": "ابدأ مجاناً، ورقي باقتك مع زيادة مرضاك. أسعار شفافة بدون مصاريف خفية.",
+    "monthly": "شهري",
+    "yearly": "سنوي",
+    "save2months": "وفر شهرين",
+    "mostPopular": "الأكثر طلباً",
+    "contactUs": "تواصل معنا",
+    "currency": "ج.م",
+    "billedYearly": "تدفع سنوياً",
+    "billedMonthly": "تدفع شهرياً",
+    
+    "tierFreeName": "مجانية",
+    "tierFreeDesc": "للتجربة والعيادات الناشئة.",
+    "ctaFree": "جرب مجاناً",
+    
+    "tierStarterName": "الأساسية",
+    "tierStarterDesc": "للعيادات الصغيرة والدكاترة الجدد.",
+    "ctaStarter": "ابدأ الآن",
+    
+    "tierProName": "الاحترافية",
+    "tierProDesc": "للعيادات النشطة التي تبحث عن النمو.",
+    "ctaPro": "اشترك الآن",
+    
+    "tierEnterpriseName": "المؤسسية",
+    "tierEnterpriseDesc": "للمراكز الطبية الكبيرة وسلاسل العيادات.",
+    "ctaEnterprise": "تواصل للمبيعات",
+    
+    "featUsers1": "مستخدم واحد",
+    "featUsers2": "مستخدمين (دكتور + مساعد)",
+    "featUsers5": "5 مستخدمين",
+    "featUsersUnl": "عدد مستخدمين غير محدود",
+    
+    "featPatients100": "حتى 100 مريض",
+    "featPatients2k": "حتى 2000 مريض",
+    "featPatientsUnl": "عدد مرضى غير محدود",
+    
+    "featAppt": "إدارة المواعيد",
+    "featRecords": "سجلات مرضية إلكترونية",
+    "featBasicReports": "تقارير مالية أساسية",
+    "featInsurance": "نظام التأمين الصحي",
+    "featInventory": "إدارة المخزون",
+    "featFeedback": "نظام تقييم المرضى",
+    "featSms": "100 رسالة SMS مجانية",
+    "featMultiBranch": "إدارة فروع متعددة",
+    "featApi": "ربط API خاص",
+    "featSupport": "دعم فني أولوي 24/7",
+    "featManager": "مدير حساب مخصص"
+  },
   "Dashboard": {
     "Welcome": "مرحبا بعودتك",
     "dis": "دعنا نستعرض بياناتك للفترة الماضية",

@@ -278,3 +278,107 @@ export type Translations = {
 export type LanguageDictionary = {
   [locale in Locale]: Translations;
 };
+
+
+
+
+
+
+// أضف هذا للكود الموجود في ملف types.ts أو أنشئ ملف جديد
+
+export type LocalizedText = {
+  ar: string;
+  en: string;
+  de: string;
+};
+
+export type NotificationType = "appointment" | "confirmation" | "cancellation" | "reminder";
+
+export interface Notification {
+  id: number;
+  message: LocalizedText; // هذا هو الحقل الـ JSONB
+  date: string;
+  time: string;
+  read: boolean;
+  type: NotificationType;
+}
+
+
+// types.ts
+
+
+// types.ts
+export type ClinicStatus = "active" | "maintenance" | "closed" | "busy";
+export type StaffRoleType = "doctor" | "nurse" | "admin" | "technician";
+export type StaffStatus = "on-duty" | "off" | "leave";
+export type PaymentStatus = "paid" | "pending" | "overdue";
+export type InventoryStatus = "good" | "low" | "critical";
+export type ClinicSpecialty = "dental" | "cardio" | "general" | "eye"; // مفتاح التخصص للاقتراحات الذكية
+
+// --- HR & Payroll ---
+export type PayrollInfo = {
+  salary: number;
+  currency: string;
+  frequency: "monthly" | "weekly";
+  nextPaymentDate: string;
+  status: PaymentStatus;
+};
+
+export type StaffMember = {
+  id: string;
+  name: LocalizedText;
+  role: LocalizedText;
+  roleType: StaffRoleType;
+  status: StaffStatus;
+  avatar: string;
+  specialty?: LocalizedText;
+  payroll: PayrollInfo; // بيانات الراتب
+};
+
+// --- Inventory ---
+export type InventoryItem = {
+  id: string;
+  itemName: LocalizedText;
+  category: LocalizedText;
+  quantity: number;
+  threshold: number; // الحد الأدنى لإعادة الطلب
+  unit: LocalizedText;
+  status: InventoryStatus;
+  // عدادات الاستهلاك والهالك
+  wastedCount: number;
+  consumedCount: number;
+};
+
+export type Amenity = {
+  id: string;
+  name: LocalizedText;
+  icon: string;
+};
+
+export type ClinicStats = {
+  doctors: number;
+  nurses: number;
+  dailyCapacity: number;
+  currentOccupancy: number;
+  monthlyVisits: number;
+};
+
+export type Clinic = {
+  id: string;
+  name: LocalizedText;
+  type: LocalizedText;
+  specialtyKey: ClinicSpecialty; // هام للاقتراحات الذكية
+  description: LocalizedText;
+  address: LocalizedText;
+  phone: string;
+  email: string;
+  image: string;
+  status: ClinicStatus;
+  rating: number;
+  openHours: string;
+  stats: ClinicStats;
+  amenities: Amenity[];
+  // القوائم الجديدة للإدارة
+  staff: StaffMember[];
+  inventory: InventoryItem[];
+};

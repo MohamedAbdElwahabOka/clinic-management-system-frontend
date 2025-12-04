@@ -10,6 +10,7 @@ import { LandingFooter } from '@/components/landing/landing-footer';
 import { DollarSign, BarChart, ShieldCheck, Users, FileText as FileTextIcon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import CircularGallery from '@/components/Ogl/CircularGallery'
+import { PricingSection } from '@/components/landing/pricing-section';
 // import CurvedLoop from '@/components/Ogl/CurvedLoop';
 
 
@@ -209,6 +210,7 @@ export default function LandingPage() {
             {/* <div style={{ height: '600px', position: 'relative' }}>
             <CircularGallery bend={3} textColor="#000" borderRadius={0.05} scrollEase={0.02}/>
             </div>   */}
+            <PricingSection globalDiscount={0} />
 
         <CtaSection
           titleKey="landingCtaBottomTitle"

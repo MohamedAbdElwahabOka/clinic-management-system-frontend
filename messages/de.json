@@ -14,6 +14,55 @@
     "settings": "Einstellungen",
     "logout": "Abmelden"
   },
+  "Pricing": {
+    "title": "Wählen Sie den Plan, der zu Ihrem Wachstum passt",
+    "subtitle": "Starten Sie kostenlos, erweitern Sie bei Bedarf. Transparente Preise ohne versteckte Gebühren.",
+    "monthly": "Monatlich",
+    "yearly": "Jährlich",
+    "save2months": "2 Monate sparen",
+    "mostPopular": "Am beliebtesten",
+    "contactUs": "Kontaktieren Sie uns",
+    "currency": "EGP",
+    "billedYearly": "Jährliche Abrechnung",
+    "billedMonthly": "Monatliche Abrechnung",
+    
+    "tierFreeName": "Kostenlos",
+    "tierFreeDesc": "Perfekt zum Testen und für Startups.",
+    "ctaFree": "Kostenlos testen",
+    
+    "tierStarterName": "Starter",
+    "tierStarterDesc": "Für kleine Praxen und neue Ärzte.",
+    "ctaStarter": "Jetzt loslegen",
+    
+    "tierProName": "Professional",
+    "tierProDesc": "Für aktive Praxen, die wachsen wollen.",
+    "ctaPro": "Jetzt abonnieren",
+    
+    "tierEnterpriseName": "Enterprise",
+    "tierEnterpriseDesc": "Für große medizinische Zentren und Ketten.",
+    "ctaEnterprise": "Vertrieb kontaktieren",
+    
+    "featUsers1": "1 Benutzer",
+    "featUsers2": "2 Benutzer (Arzt + Assistent)",
+    "featUsers5": "Bis zu 5 Benutzer",
+    "featUsersUnl": "Unbegrenzte Benutzer",
+    
+    "featPatients100": "Bis zu 100 Patienten",
+    "featPatients2k": "Bis zu 2.000 Patienten",
+    "featPatientsUnl": "Unbegrenzte Patienten",
+    
+    "featAppt": "Terminverwaltung",
+    "featRecords": "Elektronische Patientenakten",
+    "featBasicReports": "Grundlegende Finanzberichte",
+    "featInsurance": "Versicherungssystem",
+    "featInventory": "Lagerverwaltung",
+    "featFeedback": "Patienten-Feedback-System",
+    "featSms": "100 kostenlose SMS monatlich",
+    "featMultiBranch": "Verwaltung mehrerer Filialen",
+    "featApi": "Privater API-Zugang",
+    "featSupport": "24/7 Prioritäts-Support",
+    "featManager": "Persönlicher Account Manager"
+  },
   "Sidebar": {
     "Dashboard": "Dashboard",
     "patients": "Patienten",

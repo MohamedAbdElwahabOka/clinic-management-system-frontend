@@ -14,6 +14,55 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "Pricing": {
+    "title": "Choose the Plan That Fits Your Growth",
+    "subtitle": "Start for free, upgrade as you grow. Transparent pricing with no hidden fees.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save2months": "Save 2 months",
+    "mostPopular": "Most Popular",
+    "contactUs": "Contact Us",
+    "currency": "EGP",
+    "billedYearly": "Billed yearly",
+    "billedMonthly": "Billed monthly",
+    
+    "tierFreeName": "Free",
+    "tierFreeDesc": "Perfect for trial and startups.",
+    "ctaFree": "Try for Free",
+    
+    "tierStarterName": "Starter",
+    "tierStarterDesc": "For small clinics and new doctors.",
+    "ctaStarter": "Get Started",
+    
+    "tierProName": "Professional",
+    "tierProDesc": "For active clinics seeking growth.",
+    "ctaPro": "Subscribe Now",
+    
+    "tierEnterpriseName": "Enterprise",
+    "tierEnterpriseDesc": "For large medical centers and chains.",
+    "ctaEnterprise": "Contact Sales",
+    
+    "featUsers1": "1 User",
+    "featUsers2": "2 Users (Doctor + Assistant)",
+    "featUsers5": "Up to 5 Users",
+    "featUsersUnl": "Unlimited Users",
+    
+    "featPatients100": "Up to 100 Patients",
+    "featPatients2k": "Up to 2,000 Patients",
+    "featPatientsUnl": "Unlimited Patients",
+    
+    "featAppt": "Appointment Management",
+    "featRecords": "Electronic Medical Records",
+    "featBasicReports": "Basic Financial Reports",
+    "featInsurance": "Insurance System",
+    "featInventory": "Inventory Management",
+    "featFeedback": "Patient Feedback System",
+    "featSms": "100 Free SMS Monthly",
+    "featMultiBranch": "Multi-branch Management",
+    "featApi": "Private API Access",
+    "featSupport": "24/7 Priority Support",
+    "featManager": "Dedicated Account Manager"
+  },
   "Sidebar": {
     "Dashboard": "Dashboard",
     "patients": "Patients",
