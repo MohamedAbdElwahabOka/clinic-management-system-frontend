@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-// Button is not used directly here, PatientTableActions uses it
 import { PatientTableActions } from "./patient-table-actions";
 import type { Patient } from "@/types";
 import { format, parseISO } from 'date-fns';
@@ -44,9 +43,10 @@ export function PatientTable({ patients: initialPatients }: PatientTableProps) {
   }, [searchTerm, patients]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="relative w-full max-w-sm">
+    <div className="space-y-4 w-full px-2 sm:px-4 md:px-0">
+      {/* Search Bar */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="relative w-full md:max-w-sm">
           <Search className="absolute left-2.5 rtl:left-auto rtl:right-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
@@ -57,43 +57,51 @@ export function PatientTable({ patients: initialPatients }: PatientTableProps) {
           />
         </div>
       </div>
-      <div className="rounded-md border shadow-sm bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="text-right ltr:text-left">{t('patientID')}</TableHead>
-              <TableHead className="text-right ltr:text-left">{t('name')}</TableHead>
-              <TableHead className="text-right ltr:text-left">{t('dateOfBirth')}</TableHead>
-              <TableHead className="text-right ltr:text-left">{t('gender')}</TableHead>
-              <TableHead className="text-right ltr:text-left">{t('contactPhone')}</TableHead>
-              <TableHead className="text-right ltr:text-left">{t('lastVisit')}</TableHead>
-              <TableHead className="text-right rtl:text-left">{t('actions')}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredPatients.length > 0 ? (
-              filteredPatients.map((patient) => (
-                <TableRow key={patient.id}>
-                  <TableCell className="font-medium">{patient.id}</TableCell>
-                  <TableCell>{patient.name}</TableCell>
-                  <TableCell>{format(parseISO(patient.dateOfBirth), 'MM/dd/yyyy', { locale: locale === 'ar' ? arSA : undefined })}</TableCell>
-                  <TableCell>{t(patient.gender.toLowerCase())}</TableCell>
-                  <TableCell>{patient.contactPhone}</TableCell>
-                  <TableCell>{patient.lastVisit ? format(parseISO(patient.lastVisit), 'MM/dd/yyyy', { locale: locale === 'ar' ? arSA : undefined }) : t('no')}</TableCell>
-                  <TableCell className="text-right rtl:text-left">
-                    <PatientTableActions patient={patient} />
+
+      {/* Table Container with Responsive Overflow */}
+      <div className="rounded-md border shadow-sm bg-card overflow-hidden">
+        <div className="w-full overflow-x-auto [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 hover:[&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full">
+          {/* 
+            min-w-[1000px] on desktop, min-w-[800px] on mobile
+            This ensures the table maintains structure but scrolls horizontally on small screens
+          */}
+          <Table className="min-w-[800px] lg:min-w-[1000px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-right ltr:text-left whitespace-nowrap px-2 sm:px-4">{t('patientID')}</TableHead>
+                <TableHead className="text-right ltr:text-left whitespace-nowrap px-2 sm:px-4">{t('name')}</TableHead>
+                <TableHead className="text-right ltr:text-left whitespace-nowrap px-2 sm:px-4">{t('dateOfBirth')}</TableHead>
+                <TableHead className="text-right ltr:text-left whitespace-nowrap px-2 sm:px-4">{t('gender')}</TableHead>
+                <TableHead className="text-right ltr:text-left whitespace-nowrap px-2 sm:px-4">{t('contactPhone')}</TableHead>
+                <TableHead className="text-right ltr:text-left whitespace-nowrap px-2 sm:px-4">{t('lastVisit')}</TableHead>
+                <TableHead className="text-right rtl:text-left whitespace-nowrap px-2 sm:px-4">{t('actions')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredPatients.length > 0 ? (
+                filteredPatients.map((patient) => (
+                  <TableRow key={patient.id}>
+                    <TableCell className="font-medium whitespace-nowrap px-2 sm:px-4">{patient.id}</TableCell>
+                    <TableCell className="whitespace-nowrap px-2 sm:px-4">{patient.name}</TableCell>
+                    <TableCell className="whitespace-nowrap px-2 sm:px-4">{format(parseISO(patient.dateOfBirth), 'MM/dd/yyyy', { locale: locale === 'ar' ? arSA : undefined })}</TableCell>
+                    <TableCell className="whitespace-nowrap px-2 sm:px-4">{t(patient.gender.toLowerCase())}</TableCell>
+                    <TableCell className="whitespace-nowrap dir-ltr text-right rtl:text-left px-2 sm:px-4">{patient.contactPhone}</TableCell>
+                    <TableCell className="whitespace-nowrap px-2 sm:px-4">{patient.lastVisit ? format(parseISO(patient.lastVisit), 'MM/dd/yyyy', { locale: locale === 'ar' ? arSA : undefined }) : t('no')}</TableCell>
+                    <TableCell className="text-right rtl:text-left whitespace-nowrap px-2 sm:px-4">
+                      <PatientTableActions patient={patient} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="h-24 text-center">
+                    {t('noPatientsFound')}
                   </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={7} className="h-24 text-center">
-                  {t('noPatientsFound')}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );

@@ -13,6 +13,20 @@
   text-align: left;
 }
 
+/* في ملف globals.css */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #374151;
+  /* gray-700 */
+  border-radius: 20px;
+}
 
 
 @layer base {
