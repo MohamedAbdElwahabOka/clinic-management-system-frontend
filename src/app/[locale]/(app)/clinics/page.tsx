@@ -283,11 +283,12 @@ export default function ClinicOperationsPage({ params }: { params: { id: string 
                             <span className="text-red-500 flex items-center gap-1"><Trash2 size={12}/> {item.wastedCount} Waste</span>
                           </div>
                           {/* Progress bar showing stock relative to threshold * 3 (arbitrary max) */}
-                          <Progress 
-                            value={(item.quantity / (item.threshold * 3)) * 100} 
-                            className="h-2 bg-gray-100" 
-                            indicatorClassName={item.status === 'critical' ? 'bg-red-500' : item.status === 'low' ? 'bg-amber-500' : 'bg-emerald-500'} 
-                          />
+                          <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full transition-all ${item.status === 'critical' ? 'bg-red-500' : item.status === 'low' ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                              style={{ width: `${Math.min((item.quantity / (item.threshold * 3)) * 100, 100)}%` }}
+                            />
+                          </div>
                         </div>
                       </td>
                       <td className="p-4 text-center">
