@@ -38,8 +38,8 @@ export function LandingFooter() {
     }
     return translation;
   }, [t]);
-  const translateHeader = (key: string, fallback?: string) => tHeader(key, { default: fallback });
-  const translateGlobal = (key: string, fallback?: string) => tGlobal(key, { default: fallback });
+  const translateHeader = (key: string, fallback?: string) => tHeader(key, fallback ? { default: fallback } : undefined);
+  const translateGlobal = (key: string, fallback?: string) => tGlobal(key, fallback ? { default: fallback } : undefined);
   const [currentYear, setCurrentYear] = React.useState<number | null>(null);
 
   React.useEffect(() => {
@@ -141,10 +141,10 @@ export function LandingFooter() {
           </p>
           <div className="flex gap-4 mt-4 sm:mt-0">
             <Button variant="link" asChild className="p-0 h-auto text-muted-foreground hover:text-primary">
-              <Link href="#">{translate('landingFooterPrivacyPolicy', 'Privacy Policy')}</Link>
+              <Link href="/terms">{translate('landingFooterPrivacyPolicy', 'Privacy Policy')}</Link>
             </Button>
             <Button variant="link" asChild className="p-0 h-auto text-muted-foreground hover:text-primary">
-              <Link href="#">{translate('landingFooterTermsOfService', 'Terms of Service')}</Link>
+              <Link href="/terms">{translate('landingFooterTermsOfService', 'Terms of Service')}</Link>
             </Button>
           </div>
         </div>

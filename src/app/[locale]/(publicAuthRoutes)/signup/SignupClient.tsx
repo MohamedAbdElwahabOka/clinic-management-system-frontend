@@ -459,9 +459,9 @@ export default function SignupClient({ locale }: SignupClientProps) {
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel id="agree-terms-label" className="text-sm font-normal text-muted-foreground">
-                      <span>
+                      <Link href="/terms">
                         {translate('agreeToTerms', 'I agree to the Terms and Privacy Policy')}
-                      </span>
+                      </Link>
                     </FormLabel>
                     <FormMessage />
                   </div>
@@ -483,9 +483,11 @@ export default function SignupClient({ locale }: SignupClientProps) {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel id="subscribe-newsletter-label" className="text-sm font-normal text-muted-foreground">
-                      {translate('subscribeToNewsletter')}
+                  <FormLabel id="subscribe-newsletter-label" className="text-sm font-normal text-muted-foreground">
+                    <Link href="/terms">{translate('subscribeToNewsletter')}</Link>
+                      
                     </FormLabel>
+            
                   </div>
                 </FormItem>
               )}
