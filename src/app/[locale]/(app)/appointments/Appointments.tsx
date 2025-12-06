@@ -20,6 +20,15 @@ import {
   Bell
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 // import type { Locale } from "@/types";
 
 interface Appointment {
@@ -698,113 +707,228 @@ const ConfirmModal = () => {
   // عرض القائمة
   const renderListView = () => {
     return (
-      <div className="bg-gray-50 rounded-lg p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-bold">قائمة المواعيد</h3>
-          <button 
-            onClick={() => setQuickAdd(true)}
-            className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm"
-          >
-            <Plus className="w-4 h-4" />
-            إضافة موعد
-          </button>
-        </div>
+      // <div className="bg-gray-50 rounded-lg p-4">
+      //   <div className="flex justify-between items-center mb-4">
+      //     <h3 className="text-lg font-bold">قائمة المواعيد</h3>
+      //     <button 
+      //       onClick={() => setQuickAdd(true)}
+      //       className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm"
+      //     >
+      //       <Plus className="w-4 h-4" />
+      //       إضافة موعد
+      //     </button>
+      //   </div>
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-right" dir="rtl">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="p-3 text-sm font-medium text-gray-600">المريض</th>
-                <th className="p-3 text-sm font-medium text-gray-600">التاريخ</th>
-                <th className="p-3 text-sm font-medium text-gray-600">الوقت</th>
-                <th className="p-3 text-sm font-medium text-gray-600">النوع</th>
-                <th className="p-3 text-sm font-medium text-gray-600">الحالة</th>
-                <th className="p-3 text-sm font-medium text-gray-600">الإجراءات</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredAppointments.map((appt) => (
-                <tr key={appt.id} className="border-b border-gray-200 hover:bg-gray-100">
-                  <td className="p-3 font-medium">{appt.patientName}</td>
-                  <td className="p-3">{formatDateToDay(appt.date)}</td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {appt.time}
-                    </div>
-                  </td>
-                  <td className="p-3">
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      appt.type === "consultation" ? "bg-blue-100 text-blue-800" :
-                      appt.type === "follow-up" ? "bg-green-100 text-green-800" :
-                      "bg-red-100 text-red-800"
-                    }`}>
-                      {appt.type === "consultation" ? "استشارة" :
-                       appt.type === "follow-up" ? "متابعة" : "طوارئ"}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    <span className={`px-2 py-1 rounded text-white text-xs ${
-                      appt.status === "Booked" ? "bg-amber-500" :
-                      appt.status === "Canceled" ? "bg-red-500" :
-                      appt.status === "Confirmed" ? "bg-blue-500" :
-                      "bg-green-600"
-                    }`}>
-                      {appt.status === "Booked" ? "محجوز" :
-                       appt.status === "Canceled" ? "ملغي" :
-                       appt.status === "Confirmed" ? "مؤكد" : "مكتمل"}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    <div className="flex gap-2">
-                      {(appt.status === "Booked" || appt.status === "Confirmed") && (
-                        <>
-                          <button
-                            onClick={() => handleReschedule(appt.id)}
-                            className="flex items-center gap-1 bg-blue-100 text-blue-700 rounded px-2 py-1 text-sm hover:bg-blue-200 transition-colors"
-                            title="إعادة جدولة"
-                          >
-                            <RefreshCw className="w-4 h-4" />
-                          </button>
+      //   <div className="overflow-x-auto">
+      //     <table className="w-full text-right" dir="rtl">
+      //       <thead>
+      //         <tr className="border-b border-gray-200">
+      //           <th className="p-3 text-sm font-medium text-gray-600">المريض</th>
+      //           <th className="p-3 text-sm font-medium text-gray-600">التاريخ</th>
+      //           <th className="p-3 text-sm font-medium text-gray-600">الوقت</th>
+      //           <th className="p-3 text-sm font-medium text-gray-600">النوع</th>
+      //           <th className="p-3 text-sm font-medium text-gray-600">الحالة</th>
+      //           <th className="p-3 text-sm font-medium text-gray-600">الإجراءات</th>
+      //         </tr>
+      //       </thead>
+      //       <tbody>
+      //         {filteredAppointments.map((appt) => (
+      //           <tr key={appt.id} className="border-b border-gray-200 hover:bg-gray-100">
+      //             <td className="p-3 font-medium">{appt.patientName}</td>
+      //             <td className="p-3">{formatDateToDay(appt.date)}</td>
+      //             <td className="p-3">
+      //               <div className="flex items-center gap-1">
+      //                 <Clock className="w-4 h-4" />
+      //                 {appt.time}
+      //               </div>
+      //             </td>
+      //             <td className="p-3">
+      //               <span className={`px-2 py-1 rounded text-xs ${
+      //                 appt.type === "consultation" ? "bg-blue-100 text-blue-800" :
+      //                 appt.type === "follow-up" ? "bg-green-100 text-green-800" :
+      //                 "bg-red-100 text-red-800"
+      //               }`}>
+      //                 {appt.type === "consultation" ? "استشارة" :
+      //                  appt.type === "follow-up" ? "متابعة" : "طوارئ"}
+      //               </span>
+      //             </td>
+      //             <td className="p-3">
+      //               <span className={`px-2 py-1 rounded text-white text-xs ${
+      //                 appt.status === "Booked" ? "bg-amber-500" :
+      //                 appt.status === "Canceled" ? "bg-red-500" :
+      //                 appt.status === "Confirmed" ? "bg-blue-500" :
+      //                 "bg-green-600"
+      //               }`}>
+      //                 {appt.status === "Booked" ? "محجوز" :
+      //                  appt.status === "Canceled" ? "ملغي" :
+      //                  appt.status === "Confirmed" ? "مؤكد" : "مكتمل"}
+      //               </span>
+      //             </td>
+      //             <td className="p-3">
+      //               <div className="flex gap-2">
+      //                 {(appt.status === "Booked" || appt.status === "Confirmed") && (
+      //                   <>
+      //                     <button
+      //                       onClick={() => handleReschedule(appt.id)}
+      //                       className="flex items-center gap-1 bg-blue-100 text-blue-700 rounded px-2 py-1 text-sm hover:bg-blue-200 transition-colors"
+      //                       title="إعادة جدولة"
+      //                     >
+      //                       <RefreshCw className="w-4 h-4" />
+      //                     </button>
 
-                          {appt.status === "Booked" && (
-                            <button 
-                                onClick={() => setConfirmAppt(appt)}   // ✅ يفتح المودال بالموعد المحدد
-                                className="flex items-center gap-1 bg-green-100 text-green-700 rounded px-2 py-1 text-sm hover:bg-green-200 transition-colors" 
-                                title="تأكيد" 
-                              > 
-                              <CheckCircle className="w-4 h-4" /> 
-                            </button> 
-                          )}
+      //                     {appt.status === "Booked" && (
+      //                       <button 
+      //                           onClick={() => setConfirmAppt(appt)}   // ✅ يفتح المودال بالموعد المحدد
+      //                           className="flex items-center gap-1 bg-green-100 text-green-700 rounded px-2 py-1 text-sm hover:bg-green-200 transition-colors" 
+      //                           title="تأكيد" 
+      //                         > 
+      //                         <CheckCircle className="w-4 h-4" /> 
+      //                       </button> 
+      //                     )}
 
 
-                          <button
-                            onClick={() => handleCancel(appt.id)}
-                            className="flex items-center gap-1 bg-red-100 text-red-700 rounded px-2 py-1 text-sm hover:bg-red-200 transition-colors"
-                            title="إلغاء"
-                          >
-                            <XCircle className="w-4 h-4" />
-                          </button>
+      //                     <button
+      //                       onClick={() => handleCancel(appt.id)}
+      //                       className="flex items-center gap-1 bg-red-100 text-red-700 rounded px-2 py-1 text-sm hover:bg-red-200 transition-colors"
+      //                       title="إلغاء"
+      //                     >
+      //                       <XCircle className="w-4 h-4" />
+      //                     </button>
                           
-                          {appt.status === "Confirmed" && (
-                            <button
-                              onClick={() => handleComplete(appt.id)}
-                              className="flex items-center gap-1 bg-purple-100 text-purple-700 rounded px-2 py-1 text-sm hover:bg-purple-200 transition-colors"
-                              title="إكمال"
-                            >
-                              <CheckCircle className="w-4 h-4" />
-                            </button>
+      //                     {appt.status === "Confirmed" && (
+      //                       <button
+      //                         onClick={() => handleComplete(appt.id)}
+      //                         className="flex items-center gap-1 bg-purple-100 text-purple-700 rounded px-2 py-1 text-sm hover:bg-purple-200 transition-colors"
+      //                         title="إكمال"
+      //                       >
+      //                         <CheckCircle className="w-4 h-4" />
+      //                       </button>
+      //                     )}
+      //                   </>
+      //                 )}
+      //               </div>
+      //             </td>
+      //           </tr>
+      //         ))}
+      //       </tbody>
+      //     </table>
+      //   </div>
+      // </div>
+       <div className="grid grid-cols-1 gap-4 w-full px-2 sm:px-4 md:px-0">
+        <Card className="shadow-lg w-full overflow-hidden">
+          <CardHeader className="rounded-none">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <h3 className="text-lg font-bold">قائمة المواعيد</h3>
+              <button
+
+                onClick={() => setQuickAdd(true)}
+                className="flex items-center gap-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm"
+              >
+                <Plus className="w-4 h-4" />
+                إضافة موعد
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent>
+             <div className="overflow-x-auto w-full">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>المريض</TableHead>
+                    <TableHead>التاريخ</TableHead>
+                    <TableHead>الوقت</TableHead>
+                    <TableHead>النوع</TableHead>
+                    <TableHead>الحالة</TableHead>
+                    <TableHead>الإجراءات</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredAppointments.map((appt) => (
+                    <TableRow key={appt.id} className="hover:bg-gray-100">
+                      <TableCell className="font-medium">{appt.patientName}</TableCell>
+                      <TableCell>{formatDateToDay(appt.date)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          {appt.time}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          appt.type === "consultation" ? "bg-blue-100 text-blue-800" :
+                          appt.type === "follow-up" ? "bg-green-100 text-green-800" :
+                          "bg-red-100 text-red-800"
+                        }`}>
+                          {appt.type === "consultation" ? "استشارة" :
+                           appt.type === "follow-up" ? "متابعة" : "طوارئ"}
+                        </span>
+                            
+                      </TableCell>
+
+
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded text-white text-xs ${
+                          appt.status === "Booked" ? "bg-amber-500" :
+                          appt.status === "Canceled" ? "bg-red-500" :
+                          appt.status === "Confirmed" ? "bg-blue-500" :
+                          "bg-green-600"
+                        }`}>
+                          {appt.status === "Booked" ? "محجوز" :
+                           appt.status === "Canceled" ? "ملغي" :
+                            appt.status === "Confirmed" ? "مؤكد" : "مكتمل"}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          {(appt.status === "Booked" || appt.status === "Confirmed") && (
+                            <>
+                              <button 
+                                onClick={() => handleReschedule(appt.id)}
+                                className="flex items-center gap-1 bg-blue-100 text-blue-700 rounded px-2 py-1 text-sm hover:bg-blue-200 transition-colors" 
+                                title="إعادة جدولة"
+                              >
+                                <RefreshCw className="w-4 h-4" />
+                              </button>
+                              {appt.status === "Booked" && (
+                                <button
+                                  onClick={() => setConfirmAppt(appt)}   // ✅ يفتح المودال بالموعد المحدد
+                                  className="flex items-center gap-1 bg-green-100 text-green-700 rounded px-2 py-1 text-sm hover:bg-green-200 transition-colors" 
+                                  title="تأكيد"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleCancel(appt.id)}
+                                className="flex items-center gap-1 bg-red-100 text-red-700 rounded px-2 py-1 text-sm hover:bg-red-200 transition-colors"
+                                title="إلغاء"
+                              >
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                              {appt.status === "Confirmed" && (
+                                <button
+                                  onClick={() => handleComplete(appt.id)}
+                                  className="flex items-center gap-1 bg-purple-100 text-purple-700 rounded px-2 py-1 text-sm hover:bg-purple-200 transition-colors"
+                                  title="إكمال"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </button>
+                              )}
+                            </>
                           )}
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+
+              </Table>
+
+             </div>
+          </CardContent>
+          
+        </Card>
+       </div>
     );
   };
 

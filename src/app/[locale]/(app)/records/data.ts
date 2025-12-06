@@ -234,5 +234,337 @@ export const dummyPatients: Patient[] = [
     ],
     radiology: [],
     reminders: []
-  }
+  },
+  {
+    id: "PAT-2025-003",
+    name: "مصطفى محمود حسين",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=128&h=128&q=80",
+    dateOfBirth: "1960-08-20",
+    gender: "Male",
+    bloodType: "A+",
+    contactPhone: "01222222222",
+    contactEmail: "mustafa.m@example.com",
+    address: "المعادي، القاهرة",
+    maritalStatus: "متزوج",
+    occupation: "لواء متقاعد",
+    insurance: {
+      provider: "Misr Insurance",
+      policy: "EG-10293",
+      coverage: "Gold"
+    },
+    status: {
+      code: "Critical",
+      location: "العناية المتوسطة"
+    },
+    alerts: [
+      { type: "danger", msg: "حساسية شديدة للبنسلين" },
+      { type: "warning", msg: "خطر السقوط (Fall Risk)" }
+    ],
+    vitalSigns: {
+      heartRate: "85",
+      bloodPressure: "150/95",
+      temperature: "37.0",
+      glucose: "180",
+      spo2: "96",
+      weight: "92",
+      height: "178",
+      bmi: "29.0",
+      respiratoryRate: "18"
+    },
+    personalInfo: {
+      allergies: ["Penicillin", "Sulfonamides"],
+      chronicConditions: ["Type 2 Diabetes (السكري النوع الثاني)", "Hypertension (ارتفاع ضغط الدم)"],
+      familyHistory: [
+        "الأب: جلطة دماغية",
+        "الأخ: أمراض القلب"
+      ],
+    },
+    diagnoses: [
+      { description: "السكري غير المنضبط", code: "E11", source: createLocalSource("2024-10-10") },
+      { description: "ارتفاع ضغط الدم", code: "I10", source: createLocalSource("2024-10-10") },
+    ],
+    medications: [
+      { id: "MED-201", name: "Glucophage XR", dose: "1000mg", freq: "مرتين يومياً", indication: "السكري", startDate: "2015-01-01", source: createExternalSource("2020-01-01") },
+      { id: "MED-202", name: "Concor", dose: "5mg", freq: "صباحاً", indication: "الضغط", startDate: "2016-05-20", source: createLocalSource("2024-11-01") },
+    ],
+    labTests: [
+      { id: "LAB-201", testName: "HbA1c", result: "8.2", unit: "%", range: "4.0-5.6", date: "2024-11-20", category: "Chemistry", status: "high", department: "Endocrinology", source: createLocalSource("2024-11-20") },
+      { id: "LAB-202", testName: "Lipid Profile", result: "High LDL", unit: "", range: "", date: "2024-11-20", category: "Chemistry", status: "abnormal", department: "Cardiology", source: createLocalSource("2024-11-20") },
+    ],
+    visitNotes: [
+      { id: "VN-201", date: "2024-11-20", doctorName: "د. هاني", notes: "تعديل جرعة الأنسولين ضروري", department: "الباطنة", type: "متابعة", source: createLocalSource("2024-11-20") },
+    ],
+    radiology: [],
+    reminders: []
+  },
+
+  // المريض الثاني: طفل (حساسية صدرية)
+  {
+    id: "PAT-2025-004",
+    name: "يوسف كريم سالم",
+    avatar: "https://images.unsplash.com/photo-1596962853297-7e6e5a435167?auto=format&fit=crop&w=128&h=128&q=80",
+    dateOfBirth: "2016-03-12",
+    gender: "Male",
+    bloodType: "B-",
+    contactPhone: "01111111111", // رقم ولي الأمر
+    contactEmail: "karim.salem@parent.com",
+    address: "سموحة، الإسكندرية",
+    maritalStatus: "أعزب",
+    occupation: "طالب",
+    insurance: {
+      provider: "AXA",
+      policy: "EG-KD-442",
+      coverage: "Family Plus"
+    },
+    status: {
+      code: "Stable",
+      location: "المنزل"
+    },
+    alerts: [
+      { type: "info", msg: "التواصل مع الأم في حالات الطوارئ" }
+    ],
+    vitalSigns: {
+      heartRate: "90",
+      bloodPressure: "100/65",
+      temperature: "37.2",
+      glucose: "88",
+      spo2: "99",
+      weight: "32",
+      height: "135",
+      bmi: "17.5",
+      respiratoryRate: "22"
+    },
+    personalInfo: {
+      allergies: ["فراولة", "وبر الحيوانات"],
+      chronicConditions: ["Bronchial Asthma (حساسية صدرية)"],
+      familyHistory: [
+        "الأخ: أكزيما جلدية"
+      ],
+    },
+    diagnoses: [
+      { description: "نوبة ربو حادة", code: "J45", source: createLocalSource("2024-11-25") },
+    ],
+    medications: [
+      { id: "MED-301", name: "Ventolin Inhaler", dose: "100mcg", freq: "عند اللزوم", indication: "توسيع الشعب", startDate: "2022-02-15", source: createExternalSource("2022-02-15") },
+      { id: "MED-302", name: "Zyrtec", dose: "5ml", freq: "مساءً", indication: "الحساسية", startDate: "2024-11-25", source: createLocalSource("2024-11-25") },
+    ],
+    labTests: [
+      { id: "LAB-301", testName: "CBC", result: "Eosinophilia", unit: "", range: "", date: "2024-11-25", category: "Hematology", status: "abnormal", department: "Pediatrics", source: createLocalSource("2024-11-25") },
+    ],
+    visitNotes: [
+      { id: "VN-301", date: "2024-11-25", doctorName: "د. منى", notes: "تحسن ملحوظ في التنفس", department: "الأطفال", type: "كشف مستعجل", source: createLocalSource("2024-11-25") },
+    ],
+    radiology: [
+       { id: "RAD-301", type: "X-Ray", area: "Chest", report: "Hyperinflation", date: "2024-11-25", source: createLocalSource("2024-11-25") }
+    ],
+    reminders: []
+  },
+
+  // المريض الثالث: شابة (إصابة ملاعب / عظام)
+  {
+    id: "PAT-2025-005",
+    name: "رنا إبراهيم الشناوي",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=128&h=128&q=80",
+    dateOfBirth: "1998-11-05",
+    gender: "Female",
+    bloodType: "O-",
+    contactPhone: "01555555555",
+    contactEmail: "rana.des@example.com",
+    address: "التجمع الخامس، القاهرة",
+    maritalStatus: "آنسة",
+    occupation: "مصممة جرافيك",
+    insurance: {
+      provider: "MetLife",
+      policy: "EG-88712",
+      coverage: "Standard"
+    },
+    status: {
+      code: "Stable",
+      location: "العلاج الطبيعي"
+    },
+    alerts: [],
+    vitalSigns: {
+      heartRate: "78",
+      bloodPressure: "110/70",
+      temperature: "36.6",
+      glucose: "90",
+      spo2: "99",
+      weight: "60",
+      height: "162",
+      bmi: "22.8",
+      respiratoryRate: "14"
+    },
+    personalInfo: {
+      allergies: [],
+      chronicConditions: [],
+      familyHistory: [],
+    },
+    diagnoses: [
+      { description: "تمزق الرباط الصليبي الأمامي", code: "S83", source: createExternalSource("2024-10-01") },
+    ],
+    medications: [
+      { id: "MED-401", name: "Cataflam", dose: "50mg", freq: "عند الألم", indication: "مسكن", startDate: "2024-10-01", source: createExternalSource("2024-10-01") },
+      { id: "MED-402", name: "Osteocare", dose: "1 tab", freq: "يومياً", indication: "مكمل غذائي", startDate: "2024-10-05", source: createLocalSource("2024-10-05") },
+    ],
+    labTests: [],
+    visitNotes: [
+      { id: "VN-401", date: "2024-12-01", doctorName: "د. ياسر", notes: "بدء جلسات التأهيل الحركي", department: "العلاج الطبيعي", type: "تأهيل", source: createLocalSource("2024-12-01") },
+    ],
+    radiology: [
+      { id: "RAD-401", type: "MRI", area: "Right Knee", report: "Complete ACL Tear", date: "2024-10-01", source: createExternalSource("2024-10-01") }
+    ],
+    reminders: [
+        { id: "REM-401", text: "موعد جلسة العلاج الطبيعي", date: "2024-12-08" }
+    ]
+  },
+  {
+    id: "PAT-2025-006",
+    name: "فاطمة حسن السيد",
+    avatar: "https://images.unsplash.com/photo-1551843021-d7563d0f0f28?auto=format&fit=crop&w=128&h=128&q=80",
+    dateOfBirth: "1955-02-14",
+    gender: "Female",
+    bloodType: "A+",
+    contactPhone: "01009988776",
+    contactEmail: "fatma.hassan@family.com",
+    address: "شبرا، القاهرة",
+    maritalStatus: "أرملة",
+    occupation: "ربة منزل",
+    insurance: {
+      provider: "HIO (التأمين الصحي)",
+      policy: "GOV-99281",
+      coverage: "Full Government Coverage"
+    },
+    status: {
+      code: "Stable",
+      location: "العيادات الخارجية - قلب"
+    },
+    alerts: [
+      { type: "danger", msg: "تتعاطى أدوية سيولة (Warfarin) - خطر النزيف" },
+      { type: "warning", msg: "ضعف سمع شديد (تحتاج التحدث بصوت عالٍ)" }
+    ],
+    vitalSigns: {
+      heartRate: "65",
+      bloodPressure: "135/85",
+      temperature: "36.9",
+      glucose: "140",
+      spo2: "95",
+      weight: "85",
+      height: "158",
+      bmi: "34.0",
+      respiratoryRate: "18"
+    },
+    personalInfo: {
+      allergies: ["Sulfa Drugs", "Aspirin (حساسية صدرية)"],
+      chronicConditions: ["CHF (فشل عضلة القلب)", "CKD Stage 3 (قصور كلوي مزمن)", "Glaucoma (مياه زرقاء)"],
+      familyHistory: ["الوالدة: جلطة بالمخ", "الوالد: سكري"],
+    },
+    // تشخيصات متراكمة من سجلات خارجية
+    diagnoses: [
+      { description: "Chronic Heart Failure (CHF)", code: "I50", source: createExternalSource("2018-05-20") },
+      { description: "Atrial Fibrillation (رجفان أذيني)", code: "I48", source: createExternalSource("2019-03-15") },
+      { description: "Type 2 Diabetes", code: "E11", source: createExternalSource("2010-01-01") },
+      { description: "Chronic Kidney Disease - Stage 3", code: "N18.3", source: createExternalSource("2021-11-10") },
+      { description: "Glaucoma - Both Eyes", code: "H40", source: createExternalSource("2022-06-05") },
+      { description: "Osteoarthritis (خشونة المفاصل)", code: "M17", source: createLocalSource("2024-12-01") } // تشخيص حديث محلي
+    ],
+    medications: [
+      { id: "MED-501", name: "Marevan (Warfarin)", dose: "3mg", freq: "مساءً", indication: "سيولة الدم", startDate: "2019-03-15", source: createExternalSource("2019-03-15") },
+      { id: "MED-502", name: "Lasix", dose: "40mg", freq: "صباحاً", indication: "مدر للبول", startDate: "2018-05-20", source: createExternalSource("2018-05-20") },
+      { id: "MED-503", name: "Lantus Solostar", dose: "20 Units", freq: "مساءً", indication: "السكري", startDate: "2015-02-10", source: createExternalSource("2015-02-10") },
+      { id: "MED-504", name: "Atorvastatin", dose: "20mg", freq: "مساءً", indication: "الدهون", startDate: "2018-05-20", source: createExternalSource("2018-05-20") },
+      { id: "MED-505", name: "Alphagan P", dose: "1 drop", freq: "مرتين", indication: "ضغط العين", startDate: "2022-06-05", source: createExternalSource("2022-06-05") },
+      { id: "MED-506", name: "One-Alpha", dose: "0.25mcg", freq: "يومياً", indication: "الكلى/العظام", startDate: "2021-11-10", source: createExternalSource("2021-11-10") },
+    ],
+    labTests: [
+      { id: "LAB-501", testName: "INR", result: "2.5", unit: "", range: "2.0-3.0", date: "2024-12-01", category: "Hematology", status: "normal", department: "Cardiology", source: createLocalSource("2024-12-01") },
+      { id: "LAB-502", testName: "Creatinine", result: "1.8", unit: "mg/dL", range: "0.6-1.1", date: "2024-11-15", category: "Kidney Function", status: "high", department: "Nephrology", source: createExternalSource("2024-11-15") },
+      { id: "LAB-503", testName: "eGFR", result: "45", unit: "mL/min", range: ">90", date: "2024-11-15", category: "Kidney Function", status: "low", department: "Nephrology", source: createExternalSource("2024-11-15") },
+      { id: "LAB-504", testName: "HbA1c", result: "7.5", unit: "%", range: "4.0-5.6", date: "2024-10-01", category: "Endocrine", status: "abnormal", department: "Internal Med", source: createExternalSource("2024-10-01") },
+    ],
+    visitNotes: [
+      { id: "VN-501", date: "2024-11-15", doctorName: "د. مغربي (مستشفى الهلال)", notes: "وظائف الكلى مستقرة نسبياً، الاستمرار على نفس الخطة", department: "الكلى", type: "متابعة خارجية", source: createExternalSource("2024-11-15") },
+      { id: "VN-502", date: "2024-06-05", doctorName: "د. رمد (معهد الرمد)", notes: "ضغط العين 18 - مقبول", department: "الرمد", type: "فحص دوري", source: createExternalSource("2024-06-05") },
+      { id: "VN-503", date: "2019-03-15", doctorName: "طوارئ القصر العيني", notes: "دخول رعابة مركزة - ذبذبة أذينية", department: "Cardiology", type: "Emergency", source: createExternalSource("2019-03-15") },
+    ],
+    radiology: [
+        { id: "RAD-501", type: "Echocardiography", area: "Heart", report: "EF 40%, Dilated cardiomyopathy", date: "2024-01-20", source: createExternalSource("2024-01-20") }
+    ],
+    reminders: []
+},
+
+// 5. حالة حوادث قديمة (شاب - تاريخ جراحي كبير)
+{
+    id: "PAT-2025-007",
+    name: "إبراهيم كمال العدوي",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=128&h=128&q=80",
+    dateOfBirth: "1990-09-09",
+    gender: "Male",
+    bloodType: "AB+",
+    contactPhone: "01122334455",
+    contactEmail: "ibrahim.kamel@work.com",
+    address: "الدقي، الجيزة",
+    maritalStatus: "متزوج",
+    occupation: "محاسب قانوني",
+    insurance: {
+      provider: "Allianz",
+      policy: "EG-CORP-551",
+      coverage: "Premium"
+    },
+    status: {
+      code: "Stable",
+      location: "العيادات الخارجية - عظام"
+    },
+    alerts: [
+      { type: "info", msg: "يوجد شرائح ومسامير بالساق اليمنى (MRI Safety Warning)" },
+      { type: "warning", msg: "تاريخ سابق للإدمان (أدوية مسكنة) - يرجى الحذر في وصف المخدرات" }
+    ],
+    vitalSigns: {
+      heartRate: "70",
+      bloodPressure: "120/80",
+      temperature: "37.0",
+      glucose: "95",
+      spo2: "99",
+      weight: "78",
+      height: "175",
+      bmi: "25.5",
+      respiratoryRate: "16"
+    },
+    personalInfo: {
+      allergies: ["Tramadol"],
+      chronicConditions: ["Post-Traumatic Stress Disorder (PTSD)", "Chronic Back Pain (آلام ظهر مزمنة)", "HCV (تم الشفاء - تاريخ سابق)"],
+      familyHistory: [],
+    },
+    diagnoses: [
+      { description: "Multiple Fractures (History of RTA)", code: "T02", source: createExternalSource("2015-08-12") },
+      { description: "Chronic Osteomyelitis (التهاب عظمي نقي)", code: "M86", source: createExternalSource("2016-02-20") },
+      { description: "Hepatitis C (Resolved)", code: "B18.2", source: createExternalSource("2018-01-01") },
+      { description: "Lumbar Disc Herniation L4-L5", code: "M51", source: createExternalSource("2020-05-10") },
+      { description: "PTSD", code: "F43.1", source: createExternalSource("2016-01-01") }
+    ],
+    medications: [
+      { id: "MED-601", name: "Sovaldi", dose: "400mg", freq: "انتهى الكورس", indication: "فيروس سي", startDate: "2018-01-01", source: createExternalSource("2018-01-01") },
+      { id: "MED-602", name: "Gabapentin", dose: "300mg", freq: "مساءً", indication: "التهاب الأعصاب", startDate: "2020-05-10", source: createExternalSource("2020-05-10") },
+      { id: "MED-603", name: "Celebrex", dose: "200mg", freq: "عند اللزوم", indication: "مسكن", startDate: "2023-01-01", source: createExternalSource("2023-01-01") },
+      { id: "MED-604", name: "Cipralex", dose: "10mg", freq: "صباحاً", indication: "اكتئاب/قلق", startDate: "2016-06-01", source: createExternalSource("2016-06-01") },
+    ],
+    labTests: [
+      { id: "LAB-601", testName: "HCV PCR", result: "Negative", unit: "", range: "", date: "2024-01-01", category: "Virology", status: "normal", department: "Hepatology", source: createExternalSource("2024-01-01") },
+      { id: "LAB-602", testName: "ESR", result: "25", unit: "mm/hr", range: "0-15", date: "2024-11-30", category: "Hematology", status: "high", department: "Orthopedics", source: createLocalSource("2024-11-30") },
+      { id: "LAB-603", testName: "CRP", result: "6.0", unit: "mg/L", range: "<5", date: "2024-11-30", category: "Hematology", status: "high", department: "Orthopedics", source: createLocalSource("2024-11-30") },
+      { id: "LAB-604", testName: "Liver Function Tests", result: "Normal", unit: "", range: "", date: "2024-01-01", category: "Chemistry", status: "normal", department: "Internal Med", source: createExternalSource("2024-01-01") },
+    ],
+    visitNotes: [
+      { id: "VN-601", date: "2015-08-12", doctorName: "مستشفى الطوارئ الجامعي", notes: "حادث سير، كسور متعددة، دخول العمليات فوراً", department: "Trauma Unit", type: "Emergency", source: createExternalSource("2015-08-12") },
+      { id: "VN-602", date: "2016-02-20", doctorName: "أ.د عظام (خاص)", notes: "تنظيف جراحي لالتهاب العظام بالساق", department: "Orthopedics", type: "Surgery", source: createExternalSource("2016-02-20") },
+      { id: "VN-603", date: "2018-04-01", doctorName: "معهد الكبد", notes: "استجابة ممتازة للعلاج الفيروسي", department: "Hepatology", type: "Follow-up", source: createExternalSource("2018-04-01") },
+    ],
+    radiology: [
+       { id: "RAD-601", type: "CT Scan", area: "Whole Body", report: "Polytrauma CT Protocol", date: "2015-08-12", source: createExternalSource("2015-08-12") },
+       { id: "RAD-602", type: "MRI", area: "Lumbar Spine", report: "L4-L5 Disc protrusion pressing on nerve root", date: "2020-05-10", source: createExternalSource("2020-05-10") },
+       { id: "RAD-603", type: "X-Ray", area: "Right Tibia", report: "Healed fracture with metalwork in situ", date: "2023-01-15", source: createExternalSource("2023-01-15") }
+    ],
+    reminders: [
+        { id: "REM-601", text: "متابعة دورية للكبد (سنوية)", date: "2025-01-01" }
+    ]
+}
 ];

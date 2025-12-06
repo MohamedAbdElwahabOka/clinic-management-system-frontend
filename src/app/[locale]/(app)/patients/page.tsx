@@ -20,7 +20,7 @@ export default async function PatientsPage({
     // Responsive Layout:
     // 1. flex-col & space-y-6: Ensures header and table stack neatly with gap.
     // 2. p-4 md:p-8: Reduced padding on mobile, original spacious padding on desktop.
-    <div className="flex flex-col space-y-6 p-4 md:p-8 w-full max-w-full">
+    <div className="flex flex-col space-y-6 p-1 md:p-8 w-full max-w-full">
       <PageHeader
         titleKey="patientRecords"
         descriptionKey="patientRecordsDescription"

@@ -55,9 +55,7 @@ import { dummyPatients } from "./data";
 import { OTPModal } from "./OTPModal";
 import { SourceBadge, LockedOverlay, AccessControlCard } from "./AccessControl";
 
-// ============================================
-// Helper Functions
-// ============================================
+
 
 function calculateAge(dateOfBirth: string): number {
   const birthDate = new Date(dateOfBirth);
@@ -857,6 +855,9 @@ export default function MedicalRecordSystem() {
       dir="rtl"
     >
       {/* Header */}
+      <div className="grid grid-cols-1 gap-4 w-full sm:px-4 md:px-0">
+
+      
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">
@@ -889,7 +890,7 @@ export default function MedicalRecordSystem() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+      {/* <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <Card className="p-3 sm:p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -952,7 +953,7 @@ export default function MedicalRecordSystem() {
             </div>
           </div>
         </Card>
-      </div>
+      </div> */}
 
       {/* Patients Table */}
       <Card>
@@ -1069,6 +1070,7 @@ export default function MedicalRecordSystem() {
           </Table>
         </div>
       </Card>
+      </div>
 
       {/* Patient Modal */}
       {open && selectedPatient && (

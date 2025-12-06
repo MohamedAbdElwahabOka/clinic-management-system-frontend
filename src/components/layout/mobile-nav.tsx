@@ -6,9 +6,15 @@ import { Menu } from "lucide-react";
 import Sidebar from "@/components/Sidebar"; 
 import { useState } from "react";
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'; 
+// 1. استيراد useLocale عشان نعرف اللغة
+import { useLocale } from 'next-intl';
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
+  
+  // 2. تحديد اتجاه اللغة
+  const locale = useLocale();
+  const isRTL = locale === 'ar';
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -19,9 +25,12 @@ export default function MobileNav() {
         </Button>
       </SheetTrigger>
       
-      {/* التعديل هنا: ضفت z-[100] في الآخر */}
+      {/* 3. التعديل هنا:
+          غيرنا side="left" لشرط ديناميكي
+          لو عربي (isRTL) يفتح من right، غير كدة يفتح من left
+      */}
       <SheetContent 
-        side="left" 
+        side={isRTL ? "right" : "left"} 
         className="p-0 w-64 bg-gray-900 border-none [&>button]:hidden text-white z-[1000]"
       >
         <VisuallyHidden.Root>
@@ -33,7 +42,6 @@ export default function MobileNav() {
     </Sheet>
   );
 }
-
 
 
 

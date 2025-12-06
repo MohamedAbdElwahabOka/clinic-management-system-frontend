@@ -148,7 +148,7 @@ export default function ClinicOperationsPage({ params }: { params: { id: string 
   const suggestedItems = SPECIALTY_PRESETS[clinicData.specialtyKey] || SPECIALTY_PRESETS['general'];
 
   return (
-    <div className="min-h-screen bg-gray-50/50 p-4 md:p-8 font-sans" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="grid grid-cols-1 gap-4 w-full sm:px-4 md:px-0" dir={isRTL ? "rtl" : "ltr"}>
       
       {/* 1. Header & Navigation */}
       <div className="mb-8">
