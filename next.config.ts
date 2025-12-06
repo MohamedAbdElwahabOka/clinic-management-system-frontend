@@ -4,15 +4,13 @@ import { NextConfig } from 'next';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
+    // eslint block removed here to fix the warning
+
     typescript: {
         // Allow production builds even if there are TypeScript type errors.
-        // Remove this in the future and fix type errors properly.
         ignoreBuildErrors: true,
     },
-    images:{
+    images: {
         remotePatterns: [
             {
                 protocol: 'https',
