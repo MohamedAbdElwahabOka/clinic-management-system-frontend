@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, Calendar, FileText, DollarSign, Settings, HelpCircle, Hospital } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { Bell, ChevronLeft, ChevronRight, LayoutDashboard, Users, Calendar, FileText, DollarSign, Settings, HelpCircle, Hospital, ShieldAlert } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname } from 'next/navigation';
@@ -15,29 +15,92 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
   const locale = useLocale();
   const isRTL = locale === 'ar';
   const pathname = usePathname();
-  
-  const menuItems = [
-    { name: t('Dashboard'), icon: LayoutDashboard, link: '/dashboard' },
-    { name: t('patients'), icon: Users, link: '/patients' },
-    { name: t('appointments'), icon: Calendar, link: '/appointments', hasNotification: true },
-    { name: t('Medical-Records'), icon: FileText, link: '/records' },
-    { name: t('Financials'), icon: DollarSign, link: '/financials' },
-    { name: t('Clinics'), icon: Hospital, link: '/clinics' }
-  ];
-  
-  const menuItemstwo = [
-    { name: t('Notifications'), icon: Bell, link: '/notifications', hasNotification: true },
-    { name: t('Settings'), icon: Settings, link: '/settings' },
-    { name: t('Support'), icon: HelpCircle, link: '/support' }
-  ];
-  
   const [collapsed, setCollapsed] = useState(false);
+
+  // ---------------------------------------------------------
+  // 1. تحديد الـ Context الحالي
+  // ---------------------------------------------------------
+  const currentContext = useMemo(() => {
+    if (pathname.includes('/reception')) return 'reception';
+    if (pathname.includes('/admin')) return 'admin';
+    if (pathname.includes('/lab')) return 'lab';
+    return 'default'; // الديفولت (الدكتور)
+  }, [pathname]);
+
+  // ---------------------------------------------------------
+  // 2. تكوين القوائم (Menus Configuration)
+  // ---------------------------------------------------------
+  const menuConfig = useMemo(() => {
+    
+    // --- قائمة الدكتور ---
+    const doctorMenu = {
+      title: 'Clinica',
+      homeLink: '/dashboard',
+      userTitle: 'Dr. Nabil',
+      items: [
+        { name: t('Dashboard'), icon: LayoutDashboard, link: '/dashboard', hasNotification: false },
+        { name: t('patients'), icon: Users, link: '/patients', hasNotification: false },
+        { name: t('appointments'), icon: Calendar, link: '/appointments', hasNotification: true },
+        { name: t('Medical-Records'), icon: FileText, link: '/records', hasNotification: false },
+        { name: t('Financials'), icon: DollarSign, link: '/financials', hasNotification: false },
+        { name: t('Clinics'), icon: Hospital, link: '/clinics', hasNotification: false }
+      ],
+      bottomItems: [
+        { name: t('Notifications'), icon: Bell, link: '/notifications', hasNotification: true },
+        { name: t('Settings'), icon: Settings, link: '/settings', hasNotification: false },
+        { name: t('Support'), icon: HelpCircle, link: '/support', hasNotification: false }
+      ]
+    };
+
+    // --- قائمة الريسيبشن ---
+    const receptionMenu = {
+      title: 'Reception',
+      homeLink: '/reception/appointments',
+      userTitle: 'Front Desk',
+      items: [
+        { name: t('appointments'), icon: Calendar, link: '/reception/appointments', hasNotification: true },
+        { name: t('patients'), icon: Users, link: '/reception/patients', hasNotification: false },
+        { name: t('Clinics'), icon: Hospital, link: '/reception/clinics', hasNotification: false } ,
+        { name: t('Chat'), icon: Hospital, link: '/reception/chat', hasNotification: false } ,
+      ],
+      bottomItems: [
+        { name: t('Notifications'), icon: Bell, link: '/reception/notifications', hasNotification: true },
+        { name: t('Settings'), icon: Settings, link: '/reception/settings', hasNotification: true },
+        { name: t('Support'), icon: HelpCircle, link: '/reception/support', hasNotification: false }
+      ]
+    };
+
+    // --- قائمة الأدمن ---
+    const adminMenu = {
+      title: 'Admin Panel',
+      homeLink: '/admin/dashboard',
+      userTitle: 'System Admin',
+      items: [
+        { name: 'Dashboard', icon: LayoutDashboard, link: '/admin/dashboard', hasNotification: false },
+        { name: 'Users Management', icon: Users, link: '/admin/users', hasNotification: false },
+        { name: 'System Logs', icon: ShieldAlert, link: '/admin/logs', hasNotification: false },
+      ],
+      bottomItems: [
+        { name: 'Settings', icon: Settings, link: '/admin/settings', hasNotification: false },
+      ]
+    };
+
+    return {
+      default: doctorMenu,
+      reception: receptionMenu,
+      admin: adminMenu,
+    };
+
+  }, [t]);
+
+  // ---------------------------------------------------------
+  // 3. اختيار القائمة المعروضة حالياً
+  // ---------------------------------------------------------
+  const activeMenu = menuConfig[currentContext as keyof typeof menuConfig] || menuConfig.default;
 
   useEffect(() => {
     const handleResize = () => {
-        if (window.innerWidth < 768) {
-            setCollapsed(false); 
-        }
+        if (window.innerWidth < 768) setCollapsed(false); 
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -45,27 +108,27 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
   }, []);
 
   const handleItemClick = () => {
-    if (onMobileClose) {
-      onMobileClose();
-    }
+    if (onMobileClose) onMobileClose();
   };
 
   return (
     <aside className={`h-full bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out z-50 ${collapsed ? 'w-16' : 'w-full md:w-60'}`}>
       
-      {/* 1. Top Section 
-         - ضفت relative هنا عشان الزرار العائم يعرف مكانه
-      */}
+      {/* Header Section */}
       <div className="flex-shrink-0 relative">
         <div className={`flex items-center h-14 px-3 ${collapsed ? 'justify-center' : 'justify-between'}`}>
           {!collapsed && (
-            <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+            <Link href={activeMenu.homeLink} onClick={handleItemClick} className="flex items-center gap-2 overflow-hidden whitespace-nowrap cursor-pointer">
               <img src="/logo/logo.svg" alt="Logo" className="h-7 w-7 min-w-[28px]" />
-              <h1 className="text-lg font-bold tracking-wide">Clinica</h1>
-            </div>
+              <h1 className="text-lg font-bold tracking-wide">{activeMenu.title}</h1>
+            </Link>
           )}
           
-          {collapsed && <img src="/logo/logo.svg" alt="Logo" className="h-7 w-7" />}
+          {collapsed && (
+             <Link href={activeMenu.homeLink} onClick={handleItemClick}>
+                <img src="/logo/logo.svg" alt="Logo" className="h-7 w-7 cursor-pointer" />
+             </Link>
+          )}
 
           {!onMobileClose && (
             <button 
@@ -86,11 +149,19 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
         <div className="h-[1px] bg-gray-700 mx-3 my-1 opacity-50" />
       </div>
 
-      {/* Navigation Links */}
+      {/* Main Menu Items */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden custom-scrollbar py-2 space-y-4">
         <nav className="space-y-0.5 px-2">
-          {menuItems.map((item) => {
-            const isActive = pathname.includes(item.link);
+          {activeMenu.items.map((item) => {
+            
+            // 🔥 التعديل هنا: بنشيل أي لغة من حرفين (ar, en, de) من الرابط عشان المقارنة تظبط
+            const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/';
+            
+            // بنقارن الرابط "النضيف" بالرابط اللي في القائمة
+            const isActive = 
+                pathnameWithoutLocale === item.link || 
+                pathnameWithoutLocale.startsWith(`${item.link}/`);
+
             return (
               <Link 
                 href={item.link} 
@@ -119,9 +190,14 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
 
         {!collapsed && <div className="h-[1px] bg-gray-700 mx-4 opacity-30" />}
 
+        {/* Bottom Menu Items */}
         <nav className="space-y-0.5 px-2">
-          {menuItemstwo.map((item) => {
-            const isActive = pathname.includes(item.link);
+          {activeMenu.bottomItems.map((item) => {
+            
+            // 🔥 نفس التعديل للقائمة السفلية عشان الدعم والاعدادات
+            const pathnameWithoutLocale = pathname.replace(/^\/[a-z]{2}/, '') || '/';
+            const isActive = pathnameWithoutLocale === item.link || pathnameWithoutLocale.startsWith(`${item.link}/`);
+
             return (
               <Link 
                 href={item.link} 
@@ -143,35 +219,17 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
         </nav>
       </div>
 
-      {/* Bottom Section */}
+      {/* User Profile Section */}
       <div className="flex-shrink-0 p-3 bg-gray-900 border-t border-gray-800 z-10">
-        {!collapsed ? (
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-3 border border-gray-700 text-center mb-3 shadow-md">
-                <div className="w-8 h-8 bg-[#0582EB]/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                    <img src="/sidbar/sidbar.svg" alt="Upgrade" className="w-5 h-5" />
-                </div>
-                <h4 className="text-xs font-bold text-white mb-1">{t('Upgrade')}</h4>
-                <button className="w-full mt-1 bg-[#0582EB] hover:bg-blue-600 text-white text-[10px] py-1.5 rounded-md transition-colors font-semibold">
-                    {t('Upgrade')} Now
-                </button>
-            </div>
-        ) : (
-             <div className="flex justify-center mb-3">
-                 <button className="p-1.5 bg-[#0582EB] rounded-lg shadow-lg">
-                    <img src="/sidbar/sidbar.svg" alt="Upgrade" className="w-4 h-4 invert brightness-0" />
-                 </button>
-             </div>
-        )}
-
-      <Link href="/account" onClick={handleItemClick}>
-          <div
-            className={`flex items-center rounded-lg p-1.5 transition-colors hover:bg-gray-800 cursor-pointer ${collapsed ? 'justify-center' : 'space-x-2 rtl:space-x-reverse'}`}
-          >
+        <Link href={`${activeMenu.homeLink.replace('/dashboard', '').replace('/appointments', '')}/settings` || '/settings'} onClick={handleItemClick}>
+          <div className={`flex items-center rounded-lg p-1.5 transition-colors hover:bg-gray-800 cursor-pointer ${collapsed ? 'justify-center' : 'space-x-2 rtl:space-x-reverse'}`}>
             <img src="/sidbar/avatar.svg" alt="User" className="w-8 h-8 rounded-full border border-[#0582EB]" />
             {!collapsed && (
               <div className="flex flex-col overflow-hidden">
                 <span className="text-[10px] text-gray-400">{t('Welcome-back')}</span>
-                <span className="text-xs font-bold text-white truncate">Nabil Deraz</span>
+                <span className="text-xs font-bold text-white truncate">
+                   {activeMenu.userTitle}
+                </span>
               </div>
             )}
           </div>
@@ -180,10 +238,6 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
     </aside>
   );
 }
-
-
-
-
 
 
 
