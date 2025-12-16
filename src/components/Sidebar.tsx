@@ -221,7 +221,7 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
 
       {/* User Profile Section */}
       <div className="flex-shrink-0 p-3 bg-gray-900 border-t border-gray-800 z-10">
-        <Link href={`${activeMenu.homeLink.replace('/dashboard', '').replace('/appointments', '')}/settings` || '/settings'} onClick={handleItemClick}>
+        <Link href={`${activeMenu.homeLink.replace('/dashboard', '').replace('/appointments', '')}/account` || '/account'} onClick={handleItemClick}>
           <div className={`flex items-center rounded-lg p-1.5 transition-colors hover:bg-gray-800 cursor-pointer ${collapsed ? 'justify-center' : 'space-x-2 rtl:space-x-reverse'}`}>
             <img src="/sidbar/avatar.svg" alt="User" className="w-8 h-8 rounded-full border border-[#0582EB]" />
             {!collapsed && (
