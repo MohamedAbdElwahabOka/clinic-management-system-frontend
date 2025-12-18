@@ -3047,6 +3047,185 @@ const InternalMedicineDataView = ({ data, locale }: { data: any, locale: string 
   );
 };
 
+// Dentistry Data View
+const DentistryDataView = ({ data, locale }: { data: any, locale: string }) => {
+  if (!data) return null;
+
+  const hasDentalChart = data.dentalChart && Object.keys(data.dentalChart).length > 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Chief Complaint */}
+      {data.chiefComplaint && (
+        <div className="space-y-1">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-500" />
+            {locale === 'ar' ? 'الشكوى الرئيسية' : 'Chief Complaint'}
+          </h4>
+          <p className="text-sm text-gray-800 bg-red-50/60 border border-red-100 rounded p-2">
+            {data.chiefComplaint}
+          </p>
+        </div>
+      )}
+
+      {/* Tooth / Dental Chart */}
+      {hasDentalChart && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-amber-500" />
+            {locale === 'ar' ? 'خريطة الأسنان' : 'Dental Chart'}
+          </h4>
+          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+            <table className="min-w-full text-xs md:text-sm">
+              <thead className="bg-gray-50 text-gray-600">
+                <tr>
+                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'السن' : 'Tooth'}</th>
+                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'الموضع' : 'Location'}</th>
+                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'الحالة' : 'Condition'}</th>
+                  <th className="px-3 py-2 text-right hidden md:table-cell">
+                    {locale === 'ar' ? 'حالة العصب / ملاحظات' : 'Pulp / Notes'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {Object.entries<any>(data.dentalChart).map(([toothKey, toothInfo]) => (
+                  <tr key={toothKey} className="hover:bg-gray-50">
+                    <td className="px-3 py-2 font-mono text-gray-800">{toothKey}</td>
+                    <td className="px-3 py-2 text-gray-700">{toothInfo.location}</td>
+                    <td className="px-3 py-2 text-gray-700">
+                      {toothInfo.condition || toothInfo.status}
+                    </td>
+                    <td className="px-3 py-2 text-gray-600 hidden md:table-cell">
+                      {[
+                        toothInfo.pulpStatus,
+                        toothInfo.percussion && `${locale === 'ar' ? 'طرق:' : 'Perc:'} ${toothInfo.percussion}`,
+                        toothInfo.mobility && `${locale === 'ar' ? 'حركة:' : 'Mob:'} ${toothInfo.mobility}`,
+                        toothInfo.status
+                      ]
+                        .filter(Boolean)
+                        .join(' • ')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Periodontal Status */}
+      {data.periodontalStatus && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-green-600" />
+            {locale === 'ar' ? 'حالة اللثة والدعم' : 'Periodontal Status'}
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+            {Object.entries<any>(data.periodontalStatus).map(([k, v]) => (
+              <div key={k} className="flex justify-between bg-green-50/60 border border-green-100 rounded px-2 py-1">
+                <span className="text-gray-600 capitalize">
+                  {locale === 'ar' ? k : k.replace(/([A-Z])/g, ' $1')}
+                </span>
+                <span className="font-medium text-green-800">{String(v)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Procedure Details */}
+      {data.procedureDetails && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Scan className="w-4 h-4 text-blue-500" />
+            {locale === 'ar' ? 'تفاصيل الإجراء' : 'Procedure Details'}
+          </h4>
+          <div className="bg-blue-50 border border-blue-200 rounded p-3 space-y-2 text-sm">
+            {data.procedureDetails.type && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">{locale === 'ar' ? 'نوع الإجراء' : 'Type'}</span>
+                <span className="font-medium text-blue-900">{data.procedureDetails.type}</span>
+              </div>
+            )}
+            {data.procedureDetails.anesthesia && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">{locale === 'ar' ? 'التخدير' : 'Anesthesia'}</span>
+                <span className="font-medium text-blue-900">{data.procedureDetails.anesthesia}</span>
+              </div>
+            )}
+            {Array.isArray(data.procedureDetails.steps) && data.procedureDetails.steps.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-gray-600 mb-1">
+                  {locale === 'ar' ? 'الخطوات' : 'Steps'}
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-gray-800">
+                  {data.procedureDetails.steps.map((step: string, idx: number) => (
+                    <li key={idx}>{step}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {data.procedureDetails.workingLength && (
+              <div className="mt-1">
+                <p className="text-xs font-semibold text-gray-600 mb-1">
+                  {locale === 'ar' ? 'أطوال القنوات (Working Length)' : 'Working Lengths'}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-1 text-xs">
+                  {Object.entries<any>(data.procedureDetails.workingLength).map(([canal, length]) => (
+                    <div key={canal} className="flex justify-between bg-white/60 rounded px-2 py-1">
+                      <span className="text-gray-600 capitalize">{canal}</span>
+                      <span className="font-mono text-gray-800">{length}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Diagnosis & Plan */}
+      {(data.diagnosis || data.plan) && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <ClipboardList className="w-4 h-4 text-purple-500" />
+            {locale === 'ar' ? 'التشخيص والخطة' : 'Diagnosis & Plan'}
+          </h4>
+          <div className="bg-purple-50 border border-purple-200 rounded p-3 space-y-1 text-sm">
+            {data.diagnosis && (
+              <p className="font-medium text-purple-900">
+                {locale === 'ar' ? 'التشخيص: ' : 'Diagnosis: '}
+                <span className="font-normal">{data.diagnosis}</span>
+              </p>
+            )}
+            {data.plan && (
+              <p className="text-purple-900">
+                {locale === 'ar' ? 'الخطة: ' : 'Plan: '}
+                {data.plan}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Medications */}
+      {Array.isArray(data.medicationsPrescribed) && data.medicationsPrescribed.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Pill className="w-4 h-4 text-green-600" />
+            {locale === 'ar' ? 'الأدوية الموصوفة' : 'Prescribed Medications'}
+          </h4>
+          <ul className="list-disc list-inside text-sm text-gray-800 space-y-1">
+            {data.medicationsPrescribed.map((m: string, idx: number) => (
+              <li key={idx}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Default Data View (for unknown specialties)
 const DefaultDataView = ({ data, locale }: { data: any, locale: string }) => {
   if (!data) return null;
@@ -3123,6 +3302,9 @@ const SingleVisitView = ({ visit, locale, isExternal }: { visit: any, locale: st
       
       case specialtyKey.includes('internal medicine') || specialtyKey.includes('internal'):
         return <InternalMedicineDataView data={payload} locale={locale} />;
+
+      case specialtyKey.includes('dentistry') || specialtyKey.includes('dental') || specialtyKey.includes('tooth'):
+        return <DentistryDataView data={payload} locale={locale} />;
       
       default:
         return <DefaultDataView data={payload} locale={locale} />;
@@ -3465,32 +3647,41 @@ export default function PatientRecordDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/30" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <div
+      className="min-h-screen bg-gray-50/30 dark:bg-gray-950 transition-colors"
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
+    >
       
       {/* 🚀 CLINICAL PRIORITY STRIP (Sticky Header) */}
-      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b shadow-sm px-4 py-2 flex items-center gap-4 overflow-x-auto no-scrollbar">
+      <div className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b dark:border-gray-800 shadow-sm px-4 py-2 flex items-center gap-4 overflow-x-auto no-scrollbar">
          {/* Critical Alerts */}
          {criticalAlerts.length > 0 && (
-             <Badge variant="destructive" className="flex items-center gap-1 animate-pulse px-3 py-1 text-xs cursor-pointer">
+             <Badge
+               variant="destructive"
+               className="flex items-center gap-1 animate-pulse px-3 py-1 text-xs cursor-pointer"
+             >
                  <AlertTriangle className="w-3 h-3" />
                  {getLoc(criticalAlerts[0].msg, locale)}
              </Badge>
          )}
          {/* Chronic Conditions */}
          {chronicConditions.length > 0 && (
-             <Badge variant="outline" className="flex items-center gap-1 border-orange-200 bg-orange-50 text-orange-700 px-3 py-1 text-xs cursor-pointer">
+             <Badge
+               variant="outline"
+               className="flex items-center gap-1 border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-200 px-3 py-1 text-xs cursor-pointer"
+             >
                  <Info className="w-3 h-3" />
                  {getLoc(chronicConditions[0].msg, locale)}
              </Badge>
          )}
          {/* Medications */}
-         <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-100 cursor-pointer hover:bg-blue-100 transition-colors">
+         <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors">
             <Pill className="w-3 h-3" />
             <span className="font-semibold">{locale === 'ar' ? 'الأدوية الحالية:' : 'Meds:'}</span>
             <span className="truncate max-w-[200px]">{patient.currentMedications ? patient.currentMedications.join(", ") : 'None'}</span>
          </div>
          {/* Last Visit */}
-         <div className="flex items-center gap-2 text-xs text-gray-600 bg-gray-100 px-3 py-1 rounded-full ml-auto">
+         <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full ml-auto">
              <History className="w-3 h-3" />
              {locale === 'ar' ? 'آخر زيارة: منذ 3 أيام' : 'Last visit: 3 days ago'}
          </div>
@@ -3514,7 +3705,7 @@ export default function PatientRecordDetail() {
          </div>
       </div>
 
-      <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6">
+      <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6 w-full">
 
       {/* Header Info */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
@@ -3529,8 +3720,10 @@ export default function PatientRecordDetail() {
             </div>
             
             <div className="flex-1 min-w-0">
-                  <h1 className="text-2xl font-bold text-gray-900 leading-tight">{getLoc(patient.name, locale)}</h1>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 mt-1">
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+                    {getLoc(patient.name, locale)}
+                  </h1>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400 mt-1">
                       <span className="flex items-center gap-1"><User className="w-3 h-3"/> {getLoc(patient.gender, locale)}, {2024 - parseInt(patient.dateOfBirth.split('-')[0])}yo</span>
                       <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> <span dir="ltr">{patient.contactPhone}</span></span>
                       <span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {getLoc(patient.address, locale)}</span>
@@ -3549,11 +3742,18 @@ export default function PatientRecordDetail() {
                   <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0 gap-0" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
                       <div className="flex h-full overflow-hidden">
                           {/* Sidebar */}
-                          <div className="w-[280px] bg-gray-50 border-e p-4 overflow-y-auto hidden md:block text-sm">
-                              <h3 className="font-bold text-gray-500 uppercase text-xs mb-3">Patient Summary</h3>
+                          <div className="w-[280px] bg-gray-50 dark:bg-gray-900 border-e dark:border-gray-800 p-4 overflow-y-auto hidden md:block text-sm">
+                              <h3 className="font-bold text-gray-500 dark:text-gray-300 uppercase text-xs mb-3">Patient Summary</h3>
                               {/* Quick Allergies */}
                               <div className="mb-4">
-                                  {patient.alerts.map((a,i) => <div key={i} className="text-xs text-red-600 bg-red-50 border border-red-100 p-2 rounded mb-1">{getLoc(a.msg, locale)}</div>)}
+                                  {patient.alerts.map((a,i) => (
+                                    <div
+                                      key={i}
+                                      className="text-xs text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900 p-2 rounded mb-1"
+                                    >
+                                      {getLoc(a.msg, locale)}
+                                    </div>
+                                  ))}
                               </div>
                               <Separator className="mb-4"/>
                               <div className="space-y-2">
@@ -3562,7 +3762,7 @@ export default function PatientRecordDetail() {
                               </div>
                           </div>
                           {/* Form */}
-                          <div className="flex-1 flex flex-col h-full bg-white">
+                          <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950">
                               <DialogHeader className="p-5 border-b">
                                   <DialogTitle>New SOAP Note</DialogTitle>
                               </DialogHeader>
@@ -3581,16 +3781,24 @@ export default function PatientRecordDetail() {
                                   </div>
                                   <div>
                                       <Label className="text-orange-600 font-bold mb-1 block">Plan</Label>
-                                      {allergyWarning && <div className="mb-2 p-2 bg-red-100 text-red-700 text-xs rounded font-bold animate-pulse">{allergyWarning}</div>}
+                                      {allergyWarning && (
+                                        <div className="mb-2 p-2 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs rounded font-bold animate-pulse">
+                                          {allergyWarning}
+                                        </div>
+                                      )}
                                       <Textarea 
-                                        className="bg-orange-50/20 min-h-[100px]" 
+                                        className="bg-orange-50/20 dark:bg-orange-900/20 min-h-[100px]" 
                                         value={planInput} 
                                         onChange={(e) => setPlanInput(e.target.value)}
                                       />
                                   </div>
-                                  {soapError && <div className="text-red-600 text-sm font-semibold bg-red-50 p-2 rounded">{soapError}</div>}
+                                  {soapError && (
+                                    <div className="text-red-600 dark:text-red-300 text-sm font-semibold bg-red-50 dark:bg-red-900/40 p-2 rounded">
+                                      {soapError}
+                                    </div>
+                                  )}
                               </div>
-                              <DialogFooter className="p-4 border-t bg-gray-50">
+                              <DialogFooter className="p-4 border-t dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
                                   <Button onClick={handleSaveSOAP}>Save Record</Button>
                               </DialogFooter>
                           </div>
@@ -3604,9 +3812,9 @@ export default function PatientRecordDetail() {
         
         {/* LEFT COLUMN: Vitals (Sparklines) */}
         <div className="col-span-12 lg:col-span-3 space-y-6">
-          <Card className="shadow-sm border-gray-200">
+          <Card className="shadow-sm border-gray-200 dark:border-gray-800 dark:bg-gray-900">
             <CardHeader className="pb-2 pt-4 px-4">
-               <CardTitle className="text-sm font-bold flex items-center gap-2 text-gray-700">
+               <CardTitle className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-200">
                   <TrendingUp className="w-4 h-4 text-blue-500" />
                   {locale === 'ar' ? 'المؤشرات الحيوية' : 'Vital Trends'}
                </CardTitle>
@@ -3614,17 +3822,23 @@ export default function PatientRecordDetail() {
             <CardContent className="space-y-6 px-4 pb-4">
                {/* Heart Rate */}
                <div>
-                  <div className="flex justify-between text-xs mb-1 text-gray-500"><span>Heart Rate</span></div>
+                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <span>Heart Rate</span>
+                  </div>
                   <SmartSparkline data={patient.vitalSigns.history.heartRate} minNormal={60} maxNormal={100} unit="bpm" />
                </div>
                {/* BP */}
                <div>
-                  <div className="flex justify-between text-xs mb-1 text-gray-500"><span>BP (Systolic)</span></div>
+                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <span>BP (Systolic)</span>
+                  </div>
                   <SmartSparkline data={patient.vitalSigns.history.bloodPressure} minNormal={110} maxNormal={130} unit="mmHg" />
                </div>
                {/* Glucose */}
                <div>
-                  <div className="flex justify-between text-xs mb-1 text-gray-500"><span>Glucose</span></div>
+                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <span>Glucose</span>
+                  </div>
                   <SmartSparkline data={patient.vitalSigns.history.glucose} minNormal={70} maxNormal={140} unit="mg/dL" />
                </div>
             </CardContent>
@@ -3636,22 +3850,37 @@ export default function PatientRecordDetail() {
           
           {/* 🧠 DECISION-ORIENTED UI: Suggested Actions */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <Button variant="outline" className="h-auto py-3 px-4 justify-start gap-3 bg-white hover:bg-blue-50 border-blue-100 hover:border-blue-200 shadow-sm group">
-                  <div className="p-2 bg-blue-100 text-blue-600 rounded-full group-hover:bg-blue-200"><Repeat className="w-4 h-4"/></div>
+              <Button
+                variant="outline"
+                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-950 border-blue-100 dark:border-blue-900 hover:border-blue-200 shadow-sm group"
+              >
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900 text-blue-600 rounded-full group-hover:bg-blue-200">
+                    <Repeat className="w-4 h-4"/>
+                  </div>
                   <div className="text-start">
                       <div className="text-sm font-semibold text-gray-900">Refill Prescriptions</div>
                       <div className="text-[10px] text-gray-500">Metformin, Lisinopril</div>
                   </div>
               </Button>
-              <Button variant="outline" className="h-auto py-3 px-4 justify-start gap-3 bg-white hover:bg-yellow-50 border-yellow-100 hover:border-yellow-200 shadow-sm group">
-                  <div className="p-2 bg-yellow-100 text-yellow-600 rounded-full group-hover:bg-yellow-200"><Stethoscope className="w-4 h-4"/></div>
+              <Button
+                variant="outline"
+                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-yellow-50 dark:hover:bg-yellow-950 border-yellow-100 dark:border-yellow-900 hover:border-yellow-200 shadow-sm group"
+              >
+                  <div className="p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 rounded-full group-hover:bg-yellow-200">
+                    <Stethoscope className="w-4 h-4"/>
+                  </div>
                   <div className="text-start">
                       <div className="text-sm font-semibold text-gray-900">Review HR Trend</div>
                       <div className="text-[10px] text-gray-500">Elevated in last 2 visits</div>
                   </div>
               </Button>
-              <Button variant="outline" className="h-auto py-3 px-4 justify-start gap-3 bg-white hover:bg-gray-50 border-gray-200 shadow-sm group">
-                   <div className="p-2 bg-gray-100 text-gray-600 rounded-full"><GitCommitHorizontal className="w-4 h-4"/></div>
+              <Button
+                variant="outline"
+                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm group"
+              >
+                   <div className="p-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200 rounded-full">
+                     <GitCommitHorizontal className="w-4 h-4"/>
+                   </div>
                    <div className="text-start">
                       <div className="text-sm font-semibold text-gray-900">Lab Results</div>
                       <div className="text-[10px] text-gray-500">Pending from 12/12</div>
@@ -3660,7 +3889,7 @@ export default function PatientRecordDetail() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-0">
                 <TabsList className="w-full sm:w-auto grid grid-cols-2">
                     <TabsTrigger value="local">{locale === 'ar' ? 'سجلات محلية' : 'Local Records'}</TabsTrigger>
                     <TabsTrigger value="external" className="relative">
@@ -3672,8 +3901,22 @@ export default function PatientRecordDetail() {
                 {/* Timeline Toggle */}
                 {activeTab === 'local' && (
                     <div className="flex bg-gray-100 p-1 rounded-lg mt-2 sm:mt-0">
-                        <button onClick={() => setViewMode('list')} className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow text-black' : 'text-gray-500'}`}><List className="w-4 h-4"/></button>
-                        <button onClick={() => setViewMode('timeline')} className={`p-1.5 rounded ${viewMode === 'timeline' ? 'bg-white shadow text-black' : 'text-gray-500'}`}><LayoutList className="w-4 h-4"/></button>
+                        <button
+                          type="button"
+                          aria-label={locale === 'ar' ? 'عرض قائمة' : 'List view'}
+                          onClick={() => setViewMode('list')}
+                          className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}
+                        >
+                          <List className="w-4 h-4"/>
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={locale === 'ar' ? 'عرض تسلسلي زمني' : 'Timeline view'}
+                          onClick={() => setViewMode('timeline')}
+                          className={`p-1.5 rounded ${viewMode === 'timeline' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}
+                        >
+                          <LayoutList className="w-4 h-4"/>
+                        </button>
                     </div>
                 )}
             </div>
@@ -3693,7 +3936,7 @@ export default function PatientRecordDetail() {
                       ))
                   ) : (
                       // Timeline View
-                      <div className="relative border-s-2 border-gray-200 ms-4 space-y-8 py-4">
+                      <div className="relative border-s-2 border-gray-200 dark:border-gray-700 ms-4 space-y-8 py-4">
                           {localVisits.map((visit) => (
                               <div key={visit.id} className="ms-6 relative">
                                   <span className="absolute -left-[33px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-4 ring-white">
@@ -3707,10 +3950,16 @@ export default function PatientRecordDetail() {
                   )
                ) : (
                  // 🎯 Smart Empty State
-                 <div className="flex flex-col items-center justify-center py-12 text-center bg-white rounded-lg border border-dashed border-gray-300">
-                    <div className="bg-gray-50 p-4 rounded-full mb-3"><FileText className="w-8 h-8 text-gray-400"/></div>
-                    <h3 className="font-semibold text-gray-900">{locale === 'ar' ? 'لا توجد سجلات محلية' : 'No Local Records Yet'}</h3>
-                    <p className="text-sm text-gray-500 max-w-xs mb-4">{locale === 'ar' ? 'ابدأ بإضافة أول زيارة لهذا المريض' : 'Start by creating the first consultation log for this patient.'}</p>
+                 <div className="flex flex-col items-center justify-center py-12 text-center bg-white dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+                    <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-full mb-3">
+                      <FileText className="w-8 h-8 text-gray-400"/>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                      {locale === 'ar' ? 'لا توجد سجلات محلية' : 'No Local Records Yet'}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-4">
+                      {locale === 'ar' ? 'ابدأ بإضافة أول زيارة لهذا المريض' : 'Start by creating the first consultation log for this patient.'}
+                    </p>
                     <Button variant="outline" onClick={() => { setPlanInput(""); setIsNewLogOpen(true); }}>
                         <Plus className="w-4 h-4 mr-2"/>
                         {locale === 'ar' ? 'إضافة زيارة' : 'Add First Visit'}
@@ -3722,24 +3971,28 @@ export default function PatientRecordDetail() {
             {/* EXTERNAL TAB */}
             <TabsContent value="external" className="space-y-4">
               {!isExternalUnlocked ? (
-                 <Card className="bg-gray-50/50 border-dashed border-2 p-8">
+                 <Card className="bg-gray-50/50 dark:bg-gray-900/70 border-dashed border-2 dark:border-gray-700 p-8">
                    <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-6">
-                      <div className="bg-white p-4 rounded-full shadow-sm ring-1 ring-gray-100">
-                        <Lock className="w-10 h-10 text-gray-400" />
+                      <div className="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm ring-1 ring-gray-100 dark:ring-gray-700">
+                        <Lock className="w-10 h-10 text-gray-400 dark:text-gray-300" />
                       </div>
                       
                       {/* Step 1: Reason for Access (Audit Log) */}
                       {otpStep === 'reason' && (
                           <div className="w-full space-y-4 animate-in fade-in">
-                              <h3 className="font-semibold text-gray-900">Reason for Accessing External Data</h3>
-                              <p className="text-xs text-gray-500">This action will be recorded in the audit log.</p>
+                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                                Reason for Accessing External Data
+                              </h3>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                This action will be recorded in the audit log.
+                              </p>
                               
                               <RadioGroup value={accessReason} onValueChange={setAccessReason} className="grid grid-cols-1 gap-2 text-start">
-                                  <div className="flex items-center space-x-2 bg-white p-3 rounded border cursor-pointer hover:border-blue-400">
+                                  <div className="flex items-center space-x-2 bg-white dark:bg-gray-900 p-3 rounded border dark:border-gray-700 cursor-pointer hover:border-blue-400">
                                       <RadioGroupItem value="consultation" id="r1" />
                                       <Label htmlFor="r1" className="cursor-pointer font-normal">Regular Consultation</Label>
                                   </div>
-                                  <div className="flex items-center space-x-2 bg-white p-3 rounded border cursor-pointer hover:border-blue-400">
+                                  <div className="flex items-center space-x-2 bg-white dark:bg-gray-900 p-3 rounded border dark:border-gray-700 cursor-pointer hover:border-blue-400">
                                       <RadioGroupItem value="emergency" id="r2" />
                                       <Label htmlFor="r2" className="cursor-pointer font-normal">Emergency / Urgent Care</Label>
                                   </div>
@@ -3751,11 +4004,19 @@ export default function PatientRecordDetail() {
                       {/* Step 2: Choose Method */}
                       {otpStep === 'method' && (
                         <div className="grid grid-cols-2 gap-4 w-full animate-in fade-in slide-in-from-right-4">
-                          <Button variant="outline" className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50" onClick={() => { setSelectedMethod('sms'); setOtpStep('verify'); }}>
+                          <Button
+                            variant="outline"
+                            className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
+                            onClick={() => { setSelectedMethod('sms'); setOtpStep('verify'); }}
+                          >
                             <MessageSquare className="w-6 h-6 text-blue-600" />
                             <span className="text-xs font-semibold">SMS ••••890</span>
                           </Button>
-                          <Button variant="outline" className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50" onClick={() => { setSelectedMethod('email'); setOtpStep('verify'); }}>
+                          <Button
+                            variant="outline"
+                            className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
+                            onClick={() => { setSelectedMethod('email'); setOtpStep('verify'); }}
+                          >
                             <Mail className="w-6 h-6 text-blue-600" />
                             <span className="text-xs font-semibold">Email</span>
                           </Button>
@@ -3765,7 +4026,7 @@ export default function PatientRecordDetail() {
                       {/* Step 3: Verify */}
                       {otpStep === 'verify' && (
                         <div className="w-full space-y-4 animate-in fade-in">
-                           <div className="text-sm text-blue-600 bg-blue-50 py-2 rounded flex items-center justify-center gap-2">
+                           <div className="text-sm text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 py-2 rounded flex items-center justify-center gap-2">
                               {selectedMethod === 'sms' ? <MessageSquare className="w-4 h-4"/> : <Mail className="w-4 h-4"/>}
                               Code Sent
                            </div>
@@ -3777,23 +4038,30 @@ export default function PatientRecordDetail() {
                               onChange={(e) => setOtpInput(e.target.value)}
                             />
                             <Button className="w-full" onClick={handleVerifyOTP}>Verify (1234)</Button>
-                            <Button variant="link" size="sm" onClick={() => setOtpStep('method')} className="text-gray-400">Back</Button>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              onClick={() => setOtpStep('method')}
+                              className="text-gray-400 dark:text-gray-300"
+                            >
+                              Back
+                            </Button>
                         </div>
                       )}
                    </div>
                  </Card>
               ) : (
                 <div className="space-y-4 animate-in fade-in">
-                   <div className="bg-green-50 border border-green-200 rounded-lg p-3 flex justify-between items-center">
-                      <div className="flex items-center gap-3 text-green-800">
+                   <div className="bg-green-50 dark:bg-green-900/40 border border-green-200 dark:border-green-900 rounded-lg p-3 flex justify-between items-center">
+                      <div className="flex items-center gap-3 text-green-800 dark:text-green-200">
                         <ShieldCheck className="w-5 h-5" />
                         <div>
                             <span className="font-bold text-sm block">{locale === 'ar' ? 'جلسة خارجية نشطة' : 'Active External Session'}</span>
                             <span className="text-[10px] opacity-80 block">Access Reason: {accessReason}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                         <div className="flex items-center gap-2 bg-white px-3 py-1 rounded border text-green-700 font-mono font-bold">
+                       <div className="flex items-center gap-3">
+                         <div className="flex items-center gap-2 bg-white dark:bg-green-950 px-3 py-1 rounded border border-green-200 dark:border-green-800 text-green-700 dark:text-green-200 font-mono font-bold">
                             <Timer className="w-4 h-4 animate-pulse" />
                             {timeLeft}
                          </div>
