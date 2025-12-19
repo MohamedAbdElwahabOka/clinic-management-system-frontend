@@ -305,7 +305,8 @@
     "errorPhoneNumberRequired": "رقم الهاتف مطلوب.",
     "errorTermsRequired": "يجب أن توافق على الشروط والأحكام.",
     "phoneNumberPlaceholder": "مثال: 555-123-4567",
-    "requiredField": "مطلوب."
+    "requiredField": "مطلوب.",
+    "errorInvalidCredentials":"الاميل او كلمة سر غير صحيحة"
   },
   "Global": {
     "loading": "جار التحميل...",

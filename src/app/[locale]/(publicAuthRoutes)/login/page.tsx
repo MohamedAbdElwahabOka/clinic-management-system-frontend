@@ -18,6 +18,7 @@ import { useRouter, Link } from "@/i18n/navigation";
 import { LogIn, HeartPulse, Apple, Facebook, Twitter as XIcon } from "lucide-react";
 import { useTranslations } from 'next-intl';
 import type { Locale } from '@/types';
+import { signIn, getSession } from "next-auth/react"; // ضفنا getSession
 
 interface LoginPageProps {
   params: Promise<{ locale: Locale }>;
@@ -67,24 +68,54 @@ export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
     form.reset(undefined, { keepValues: false });
   }, [locale, form, translate]);
 
-  async function onSubmit(data: LoginFormValues) {
+async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    if (data.email && data.password) {
-      toast({
-        title: translate('loginSuccessToast'),
-        description: translate('loginSuccessDesc'),
+    try {
+      // 1. محاولة تسجيل الدخول
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
       });
-      router.push("/dashboard");
-    } else {
+
+      if (result?.error) {
+        setIsLoading(false);
+        toast({
+          title: translate('loginFailedToast'),
+          description: translate('errorInvalidCredentials'),
+          variant: "destructive",
+        });
+      } else {
+        // 2. الدخول نجح، دلوقتي نجيب بيانات السيشن عشان نعرف الـ Role
+        const session = await getSession();
+        
+        toast({
+          title: translate('loginSuccessToast'),
+          description: translate('loginSuccessDesc'),
+        });
+
+        // بنعمل ريفرش عشان الراوتر يحس بالتغيير
+        router.refresh();
+
+        // 3. التوجيه بناءً على الـ Role اللي جاي من السيشن
+        // (لاحظ: لازم تكون ضفت الـ role في ملف next-auth.d.ts زي ما اتفقنا قبل كده)
+        if (session?.user?.role === "reception") {
+             router.push("/reception/appointments");
+        } else {
+             // للدكتور (admin) أو أي دور تاني
+             router.push("/dashboard");
+        }
+      }
+    } catch (error) {
+      setIsLoading(false);
       toast({
-        title: translate('loginFailedToast'),
-        description: translate('loginFailedDesc'),
+        title: "Error",
+        description: "Something went wrong",
         variant: "destructive",
       });
     }
-    setIsLoading(false);
+    // ملحوظة: شيلنا setIsLoading(false) من حالة النجاح عشان ميرجعش الزرار يظهر قبل ما الصفحة تقلب
   }
 
   return (
@@ -101,7 +132,10 @@ export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
         </h2>
         <p className="text-sm text-muted-foreground">
           {translate('authSmartManagementCare', 'Smart management, exceptional care.')}
+          
         </p>
+        <p> use reception@clinica.com and pass:123</p>
+        <p> use doctor@clinica.com and pass:123</p>
       </div>
 
       <Form {...form}>

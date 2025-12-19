@@ -296,7 +296,8 @@
     "errorPhoneNumberRequired": "Phone number is required.",
     "errorTermsRequired": "You must agree to the terms and conditions.",
     "phoneNumberPlaceholder": "e.g., 555-123-4567",
-    "requiredField": "{field} is required."
+    "requiredField": "{field} is required.",
+    "errorInvalidCredentials":"email or password are rongo"
   },
   "Global": {
     "loading": "Loading...",
