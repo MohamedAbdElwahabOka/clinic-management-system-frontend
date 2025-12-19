@@ -2857,3 +2857,188 @@ export const dummyPatients: Patient[] = [
   ]
 }
 ];
+
+
+
+// {
+//   "resourceType": "Bundle",
+//   "type": "collection",
+//   "entry": [
+//     {
+//       "fullUrl": "urn:uuid:patient-ahmed",
+//       "resource": {
+//         "resourceType": "Patient",
+//         "id": "PAT-2025-001",
+//         "active": true,
+//         "name": [
+//           {
+//             "use": "official",
+//             "text": "Mr. Ahmed Abdel Moneim El-Sayed",
+//             "family": "El-Sayed",
+//             "given": ["Ahmed", "Abdel", "Moneim"]
+//           },
+//           {
+//             "use": "official",
+//             "text": "الحاج/ أحمد عبد الموجود السيد",
+//             "extension": [{ "url": "http://hl7.org/fhir/StructureDefinition/language", "valueCode": "ar" }]
+//           }
+//         ],
+//         "gender": "male",
+//         "birthDate": "1958-04-12",
+//         "telecom": [
+//           { "system": "phone", "value": "+20 123 456 7890", "use": "mobile" }
+//         ],
+//         "address": [
+//           { "text": "12 Sea Street, Tanta", "city": "Tanta", "country": "EG" }
+//         ]
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:allergy-penicillin",
+//       "resource": {
+//         "resourceType": "AllergyIntolerance",
+//         "id": "ALG-001",
+//         "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical", "code": "active" }] },
+//         "verificationStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/allergyintolerance-verification", "code": "confirmed" }] },
+//         "criticality": "high",
+//         "code": {
+//           "text": "Severe Penicillin Allergy"
+//         },
+//         "patient": { "reference": "urn:uuid:patient-ahmed" }
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:condition-htn",
+//       "resource": {
+//         "resourceType": "Condition",
+//         "id": "COND-HTN",
+//         "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] },
+//         "code": {
+//           "coding": [{ "system": "http://hl7.org/fhir/sid/icd-10", "code": "I10", "display": "Essential (primary) hypertension" }],
+//           "text": "Uncontrolled hypertension"
+//         },
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "onsetDateTime": "2019"
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:condition-diabetes",
+//       "resource": {
+//         "resourceType": "Condition",
+//         "id": "COND-DM2",
+//         "clinicalStatus": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active" }] },
+//         "code": {
+//           "coding": [{ "system": "http://hl7.org/fhir/sid/icd-10", "code": "E11.9", "display": "Type 2 diabetes mellitus" }]
+//         },
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "onsetDateTime": "2020"
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:practitioner-said",
+//       "resource": {
+//         "resourceType": "Practitioner",
+//         "id": "DOC-CURRENT-001",
+//         "name": [{ "text": "Dr. Ahmed Said" }]
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:encounter-vis101",
+//       "resource": {
+//         "resourceType": "Encounter",
+//         "id": "VIS-101",
+//         "status": "finished",
+//         "class": {
+//           "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+//           "code": "AMB",
+//           "display": "ambulatory"
+//         },
+//         "type": [{ "text": "Internal Medicine Follow up" }],
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "participant": [
+//           { "individual": { "reference": "urn:uuid:practitioner-said", "display": "Dr. Ahmed Said" } }
+//         ],
+//         "period": { "start": "2024-11-28T10:05:00Z" },
+//         "reasonCode": [{ "text": "Elevated blood pressure readings with occasional headaches" }]
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:obs-bp-vis101",
+//       "resource": {
+//         "resourceType": "Observation",
+//         "status": "final",
+//         "category": [{ "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "vital-signs" }] }],
+//         "code": { "coding": [{ "system": "http://loinc.org", "code": "85354-9", "display": "Blood pressure panel" }] },
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "encounter": { "reference": "urn:uuid:encounter-vis101" },
+//         "effectiveDateTime": "2024-11-28T10:05:00Z",
+//         "component": [
+//           {
+//             "code": { "coding": [{ "system": "http://loinc.org", "code": "8480-6", "display": "Systolic" }] },
+//             "valueQuantity": { "value": 150, "unit": "mmHg", "system": "http://unitsofmeasure.org", "code": "mm[Hg]" }
+//           },
+//           {
+//             "code": { "coding": [{ "system": "http://loinc.org", "code": "8462-4", "display": "Diastolic" }] },
+//             "valueQuantity": { "value": 90, "unit": "mmHg", "system": "http://unitsofmeasure.org", "code": "mm[Hg]" }
+//           }
+//         ]
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:med-lisinopril",
+//       "resource": {
+//         "resourceType": "MedicationRequest",
+//         "status": "active",
+//         "intent": "order",
+//         "medicationCodeableConcept": { "text": "Lisinopril 10mg" },
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "encounter": { "reference": "urn:uuid:encounter-vis101" },
+//         "dosageInstruction": [{ "text": "10 mg daily", "timing": { "repeat": { "frequency": 1, "period": 1, "periodUnit": "d" } } }]
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:report-cardio-stress",
+//       "resource": {
+//         "resourceType": "DiagnosticReport",
+//         "id": "REC-CARD-1",
+//         "status": "final",
+//         "code": { "text": "Cardiac Stress Test" },
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "effectiveDateTime": "2024-08-20T09:15:00Z",
+//         "performer": [{ "display": "Dr. Youssef Fathi" }],
+//         "conclusion": "Hypertensive heart disease, Stable coronary artery disease. Mild ischemia detected.",
+//         "presentedForm": [
+//           {
+//             "contentType": "application/pdf",
+//             "url": "/reports/stress-test.pdf",
+//             "title": "تقرير اختبار الجهد"
+//           }
+//         ],
+//         "result": [
+//            { "display": "Resting ECG: LVH by voltage criteria" },
+//            { "display": "Stress Test: 7.2 METs achieved" }
+//         ]
+//       }
+//     },
+//     {
+//       "fullUrl": "urn:uuid:report-ophthalmology",
+//       "resource": {
+//         "resourceType": "DiagnosticReport",
+//         "id": "REC-EYE-1",
+//         "status": "final",
+//         "code": { "text": "Retinopathy Scan & Fundus Exam" },
+//         "subject": { "reference": "urn:uuid:patient-ahmed" },
+//         "effectiveDateTime": "2024-11-10T14:45:00Z",
+//         "performer": [{ "display": "Dr. Sara Mahmoud" }],
+//         "conclusion": "Mild non-proliferative diabetic retinopathy (right), Moderate (left).",
+//         "presentedForm": [
+//           {
+//             "contentType": "image/png",
+//             "url": "/flags/ar.png",
+//             "title": "صورة قاع العين اليمنى"
+//           }
+//         ]
+//       }
+//     }
+//   ]
+// }
