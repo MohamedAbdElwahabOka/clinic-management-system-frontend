@@ -1,3 +1,1160 @@
+
+
+"use client";
+
+import React, { useState, useMemo, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { 
+  ArrowRight, Lock, ShieldCheck, AlertTriangle, Info, MapPin, 
+  Phone, User, Plus, Mail, MessageSquare, Timer, 
+  LogOut, RefreshCw, FileText, CheckCircle2, TrendingUp, 
+  Image as ImageIcon, Repeat, X, Pill, Stethoscope, 
+  AlertOctagon, FileDown, Flag, History, List, 
+  GitCommitHorizontal, LayoutList, Eye, Droplets, Search, ClipboardCheck, Scan, Scissors, 
+  Microscope, ScanEye, Droplet, Ear, Camera, Scaling, 
+  FlaskConical, ClipboardList, Activity, Calendar, ChevronDown, ChevronUp
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+import { dummyPatients } from "../data";
+import { CURRENT_DOCTOR_ID, LocalizedText } from "../types";
+import {
+  CardiologyDataView,
+  OphthalmologyDataView,  
+  GastroenterologyDataView,
+  UrologyDataView,
+  ENTDataView,
+  DermatologyDataView,
+  InternalMedicineDataView,
+  DefaultDataView
+} from "../components/specialties/index";
+
+// ============================================
+// 1. Localization Helper
+// ============================================
+const getLoc = (content: LocalizedText | string | undefined, locale: string) => {
+  if (!content) return "";
+  if (typeof content === "string") return content;
+  
+  const priorities: Record<string, string[]> = {
+    'en': ['en', 'ar', 'de'],
+    'ar': ['ar', 'en', 'de'],
+    'de': ['de', 'en', 'ar'],
+  };
+  
+  const searchOrder = priorities[locale] || ['ar', 'en', 'de'];
+  
+  for (const lang of searchOrder) {
+    // @ts-ignore
+    const value = content[lang];
+    if (value && value.trim() !== "") return value;
+  }
+  return "";
+};
+
+// ============================================
+// 2. Enhanced Sparkline (Context-Aware)
+// ============================================
+const SmartSparkline = ({ data, minNormal, maxNormal, unit }: { data: number[], minNormal: number, maxNormal: number, unit: string }) => {
+    if (!data || data.length < 2) return null;
+    
+    const min = Math.min(...data, minNormal - 5);
+    const max = Math.max(...data, maxNormal + 5);
+    const range = max - min || 1;
+    const width = 120;
+    const height = 40;
+    
+    const lastValue = data[data.length - 1];
+    const isAbnormal = lastValue < minNormal || lastValue > maxNormal;
+    const color = isAbnormal ? "red" : "#10b981"; 
+
+    const points = data.map((val, i) => {
+        const x = (i / (data.length - 1)) * width;
+        const y = height - ((val - min) / range) * height;
+        return `${x},${y}`;
+    }).join(" ");
+
+    return (
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <div className="flex flex-col items-end cursor-help">
+                         <div className="flex items-center gap-2 mb-1">
+                             {isAbnormal && <AlertOctagon className="w-3 h-3 text-red-500 animate-pulse" />}
+                             <span className={`font-bold text-sm ${isAbnormal ? 'text-red-600' : 'text-gray-700'}`}>
+                                 {lastValue} <span className="text-[10px] text-muted-foreground font-normal">{unit}</span>
+                             </span>
+                         </div>
+                         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+                            {/* Normal Range Zone Background */}
+                            <rect 
+                                x="0" 
+                                y={height - ((maxNormal - min) / range) * height} 
+                                width={width} 
+                                height={((maxNormal - minNormal) / range) * height} 
+                                fill={isAbnormal ? "#fee2e2" : "#ecfdf5"} 
+                                opacity="0.5"
+                            />
+                            <polyline fill="none" stroke={color} strokeWidth="2" points={points} strokeLinecap="round" strokeLinejoin="round" />
+                            <circle cx={width} cy={height - ((lastValue - min) / range) * height} r="3" fill={color} />
+                        </svg>
+                    </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p className="text-xs">Normal Range: {minNormal}-{maxNormal} {unit}</p>
+                    <p className="text-xs font-bold">{isAbnormal ? '⚠️ Attention Needed' : '✅ Within Limits'}</p>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    );
+};
+
+
+
+
+
+// Dentistry Data View
+const DentistryDataView = ({ data, locale }: { data: any, locale: string }) => {
+  if (!data) return null;
+
+  const hasDentalChart = data.dentalChart && Object.keys(data.dentalChart).length > 0;
+
+  return (
+    <div className="space-y-4">
+      {/* Chief Complaint */}
+      {data.chiefComplaint && (
+        <div className="space-y-1">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-red-500" />
+            {locale === 'ar' ? 'الشكوى الرئيسية' : 'Chief Complaint'}
+          </h4>
+          <p className="text-sm text-gray-800 bg-red-50/60 border border-red-100 rounded p-2">
+            {data.chiefComplaint}
+          </p>
+        </div>
+      )}
+
+      {/* Tooth / Dental Chart */}
+      {hasDentalChart && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-amber-500" />
+            {locale === 'ar' ? 'خريطة الأسنان' : 'Dental Chart'}
+          </h4>
+          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
+            <table className="min-w-full text-xs md:text-sm">
+              <thead className="bg-gray-50 text-gray-600">
+                <tr>
+                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'السن' : 'Tooth'}</th>
+                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'الموضع' : 'Location'}</th>
+                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'الحالة' : 'Condition'}</th>
+                  <th className="px-3 py-2 text-right hidden md:table-cell">
+                    {locale === 'ar' ? 'حالة العصب / ملاحظات' : 'Pulp / Notes'}
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {Object.entries<any>(data.dentalChart).map(([toothKey, toothInfo]) => (
+                  <tr key={toothKey} className="hover:bg-gray-50">
+                    <td className="px-3 py-2 font-mono text-gray-800">{toothKey}</td>
+                    <td className="px-3 py-2 text-gray-700">{toothInfo.location}</td>
+                    <td className="px-3 py-2 text-gray-700">
+                      {toothInfo.condition || toothInfo.status}
+                    </td>
+                    <td className="px-3 py-2 text-gray-600 hidden md:table-cell">
+                      {[
+                        toothInfo.pulpStatus,
+                        toothInfo.percussion && `${locale === 'ar' ? 'طرق:' : 'Perc:'} ${toothInfo.percussion}`,
+                        toothInfo.mobility && `${locale === 'ar' ? 'حركة:' : 'Mob:'} ${toothInfo.mobility}`,
+                        toothInfo.status
+                      ]
+                        .filter(Boolean)
+                        .join(' • ')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Periodontal Status */}
+      {data.periodontalStatus && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Activity className="w-4 h-4 text-green-600" />
+            {locale === 'ar' ? 'حالة اللثة والدعم' : 'Periodontal Status'}
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+            {Object.entries<any>(data.periodontalStatus).map(([k, v]) => (
+              <div key={k} className="flex justify-between bg-green-50/60 border border-green-100 rounded px-2 py-1">
+                <span className="text-gray-600 capitalize">
+                  {locale === 'ar' ? k : k.replace(/([A-Z])/g, ' $1')}
+                </span>
+                <span className="font-medium text-green-800">{String(v)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Procedure Details */}
+      {data.procedureDetails && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Scan className="w-4 h-4 text-blue-500" />
+            {locale === 'ar' ? 'تفاصيل الإجراء' : 'Procedure Details'}
+          </h4>
+          <div className="bg-blue-50 border border-blue-200 rounded p-3 space-y-2 text-sm">
+            {data.procedureDetails.type && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">{locale === 'ar' ? 'نوع الإجراء' : 'Type'}</span>
+                <span className="font-medium text-blue-900">{data.procedureDetails.type}</span>
+              </div>
+            )}
+            {data.procedureDetails.anesthesia && (
+              <div className="flex justify-between">
+                <span className="text-gray-600">{locale === 'ar' ? 'التخدير' : 'Anesthesia'}</span>
+                <span className="font-medium text-blue-900">{data.procedureDetails.anesthesia}</span>
+              </div>
+            )}
+            {Array.isArray(data.procedureDetails.steps) && data.procedureDetails.steps.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-gray-600 mb-1">
+                  {locale === 'ar' ? 'الخطوات' : 'Steps'}
+                </p>
+                <ul className="list-disc list-inside space-y-1 text-gray-800">
+                  {data.procedureDetails.steps.map((step: string, idx: number) => (
+                    <li key={idx}>{step}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {data.procedureDetails.workingLength && (
+              <div className="mt-1">
+                <p className="text-xs font-semibold text-gray-600 mb-1">
+                  {locale === 'ar' ? 'أطوال القنوات (Working Length)' : 'Working Lengths'}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-1 text-xs">
+                  {Object.entries<any>(data.procedureDetails.workingLength).map(([canal, length]) => (
+                    <div key={canal} className="flex justify-between bg-white/60 rounded px-2 py-1">
+                      <span className="text-gray-600 capitalize">{canal}</span>
+                      <span className="font-mono text-gray-800">{length}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Diagnosis & Plan */}
+      {(data.diagnosis || data.plan) && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <ClipboardList className="w-4 h-4 text-purple-500" />
+            {locale === 'ar' ? 'التشخيص والخطة' : 'Diagnosis & Plan'}
+          </h4>
+          <div className="bg-purple-50 border border-purple-200 rounded p-3 space-y-1 text-sm">
+            {data.diagnosis && (
+              <p className="font-medium text-purple-900">
+                {locale === 'ar' ? 'التشخيص: ' : 'Diagnosis: '}
+                <span className="font-normal">{data.diagnosis}</span>
+              </p>
+            )}
+            {data.plan && (
+              <p className="text-purple-900">
+                {locale === 'ar' ? 'الخطة: ' : 'Plan: '}
+                {data.plan}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Medications */}
+      {Array.isArray(data.medicationsPrescribed) && data.medicationsPrescribed.length > 0 && (
+        <div className="space-y-2">
+          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+            <Pill className="w-4 h-4 text-green-600" />
+            {locale === 'ar' ? 'الأدوية الموصوفة' : 'Prescribed Medications'}
+          </h4>
+          <ul className="list-disc list-inside text-sm text-gray-800 space-y-1">
+            {data.medicationsPrescribed.map((m: string, idx: number) => (
+              <li key={idx}>{m}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================
+// 4. Single Visit View Component
+// ============================================
+const SingleVisitView = ({ visit, locale, isExternal }: { visit: any, locale: string, isExternal?: boolean }) => {
+  const [selectedImage, setSelectedImage] = useState<{ url: string, title: string } | null>(null);
+
+  // Helper function to get specialty in English
+  const getSpecialtyKey = (specialtyObj: any) => {
+    if (!specialtyObj) return '';
+    if (typeof specialtyObj === 'string') return specialtyObj;
+    return specialtyObj.en || specialtyObj.ar || '';
+  };
+
+  // Specialized Data Payload Renderers
+  const renderDataPayload = (payload: any, specialty: any) => {
+    if (!payload) return null;
+    
+    const specialtyKey = getSpecialtyKey(specialty).toLowerCase();
+    
+    switch (true) {
+      case specialtyKey.includes('cardiology'):
+        return <CardiologyDataView data={payload} locale={locale} />;
+        // return <div>تمام يسطا اتشالت</div>
+      
+      case specialtyKey.includes('ophthalmology') || specialtyKey.includes('eye'):
+        return <OphthalmologyDataView data={payload} locale={locale} />;
+      
+      case specialtyKey.includes('gastroenterology') || specialtyKey.includes('digestive'):
+        return <GastroenterologyDataView data={payload} locale={locale} />;
+      
+      case specialtyKey.includes('urology') || specialtyKey.includes('renal'):
+        return <UrologyDataView data={payload} locale={locale} />;
+      
+      case specialtyKey.includes('ent') || specialtyKey.includes('sinus'):
+        return <ENTDataView data={payload} locale={locale} />;
+      
+      case specialtyKey.includes('dermatology') || specialtyKey.includes('skin'):
+        return <DermatologyDataView data={payload} locale={locale} />;
+      
+      case specialtyKey.includes('internal medicine') || specialtyKey.includes('internal'):
+        return <InternalMedicineDataView data={payload} locale={locale} />;
+
+      case specialtyKey.includes('dentistry') || specialtyKey.includes('dental') || specialtyKey.includes('tooth'):
+        return <DentistryDataView data={payload} locale={locale} />;
+      
+      default:
+        return <DefaultDataView data={payload} locale={locale} />;
+    }
+  };
+
+  return (
+    <>
+      <div className="border rounded-lg mb-3 bg-white">
+        <div className="p-4 border-b bg-gray-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Calendar className="w-4 h-4 text-gray-500" />
+              <span className="text-sm font-medium text-gray-700">
+                {new Date(visit.date).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </span>
+            </div>
+            <Badge variant="outline" className="text-xs">
+              {visit.type || 'Consultation'}
+            </Badge>
+          </div>
+          {visit.notes && (
+            <p className="text-sm text-gray-600 mt-2">{getLoc(visit.notes, locale)}</p>
+          )}
+        </div>
+        
+        <div className="p-4">
+          {visit.records.map((rec: any) => (
+            <div key={rec.id} className="mb-4 last:mb-0">
+              {/* Record Header */}
+              <div className="flex gap-3 items-start p-2 hover:bg-gray-50 rounded transition-colors group mb-3">
+                <div className="mt-1"><CheckCircle2 className="w-4 h-4 text-green-600" /></div>
+                <div className="flex-1">
+                  <h5 className="font-medium text-sm text-gray-900 flex justify-between">
+                      {getLoc(rec.title, locale)}
+                      <span className="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">#{rec.id}</span>
+                  </h5>
+                  <p className="text-xs text-gray-500 mt-0.5">{getLoc(rec.description, locale)}</p>
+                </div>
+              </div>
+
+              {/* Specialized Data Payload View */}
+              {rec.dataPayload && (
+                <div className="mt-3 ms-9">
+                  <div className="bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 p-4 shadow-sm">
+                    <div className="mb-3">
+                      <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">
+                        <FileText className="w-3 h-3" />
+                        {locale === 'ar' ? 'تفاصيل الفحص' : 'Examination Details'}
+                      </div>
+                      {renderDataPayload(rec.dataPayload, visit.specialty)}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Attachments Gallery */}
+              {rec.attachments && rec.attachments.length > 0 && (
+                  <div className="mt-4 ms-9">
+                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">
+                      <ImageIcon className="w-3 h-3" />
+                      {locale === 'ar' ? 'المرفقات' : 'Attachments'}
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                       {rec.attachments.map((att: any) => (
+                           <div 
+                             key={att.id} 
+                             className="group relative aspect-square bg-gray-100 rounded-lg overflow-hidden border cursor-zoom-in shadow-sm hover:shadow-md transition-all"
+                             onClick={(e) => { 
+                               e.stopPropagation(); 
+                               setSelectedImage({ url: att.url, title: att.title }); 
+                             }}
+                           >
+                               <img src={att.url} alt={att.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs text-center p-1 font-medium">
+                                   {att.title}
+                               </div>
+                               <div className="absolute bottom-1 right-1 bg-black/60 p-1 rounded text-white">
+                                   <ImageIcon className="w-3 h-3" />
+                               </div>
+                           </div>
+                       ))}
+                    </div>
+                  </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl p-0 bg-black/95 border-none text-white overflow-hidden flex flex-col items-center justify-center h-[80vh] sm:h-auto">
+          {selectedImage && (
+            <>
+              <div className="absolute top-4 right-4 z-50">
+                 <Button variant="ghost" size="icon" className="rounded-full bg-black/50 hover:bg-white/20 text-white" onClick={() => setSelectedImage(null)}>
+                   <X className="w-5 h-5" />
+                 </Button>
+              </div>
+              <div className="w-full h-full flex items-center justify-center p-2 sm:p-6">
+                <img src={selectedImage.url} alt={selectedImage.title} className="max-w-full max-h-[75vh] object-contain rounded shadow-2xl" />
+              </div>
+              <div className="w-full bg-black/80 p-4 text-center backdrop-blur-sm absolute bottom-0">
+                <p className="font-medium text-sm sm:text-base">{selectedImage.title}</p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+// ============================================
+// 5. Doctor Visit Card (Groups visits by doctor)
+// ============================================
+const DoctorVisitCard = ({ visits, locale, onRefill, isExternal }: { visits: any[], locale: string, onRefill?: () => void, isExternal?: boolean }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  
+  if (visits.length === 0) return null;
+  
+  const firstVisit = visits[0];
+  const sortedVisits = [...visits].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const latestVisit = sortedVisits[0];
+  
+  return (
+    <Card className={`border rounded-lg shadow-sm ${isExternal ? 'opacity-90' : ''}`}>
+      <CardHeader className="pb-3 pt-4 px-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-start gap-4">
+            <div className="hidden sm:flex flex-col items-center min-w-[60px] text-center border-e pe-4">
+              <span className="text-xs text-muted-foreground uppercase">{new Date(latestVisit.date).toLocaleString('default', { month: 'short' })}</span>
+              <span className="text-xl font-bold text-gray-800">{new Date(latestVisit.date).getDate()}</span>
+              <span className="text-xs text-muted-foreground">{new Date(latestVisit.date).getFullYear()}</span>
+            </div>
+
+            <div className="flex-1">
+              <h4 className="font-semibold text-base text-primary flex items-center gap-2">
+                {getLoc(firstVisit.doctorName, locale)}
+                <Badge variant="secondary" className="text-[10px] font-normal">
+                  {getLoc(firstVisit.specialty, locale)}
+                </Badge>
+                <Badge variant="outline" className="text-[10px] font-normal">
+                  {visits.length} {locale === 'ar' ? 'زيارة' : 'visits'}
+                </Badge>
+              </h4>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                <MapPin className="w-3 h-3"/> {getLoc(firstVisit.clinicName, locale)}
+              </div>
+              <div className="text-xs text-gray-500 mt-2">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {locale === 'ar' ? 'آخر زيارة: ' : 'Last visit: '}
+                  {new Date(latestVisit.date).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US')}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col items-end gap-2">
+            {!isExternal && onRefill && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-blue-600 hover:bg-blue-50 gap-1 h-8"
+                onClick={onRefill}
+              >
+                <Repeat className="w-3 h-3" />
+                {locale === 'ar' ? 'تكرار' : 'Refill'}
+              </Button>
+            )}
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 px-2"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
+        </div>
+
+        {/* External Badge */}
+        {isExternal && (
+          <Badge variant="outline" className="bg-gray-100 text-gray-500 border-gray-300 gap-1 absolute top-4 right-4">
+            <Lock className="w-3 h-3"/> Read-Only
+          </Badge>
+        )}
+      </CardHeader>
+
+      {isExpanded && (
+        <CardContent className="pt-0 px-4 pb-4 border-t">
+          <div className="space-y-4 mt-4">
+            {sortedVisits.map((visit) => (
+              <SingleVisitView 
+                key={visit.id} 
+                visit={visit} 
+                locale={locale} 
+                isExternal={isExternal}
+              />
+            ))}
+          </div>
+        </CardContent>
+      )}
+    </Card>
+  );
+};
+
+// ============================================
+// 6. Main Page Component
+// ============================================
+export default function PatientRecordDetail() {
+  const params = useParams();
+  const locale = (params.locale as string) || "ar";
+
+  // --- States ---
+  const [activeTab, setActiveTab] = useState("local");
+  const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
+
+  // Modal & Forms
+  const [isNewLogOpen, setIsNewLogOpen] = useState(false);
+  const [planInput, setPlanInput] = useState("");
+  const [assessmentInput, setAssessmentInput] = useState("");
+  const [allergyWarning, setAllergyWarning] = useState<string | null>(null);
+  const [soapError, setSoapError] = useState<string | null>(null);
+
+  // Security & OTP
+  const [isExternalUnlocked, setIsExternalUnlocked] = useState(false);
+  const [sessionExpiry, setSessionExpiry] = useState<number | null>(null);
+  const [timeLeft, setTimeLeft] = useState<string>("");
+  const [otpStep, setOtpStep] = useState<'reason' | 'method' | 'verify'>('reason');
+  const [accessReason, setAccessReason] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState<'sms' | 'email' | null>(null);
+  const [otpInput, setOtpInput] = useState("");
+
+  // --- Data Logic ---
+  const patient = useMemo(
+    () => dummyPatients.find((p) => p.id === params.id) || dummyPatients[0],
+    [params.id]
+  );
+
+  const localVisits = patient.visitsHistory.filter((v) => v.doctorId === CURRENT_DOCTOR_ID);
+  const externalVisits = patient.visitsHistory.filter((v) => v.doctorId !== CURRENT_DOCTOR_ID);
+  
+  // Group visits by doctor
+  const groupVisitsByDoctor = (visits: any[]) => {
+    const grouped: Record<string, any[]> = {};
+    
+    visits.forEach(visit => {
+      const doctorId = visit.doctorId;
+      if (!grouped[doctorId]) {
+        grouped[doctorId] = [];
+      }
+      grouped[doctorId].push(visit);
+    });
+    
+    return grouped;
+  };
+  
+  const groupedLocalVisits = groupVisitsByDoctor(localVisits);
+  const groupedExternalVisits = groupVisitsByDoctor(externalVisits);
+
+  // --- Clinical Priority Strip Data ---
+  const criticalAlerts = patient.alerts.filter(a => a.type === 'critical');
+  const chronicConditions = patient.alerts.filter(a => a.type === 'warning');
+
+  // --- Effect: Drug Interaction Check ---
+  useEffect(() => {
+    const lowerPlan = planInput.toLowerCase();
+    const hasPenicillinAllergy = patient.alerts.some(a => 
+      a.type === 'critical' && getLoc(a.msg, 'en').toLowerCase().includes('penicillin')
+    );
+    if (hasPenicillinAllergy && lowerPlan.includes('penicillin')) {
+      setAllergyWarning(locale === 'ar' ? "تنبيه خطير: المريض لديه حساسية من البنسلين!" : "CRITICAL: Patient has Penicillin allergy!");
+    } else {
+      setAllergyWarning(null);
+    }
+  }, [planInput, patient, locale]);
+
+  // --- Effect: Countdown Timer ---
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isExternalUnlocked && sessionExpiry) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        const diff = sessionExpiry - now;
+        if (diff <= 0) handleEndSession();
+        else {
+          const minutes = Math.floor(diff / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          setTimeLeft(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        }
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isExternalUnlocked, sessionExpiry]);
+
+  // --- Handlers ---
+  const handleVerifyOTP = () => {
+    if (otpInput === "1234") {
+      setIsExternalUnlocked(true);
+      setSessionExpiry(Date.now() + 60 * 60 * 1000);
+      setOtpStep('reason'); 
+      setOtpInput("");
+      setAccessReason("");
+    } else {
+      alert("Invalid OTP");
+    }
+  };
+
+  const handleEndSession = () => {
+    setIsExternalUnlocked(false);
+    setSessionExpiry(null);
+    setTimeLeft("");
+  };
+
+  const handleRefill = (doctorId: string, prevNotes: string) => {
+    setPlanInput(prevNotes + (locale === 'ar' ? "\n(تكرار العلاج - Refill)" : "\n(Refill)"));
+    setIsNewLogOpen(true);
+  };
+
+  const handleSaveSOAP = () => {
+      // SOAP Validation
+      if (planInput.trim().length > 0 && assessmentInput.trim().length === 0) {
+          setSoapError(locale === 'ar' ? "لا يمكن حفظ خطة علاج بدون تشخيص (Assessment)" : "Cannot save Plan without Assessment");
+          return;
+      }
+      setSoapError(null);
+      setIsNewLogOpen(false);
+  };
+
+  return (
+    <div
+      className="min-h-screen bg-gray-50/30 dark:bg-gray-950 transition-colors"
+      dir={locale === 'ar' ? 'rtl' : 'ltr'}
+    >
+      
+      {/* 🚀 CLINICAL PRIORITY STRIP (Sticky Header) */}
+      <div className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b dark:border-gray-800 shadow-sm px-4 py-2 flex items-center gap-4 overflow-x-auto no-scrollbar">
+         {/* Critical Alerts */}
+         {criticalAlerts.length > 0 && (
+             <Badge
+               variant="destructive"
+               className="flex items-center gap-1 animate-pulse px-3 py-1 text-xs cursor-pointer"
+             >
+                 <AlertTriangle className="w-3 h-3" />
+                 {getLoc(criticalAlerts[0].msg, locale)}
+             </Badge>
+         )}
+         {/* Chronic Conditions */}
+         {chronicConditions.length > 0 && (
+             <Badge
+               variant="outline"
+               className="flex items-center gap-1 border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-200 px-3 py-1 text-xs cursor-pointer"
+             >
+                 <Info className="w-3 h-3" />
+                 {getLoc(chronicConditions[0].msg, locale)}
+             </Badge>
+         )}
+         {/* Medications */}
+         <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors">
+            <Pill className="w-3 h-3" />
+            <span className="font-semibold">{locale === 'ar' ? 'الأدوية الحالية:' : 'Meds:'}</span>
+            <span className="truncate max-w-[200px]">{patient.currentMedications ? patient.currentMedications.join(", ") : 'None'}</span>
+         </div>
+         {/* Last Visit */}
+         <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full ml-auto">
+             <History className="w-3 h-3" />
+             {locale === 'ar' ? 'آخر زيارة: منذ 3 أيام' : 'Last visit: 3 days ago'}
+         </div>
+         
+         {/* Enterprise Actions */}
+         <div className="flex items-center gap-1 border-l pl-2 border-gray-300">
+             <TooltipProvider>
+                 <Tooltip>
+                     <TooltipTrigger asChild>
+                         <Button variant="ghost" size="icon" className="h-7 w-7"><FileDown className="w-4 h-4 text-gray-500"/></Button>
+                     </TooltipTrigger>
+                     <TooltipContent>Export PDF</TooltipContent>
+                 </Tooltip>
+                 <Tooltip>
+                     <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7"><Flag className="w-4 h-4 text-gray-500"/></Button>
+                     </TooltipTrigger>
+                     <TooltipContent>Flag for Follow-up</TooltipContent>
+                 </Tooltip>
+             </TooltipProvider>
+         </div>
+      </div>
+
+      <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6 w-full">
+
+      {/* Header Info */}
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+            <div className="relative shrink-0">
+              <Avatar className="w-20 h-20 border-4 border-white shadow-sm">
+                <AvatarImage src={patient.avatar} />
+                <AvatarFallback>{getLoc(patient.name, locale)[0]}</AvatarFallback>
+              </Avatar>
+              <Badge className={`absolute -bottom-2 -right-2 px-2 py-0.5 text-[10px] ${getLoc(patient.status.code, 'en') === 'Stable' ? 'bg-green-500' : 'bg-red-500'}`}>
+                {getLoc(patient.status.code, locale)}
+              </Badge>
+            </div>
+            
+            <div className="flex-1 min-w-0">
+                  <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+                    {getLoc(patient.name, locale)}
+                  </h1>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400 mt-1">
+                      <span className="flex items-center gap-1"><User className="w-3 h-3"/> {getLoc(patient.gender, locale)}, {2024 - parseInt(patient.dateOfBirth.split('-')[0])}yo</span>
+                      <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> <span dir="ltr">{patient.contactPhone}</span></span>
+                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {getLoc(patient.address, locale)}</span>
+                  </div>
+            </div>
+
+            {/* New Record Button */}
+            <div className="shrink-0">
+                <Dialog open={isNewLogOpen} onOpenChange={setIsNewLogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="gap-2 shadow-sm bg-blue-600 hover:bg-blue-700" onClick={() => { setPlanInput(""); setAssessmentInput(""); setSoapError(null); }}>
+                      <Plus className="w-4 h-4" /> 
+                      {locale === 'ar' ? 'سجل جديد' : 'New Record'}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0 gap-0" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                      <div className="flex h-full overflow-hidden">
+                          {/* Sidebar */}
+                          <div className="w-[280px] bg-gray-50 dark:bg-gray-900 border-e dark:border-gray-800 p-4 overflow-y-auto hidden md:block text-sm">
+                              <h3 className="font-bold text-gray-500 dark:text-gray-300 uppercase text-xs mb-3">Patient Summary</h3>
+                              {/* Quick Allergies */}
+                              <div className="mb-4">
+                                  {patient.alerts.map((a,i) => (
+                                    <div
+                                      key={i}
+                                      className="text-xs text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900 p-2 rounded mb-1"
+                                    >
+                                      {getLoc(a.msg, locale)}
+                                    </div>
+                                  ))}
+                              </div>
+                              <Separator className="mb-4"/>
+                              <div className="space-y-2">
+                                  <div className="flex justify-between"><span>BP</span> <span className="font-mono font-bold">{patient.vitalSigns.bloodPressure}</span></div>
+                                  <div className="flex justify-between"><span>HR</span> <span className="font-mono font-bold">{patient.vitalSigns.heartRate}</span></div>
+                              </div>
+                          </div>
+                          {/* Form */}
+                          <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950">
+                              <DialogHeader className="p-5 border-b">
+                                  <DialogTitle>New SOAP Note</DialogTitle>
+                              </DialogHeader>
+                              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                                  {/* SOAP Fields */}
+                                  <div><Label className="text-blue-600 font-bold mb-1 block">Subjective</Label><Textarea className="bg-blue-50/20"/></div>
+                                  <div><Label className="text-green-600 font-bold mb-1 block">Objective</Label><Textarea className="bg-green-50/20"/></div>
+                                  <div>
+                                      <Label className="text-purple-600 font-bold mb-1 block">Assessment <span className="text-red-500">*</span></Label>
+                                      <Input 
+                                        className="bg-purple-50/20" 
+                                        value={assessmentInput}
+                                        onChange={(e) => setAssessmentInput(e.target.value)}
+                                        placeholder="Diagnosis..."
+                                      />
+                                  </div>
+                                  <div>
+                                      <Label className="text-orange-600 font-bold mb-1 block">Plan</Label>
+                                      {allergyWarning && (
+                                        <div className="mb-2 p-2 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs rounded font-bold animate-pulse">
+                                          {allergyWarning}
+                                        </div>
+                                      )}
+                                      <Textarea 
+                                        className="bg-orange-50/20 dark:bg-orange-900/20 min-h-[100px]" 
+                                        value={planInput} 
+                                        onChange={(e) => setPlanInput(e.target.value)}
+                                      />
+                                  </div>
+                                  {soapError && (
+                                    <div className="text-red-600 dark:text-red-300 text-sm font-semibold bg-red-50 dark:bg-red-900/40 p-2 rounded">
+                                      {soapError}
+                                    </div>
+                                  )}
+                              </div>
+                              <DialogFooter className="p-4 border-t dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+                                  <Button onClick={handleSaveSOAP}>Save Record</Button>
+                              </DialogFooter>
+                          </div>
+                      </div>
+                  </DialogContent>
+                </Dialog>
+            </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-6">
+        
+        {/* LEFT COLUMN: Vitals (Sparklines) */}
+        <div className="col-span-12 lg:col-span-3 space-y-6">
+          <Card className="shadow-sm border-gray-200 dark:border-gray-800 dark:bg-gray-900">
+            <CardHeader className="pb-2 pt-4 px-4">
+               <CardTitle className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-200">
+                  <TrendingUp className="w-4 h-4 text-blue-500" />
+                  {locale === 'ar' ? 'المؤشرات الحيوية' : 'Vital Trends'}
+               </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 px-4 pb-4">
+               {/* Heart Rate */}
+               <div>
+                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <span>Heart Rate</span>
+                  </div>
+                  <SmartSparkline data={patient.vitalSigns.history.heartRate} minNormal={60} maxNormal={100} unit="bpm" />
+               </div>
+               {/* BP */}
+               <div>
+                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <span>BP (Systolic)</span>
+                  </div>
+                  <SmartSparkline data={patient.vitalSigns.history.bloodPressure} minNormal={110} maxNormal={130} unit="mmHg" />
+               </div>
+               {/* Glucose */}
+               <div>
+                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
+                    <span>Glucose</span>
+                  </div>
+                  <SmartSparkline data={patient.vitalSigns.history.glucose} minNormal={70} maxNormal={140} unit="mg/dL" />
+               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* RIGHT COLUMN: Visits & Actions */}
+        <div className="col-span-12 lg:col-span-9 space-y-6">
+          
+          {/* 🧠 DECISION-ORIENTED UI: Suggested Actions */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Button
+                variant="outline"
+                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-950 border-blue-100 dark:border-blue-900 hover:border-blue-200 shadow-sm group"
+              >
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900 text-blue-600 rounded-full group-hover:bg-blue-200">
+                    <Repeat className="w-4 h-4"/>
+                  </div>
+                  <div className="text-start">
+                      <div className="text-sm font-semibold text-gray-900">Refill Prescriptions</div>
+                      <div className="text-[10px] text-gray-500">Metformin, Lisinopril</div>
+                  </div>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-yellow-50 dark:hover:bg-yellow-950 border-yellow-100 dark:border-yellow-900 hover:border-yellow-200 shadow-sm group"
+              >
+                  <div className="p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 rounded-full group-hover:bg-yellow-200">
+                    <Stethoscope className="w-4 h-4"/>
+                  </div>
+                  <div className="text-start">
+                      <div className="text-sm font-semibold text-gray-900">Review HR Trend</div>
+                      <div className="text-[10px] text-gray-500">Elevated in last 2 visits</div>
+                  </div>
+              </Button>
+              <Button
+                variant="outline"
+                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm group"
+              >
+                   <div className="p-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200 rounded-full">
+                     <GitCommitHorizontal className="w-4 h-4"/>
+                   </div>
+                   <div className="text-start">
+                      <div className="text-sm font-semibold text-gray-900">Lab Results</div>
+                      <div className="text-[10px] text-gray-500">Pending from 12/12</div>
+                   </div>
+              </Button>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-0">
+                <TabsList className="w-full sm:w-auto grid grid-cols-2">
+                    <TabsTrigger value="local">{locale === 'ar' ? 'سجلات محلية' : 'Local Records'}</TabsTrigger>
+                    <TabsTrigger value="external" className="relative">
+                        {locale === 'ar' ? 'سجلات خارجية' : 'External Records'}
+                        {isExternalUnlocked && <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-500 animate-pulse"/>}
+                    </TabsTrigger>
+                </TabsList>
+                
+                {/* Timeline Toggle */}
+                {activeTab === 'local' && (
+                    <div className="flex bg-gray-100 p-1 rounded-lg mt-2 sm:mt-0">
+                        <button
+                          type="button"
+                          aria-label={locale === 'ar' ? 'عرض قائمة' : 'List view'}
+                          onClick={() => setViewMode('list')}
+                          className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}
+                        >
+                          <List className="w-4 h-4"/>
+                        </button>
+                        <button
+                          type="button"
+                          aria-label={locale === 'ar' ? 'عرض تسلسلي زمني' : 'Timeline view'}
+                          onClick={() => setViewMode('timeline')}
+                          className={`p-1.5 rounded ${viewMode === 'timeline' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}
+                        >
+                          <LayoutList className="w-4 h-4"/>
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* LOCAL TAB */}
+            <TabsContent value="local" className="space-y-4">
+               {Object.keys(groupedLocalVisits).length > 0 ? (
+                  viewMode === 'list' ? (
+                      // List View with grouped visits by doctor
+                      Object.entries(groupedLocalVisits).map(([doctorId, visits]) => (
+                        <DoctorVisitCard 
+                            key={doctorId}
+                            visits={visits}
+                            locale={locale}
+                            onRefill={() => handleRefill(doctorId, getLoc(visits[0].notes, locale))}
+                        />
+                      ))
+                  ) : (
+                      // Timeline View
+                      <div className="relative border-s-2 border-gray-200 dark:border-gray-700 ms-4 space-y-8 py-4">
+                          {localVisits.map((visit) => (
+                              <div key={visit.id} className="ms-6 relative">
+                                  <span className="absolute -left-[33px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-4 ring-white">
+                                      <CheckCircle2 className="h-4 w-4 text-blue-600" />
+                                  </span>
+                                  <div className="text-xs text-gray-500 mb-1 font-mono">{visit.date}</div>
+                                  <SingleVisitView visit={visit} locale={locale} />
+                              </div>
+                          ))}
+                      </div>
+                  )
+               ) : (
+                 // 🎯 Smart Empty State
+                 <div className="flex flex-col items-center justify-center py-12 text-center bg-white dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
+                    <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-full mb-3">
+                      <FileText className="w-8 h-8 text-gray-400"/>
+                    </div>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                      {locale === 'ar' ? 'لا توجد سجلات محلية' : 'No Local Records Yet'}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-4">
+                      {locale === 'ar' ? 'ابدأ بإضافة أول زيارة لهذا المريض' : 'Start by creating the first consultation log for this patient.'}
+                    </p>
+                    <Button variant="outline" onClick={() => { setPlanInput(""); setIsNewLogOpen(true); }}>
+                        <Plus className="w-4 h-4 mr-2"/>
+                        {locale === 'ar' ? 'إضافة زيارة' : 'Add First Visit'}
+                    </Button>
+                 </div>
+               )}
+            </TabsContent>
+
+            {/* EXTERNAL TAB */}
+            <TabsContent value="external" className="space-y-4">
+              {!isExternalUnlocked ? (
+                 <Card className="bg-gray-50/50 dark:bg-gray-900/70 border-dashed border-2 dark:border-gray-700 p-8">
+                   <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-6">
+                      <div className="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm ring-1 ring-gray-100 dark:ring-gray-700">
+                        <Lock className="w-10 h-10 text-gray-400 dark:text-gray-300" />
+                      </div>
+                      
+                      {/* Step 1: Reason for Access (Audit Log) */}
+                      {otpStep === 'reason' && (
+                          <div className="w-full space-y-4 animate-in fade-in">
+                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+                                Reason for Accessing External Data
+                              </h3>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                This action will be recorded in the audit log.
+                              </p>
+                              
+                              <RadioGroup value={accessReason} onValueChange={setAccessReason} className="grid grid-cols-1 gap-2 text-start">
+                                  <div className="flex items-center space-x-2 bg-white dark:bg-gray-900 p-3 rounded border dark:border-gray-700 cursor-pointer hover:border-blue-400">
+                                      <RadioGroupItem value="consultation" id="r1" />
+                                      <Label htmlFor="r1" className="cursor-pointer font-normal">Regular Consultation</Label>
+                                  </div>
+                                  <div className="flex items-center space-x-2 bg-white dark:bg-gray-900 p-3 rounded border dark:border-gray-700 cursor-pointer hover:border-blue-400">
+                                      <RadioGroupItem value="emergency" id="r2" />
+                                      <Label htmlFor="r2" className="cursor-pointer font-normal">Emergency / Urgent Care</Label>
+                                  </div>
+                              </RadioGroup>
+                              <Button className="w-full" disabled={!accessReason} onClick={() => setOtpStep('method')}>Next</Button>
+                          </div>
+                      )}
+
+                      {/* Step 2: Choose Method */}
+                      {otpStep === 'method' && (
+                        <div className="grid grid-cols-2 gap-4 w-full animate-in fade-in slide-in-from-right-4">
+                          <Button
+                            variant="outline"
+                            className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
+                            onClick={() => { setSelectedMethod('sms'); setOtpStep('verify'); }}
+                          >
+                            <MessageSquare className="w-6 h-6 text-blue-600" />
+                            <span className="text-xs font-semibold">SMS ••••890</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
+                            onClick={() => { setSelectedMethod('email'); setOtpStep('verify'); }}
+                          >
+                            <Mail className="w-6 h-6 text-blue-600" />
+                            <span className="text-xs font-semibold">Email</span>
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* Step 3: Verify */}
+                      {otpStep === 'verify' && (
+                        <div className="w-full space-y-4 animate-in fade-in">
+                           <div className="text-sm text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 py-2 rounded flex items-center justify-center gap-2">
+                              {selectedMethod === 'sms' ? <MessageSquare className="w-4 h-4"/> : <Mail className="w-4 h-4"/>}
+                              Code Sent
+                           </div>
+                           <Input 
+                              placeholder="0000" 
+                              className="text-center text-2xl tracking-[1em] font-mono h-12" 
+                              maxLength={4}
+                              value={otpInput}
+                              onChange={(e) => setOtpInput(e.target.value)}
+                            />
+                            <Button className="w-full" onClick={handleVerifyOTP}>Verify (1234)</Button>
+                            <Button
+                              variant="link"
+                              size="sm"
+                              onClick={() => setOtpStep('method')}
+                              className="text-gray-400 dark:text-gray-300"
+                            >
+                              Back
+                            </Button>
+                        </div>
+                      )}
+                   </div>
+                 </Card>
+              ) : (
+                <div className="space-y-4 animate-in fade-in">
+                   <div className="bg-green-50 dark:bg-green-900/40 border border-green-200 dark:border-green-900 rounded-lg p-3 flex justify-between items-center">
+                      <div className="flex items-center gap-3 text-green-800 dark:text-green-200">
+                        <ShieldCheck className="w-5 h-5" />
+                        <div>
+                            <span className="font-bold text-sm block">{locale === 'ar' ? 'جلسة خارجية نشطة' : 'Active External Session'}</span>
+                            <span className="text-[10px] opacity-80 block">Access Reason: {accessReason}</span>
+                        </div>
+                      </div>
+                       <div className="flex items-center gap-3">
+                         <div className="flex items-center gap-2 bg-white dark:bg-green-950 px-3 py-1 rounded border border-green-200 dark:border-green-800 text-green-700 dark:text-green-200 font-mono font-bold">
+                            <Timer className="w-4 h-4 animate-pulse" />
+                            {timeLeft}
+                         </div>
+                         <Button variant="destructive" size="sm" onClick={handleEndSession}>
+                            <LogOut className="w-4 h-4" />
+                         </Button>
+                      </div>
+                   </div>
+                   
+                   {Object.entries(groupedExternalVisits).map(([doctorId, visits]) => (
+                     <DoctorVisitCard 
+                       key={doctorId}
+                       visits={visits}
+                       locale={locale}
+                       isExternal
+                     />
+                   ))}
+                </div>
+              )}
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // "use client";
 
 // import React, { useCallback, useMemo, useState, use } from "react";
@@ -2387,1137 +3544,3 @@
 
 
 
-
-
-"use client";
-
-import React, { useState, useMemo, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { 
-  ArrowRight, Lock, ShieldCheck, AlertTriangle, Info, MapPin, 
-  Phone, User, Plus, Mail, MessageSquare, Timer, 
-  LogOut, RefreshCw, FileText, CheckCircle2, TrendingUp, 
-  Image as ImageIcon, Repeat, X, Pill, Stethoscope, 
-  AlertOctagon, FileDown, Flag, History, List, 
-  GitCommitHorizontal, LayoutList, Eye, Droplets, Search, ClipboardCheck, Scan, Scissors, 
-  Microscope, ScanEye, Droplet, Ear, Camera, Scaling, 
-  FlaskConical, ClipboardList, Activity, Calendar, ChevronDown, ChevronUp
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
-import { dummyPatients } from "../data";
-import { CURRENT_DOCTOR_ID, LocalizedText } from "../types";
-import {
-  CardiologyDataView,
-  OphthalmologyDataView,  
-  GastroenterologyDataView,
-  UrologyDataView,
-  ENTDataView,
-  DermatologyDataView,
-  InternalMedicineDataView,
-  DefaultDataView
-} from "../components/specialties/index";
-
-// ============================================
-// 1. Localization Helper
-// ============================================
-const getLoc = (content: LocalizedText | string | undefined, locale: string) => {
-  if (!content) return "";
-  if (typeof content === "string") return content;
-  
-  const priorities: Record<string, string[]> = {
-    'en': ['en', 'ar', 'de'],
-    'ar': ['ar', 'en', 'de'],
-    'de': ['de', 'en', 'ar'],
-  };
-  
-  const searchOrder = priorities[locale] || ['ar', 'en', 'de'];
-  
-  for (const lang of searchOrder) {
-    // @ts-ignore
-    const value = content[lang];
-    if (value && value.trim() !== "") return value;
-  }
-  return "";
-};
-
-// ============================================
-// 2. Enhanced Sparkline (Context-Aware)
-// ============================================
-const SmartSparkline = ({ data, minNormal, maxNormal, unit }: { data: number[], minNormal: number, maxNormal: number, unit: string }) => {
-    if (!data || data.length < 2) return null;
-    
-    const min = Math.min(...data, minNormal - 5);
-    const max = Math.max(...data, maxNormal + 5);
-    const range = max - min || 1;
-    const width = 120;
-    const height = 40;
-    
-    const lastValue = data[data.length - 1];
-    const isAbnormal = lastValue < minNormal || lastValue > maxNormal;
-    const color = isAbnormal ? "red" : "#10b981"; 
-
-    const points = data.map((val, i) => {
-        const x = (i / (data.length - 1)) * width;
-        const y = height - ((val - min) / range) * height;
-        return `${x},${y}`;
-    }).join(" ");
-
-    return (
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <div className="flex flex-col items-end cursor-help">
-                         <div className="flex items-center gap-2 mb-1">
-                             {isAbnormal && <AlertOctagon className="w-3 h-3 text-red-500 animate-pulse" />}
-                             <span className={`font-bold text-sm ${isAbnormal ? 'text-red-600' : 'text-gray-700'}`}>
-                                 {lastValue} <span className="text-[10px] text-muted-foreground font-normal">{unit}</span>
-                             </span>
-                         </div>
-                         <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
-                            {/* Normal Range Zone Background */}
-                            <rect 
-                                x="0" 
-                                y={height - ((maxNormal - min) / range) * height} 
-                                width={width} 
-                                height={((maxNormal - minNormal) / range) * height} 
-                                fill={isAbnormal ? "#fee2e2" : "#ecfdf5"} 
-                                opacity="0.5"
-                            />
-                            <polyline fill="none" stroke={color} strokeWidth="2" points={points} strokeLinecap="round" strokeLinejoin="round" />
-                            <circle cx={width} cy={height - ((lastValue - min) / range) * height} r="3" fill={color} />
-                        </svg>
-                    </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p className="text-xs">Normal Range: {minNormal}-{maxNormal} {unit}</p>
-                    <p className="text-xs font-bold">{isAbnormal ? '⚠️ Attention Needed' : '✅ Within Limits'}</p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
-    );
-};
-
-
-
-
-
-// Dentistry Data View
-const DentistryDataView = ({ data, locale }: { data: any, locale: string }) => {
-  if (!data) return null;
-
-  const hasDentalChart = data.dentalChart && Object.keys(data.dentalChart).length > 0;
-
-  return (
-    <div className="space-y-4">
-      {/* Chief Complaint */}
-      {data.chiefComplaint && (
-        <div className="space-y-1">
-          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-red-500" />
-            {locale === 'ar' ? 'الشكوى الرئيسية' : 'Chief Complaint'}
-          </h4>
-          <p className="text-sm text-gray-800 bg-red-50/60 border border-red-100 rounded p-2">
-            {data.chiefComplaint}
-          </p>
-        </div>
-      )}
-
-      {/* Tooth / Dental Chart */}
-      {hasDentalChart && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <Activity className="w-4 h-4 text-amber-500" />
-            {locale === 'ar' ? 'خريطة الأسنان' : 'Dental Chart'}
-          </h4>
-          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-            <table className="min-w-full text-xs md:text-sm">
-              <thead className="bg-gray-50 text-gray-600">
-                <tr>
-                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'السن' : 'Tooth'}</th>
-                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'الموضع' : 'Location'}</th>
-                  <th className="px-3 py-2 text-right">{locale === 'ar' ? 'الحالة' : 'Condition'}</th>
-                  <th className="px-3 py-2 text-right hidden md:table-cell">
-                    {locale === 'ar' ? 'حالة العصب / ملاحظات' : 'Pulp / Notes'}
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {Object.entries<any>(data.dentalChart).map(([toothKey, toothInfo]) => (
-                  <tr key={toothKey} className="hover:bg-gray-50">
-                    <td className="px-3 py-2 font-mono text-gray-800">{toothKey}</td>
-                    <td className="px-3 py-2 text-gray-700">{toothInfo.location}</td>
-                    <td className="px-3 py-2 text-gray-700">
-                      {toothInfo.condition || toothInfo.status}
-                    </td>
-                    <td className="px-3 py-2 text-gray-600 hidden md:table-cell">
-                      {[
-                        toothInfo.pulpStatus,
-                        toothInfo.percussion && `${locale === 'ar' ? 'طرق:' : 'Perc:'} ${toothInfo.percussion}`,
-                        toothInfo.mobility && `${locale === 'ar' ? 'حركة:' : 'Mob:'} ${toothInfo.mobility}`,
-                        toothInfo.status
-                      ]
-                        .filter(Boolean)
-                        .join(' • ')}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Periodontal Status */}
-      {data.periodontalStatus && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <Activity className="w-4 h-4 text-green-600" />
-            {locale === 'ar' ? 'حالة اللثة والدعم' : 'Periodontal Status'}
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-            {Object.entries<any>(data.periodontalStatus).map(([k, v]) => (
-              <div key={k} className="flex justify-between bg-green-50/60 border border-green-100 rounded px-2 py-1">
-                <span className="text-gray-600 capitalize">
-                  {locale === 'ar' ? k : k.replace(/([A-Z])/g, ' $1')}
-                </span>
-                <span className="font-medium text-green-800">{String(v)}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Procedure Details */}
-      {data.procedureDetails && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <Scan className="w-4 h-4 text-blue-500" />
-            {locale === 'ar' ? 'تفاصيل الإجراء' : 'Procedure Details'}
-          </h4>
-          <div className="bg-blue-50 border border-blue-200 rounded p-3 space-y-2 text-sm">
-            {data.procedureDetails.type && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">{locale === 'ar' ? 'نوع الإجراء' : 'Type'}</span>
-                <span className="font-medium text-blue-900">{data.procedureDetails.type}</span>
-              </div>
-            )}
-            {data.procedureDetails.anesthesia && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">{locale === 'ar' ? 'التخدير' : 'Anesthesia'}</span>
-                <span className="font-medium text-blue-900">{data.procedureDetails.anesthesia}</span>
-              </div>
-            )}
-            {Array.isArray(data.procedureDetails.steps) && data.procedureDetails.steps.length > 0 && (
-              <div>
-                <p className="text-xs font-semibold text-gray-600 mb-1">
-                  {locale === 'ar' ? 'الخطوات' : 'Steps'}
-                </p>
-                <ul className="list-disc list-inside space-y-1 text-gray-800">
-                  {data.procedureDetails.steps.map((step: string, idx: number) => (
-                    <li key={idx}>{step}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {data.procedureDetails.workingLength && (
-              <div className="mt-1">
-                <p className="text-xs font-semibold text-gray-600 mb-1">
-                  {locale === 'ar' ? 'أطوال القنوات (Working Length)' : 'Working Lengths'}
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-1 text-xs">
-                  {Object.entries<any>(data.procedureDetails.workingLength).map(([canal, length]) => (
-                    <div key={canal} className="flex justify-between bg-white/60 rounded px-2 py-1">
-                      <span className="text-gray-600 capitalize">{canal}</span>
-                      <span className="font-mono text-gray-800">{length}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Diagnosis & Plan */}
-      {(data.diagnosis || data.plan) && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <ClipboardList className="w-4 h-4 text-purple-500" />
-            {locale === 'ar' ? 'التشخيص والخطة' : 'Diagnosis & Plan'}
-          </h4>
-          <div className="bg-purple-50 border border-purple-200 rounded p-3 space-y-1 text-sm">
-            {data.diagnosis && (
-              <p className="font-medium text-purple-900">
-                {locale === 'ar' ? 'التشخيص: ' : 'Diagnosis: '}
-                <span className="font-normal">{data.diagnosis}</span>
-              </p>
-            )}
-            {data.plan && (
-              <p className="text-purple-900">
-                {locale === 'ar' ? 'الخطة: ' : 'Plan: '}
-                {data.plan}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Medications */}
-      {Array.isArray(data.medicationsPrescribed) && data.medicationsPrescribed.length > 0 && (
-        <div className="space-y-2">
-          <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-            <Pill className="w-4 h-4 text-green-600" />
-            {locale === 'ar' ? 'الأدوية الموصوفة' : 'Prescribed Medications'}
-          </h4>
-          <ul className="list-disc list-inside text-sm text-gray-800 space-y-1">
-            {data.medicationsPrescribed.map((m: string, idx: number) => (
-              <li key={idx}>{m}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ============================================
-// 4. Single Visit View Component
-// ============================================
-const SingleVisitView = ({ visit, locale, isExternal }: { visit: any, locale: string, isExternal?: boolean }) => {
-  const [selectedImage, setSelectedImage] = useState<{ url: string, title: string } | null>(null);
-
-  // Helper function to get specialty in English
-  const getSpecialtyKey = (specialtyObj: any) => {
-    if (!specialtyObj) return '';
-    if (typeof specialtyObj === 'string') return specialtyObj;
-    return specialtyObj.en || specialtyObj.ar || '';
-  };
-
-  // Specialized Data Payload Renderers
-  const renderDataPayload = (payload: any, specialty: any) => {
-    if (!payload) return null;
-    
-    const specialtyKey = getSpecialtyKey(specialty).toLowerCase();
-    
-    switch (true) {
-      case specialtyKey.includes('cardiology'):
-        return <CardiologyDataView data={payload} locale={locale} />;
-        // return <div>تمام يسطا اتشالت</div>
-      
-      case specialtyKey.includes('ophthalmology') || specialtyKey.includes('eye'):
-        return <OphthalmologyDataView data={payload} locale={locale} />;
-      
-      case specialtyKey.includes('gastroenterology') || specialtyKey.includes('digestive'):
-        return <GastroenterologyDataView data={payload} locale={locale} />;
-      
-      case specialtyKey.includes('urology') || specialtyKey.includes('renal'):
-        return <UrologyDataView data={payload} locale={locale} />;
-      
-      case specialtyKey.includes('ent') || specialtyKey.includes('sinus'):
-        return <ENTDataView data={payload} locale={locale} />;
-      
-      case specialtyKey.includes('dermatology') || specialtyKey.includes('skin'):
-        return <DermatologyDataView data={payload} locale={locale} />;
-      
-      case specialtyKey.includes('internal medicine') || specialtyKey.includes('internal'):
-        return <InternalMedicineDataView data={payload} locale={locale} />;
-
-      case specialtyKey.includes('dentistry') || specialtyKey.includes('dental') || specialtyKey.includes('tooth'):
-        return <DentistryDataView data={payload} locale={locale} />;
-      
-      default:
-        return <DefaultDataView data={payload} locale={locale} />;
-    }
-  };
-
-  return (
-    <>
-      <div className="border rounded-lg mb-3 bg-white">
-        <div className="p-4 border-b bg-gray-50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Calendar className="w-4 h-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">
-                {new Date(visit.date).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </span>
-            </div>
-            <Badge variant="outline" className="text-xs">
-              {visit.type || 'Consultation'}
-            </Badge>
-          </div>
-          {visit.notes && (
-            <p className="text-sm text-gray-600 mt-2">{getLoc(visit.notes, locale)}</p>
-          )}
-        </div>
-        
-        <div className="p-4">
-          {visit.records.map((rec: any) => (
-            <div key={rec.id} className="mb-4 last:mb-0">
-              {/* Record Header */}
-              <div className="flex gap-3 items-start p-2 hover:bg-gray-50 rounded transition-colors group mb-3">
-                <div className="mt-1"><CheckCircle2 className="w-4 h-4 text-green-600" /></div>
-                <div className="flex-1">
-                  <h5 className="font-medium text-sm text-gray-900 flex justify-between">
-                      {getLoc(rec.title, locale)}
-                      <span className="text-[10px] text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">#{rec.id}</span>
-                  </h5>
-                  <p className="text-xs text-gray-500 mt-0.5">{getLoc(rec.description, locale)}</p>
-                </div>
-              </div>
-
-              {/* Specialized Data Payload View */}
-              {rec.dataPayload && (
-                <div className="mt-3 ms-9">
-                  <div className="bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 p-4 shadow-sm">
-                    <div className="mb-3">
-                      <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-wider mb-1">
-                        <FileText className="w-3 h-3" />
-                        {locale === 'ar' ? 'تفاصيل الفحص' : 'Examination Details'}
-                      </div>
-                      {renderDataPayload(rec.dataPayload, visit.specialty)}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Attachments Gallery */}
-              {rec.attachments && rec.attachments.length > 0 && (
-                  <div className="mt-4 ms-9">
-                    <div className="flex items-center gap-2 text-xs text-gray-500 font-medium uppercase tracking-wider mb-2">
-                      <ImageIcon className="w-3 h-3" />
-                      {locale === 'ar' ? 'المرفقات' : 'Attachments'}
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                       {rec.attachments.map((att: any) => (
-                           <div 
-                             key={att.id} 
-                             className="group relative aspect-square bg-gray-100 rounded-lg overflow-hidden border cursor-zoom-in shadow-sm hover:shadow-md transition-all"
-                             onClick={(e) => { 
-                               e.stopPropagation(); 
-                               setSelectedImage({ url: att.url, title: att.title }); 
-                             }}
-                           >
-                               <img src={att.url} alt={att.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs text-center p-1 font-medium">
-                                   {att.title}
-                               </div>
-                               <div className="absolute bottom-1 right-1 bg-black/60 p-1 rounded text-white">
-                                   <ImageIcon className="w-3 h-3" />
-                               </div>
-                           </div>
-                       ))}
-                    </div>
-                  </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Dialog open={!!selectedImage} onOpenChange={(open) => !open && setSelectedImage(null)}>
-        <DialogContent className="max-w-4xl p-0 bg-black/95 border-none text-white overflow-hidden flex flex-col items-center justify-center h-[80vh] sm:h-auto">
-          {selectedImage && (
-            <>
-              <div className="absolute top-4 right-4 z-50">
-                 <Button variant="ghost" size="icon" className="rounded-full bg-black/50 hover:bg-white/20 text-white" onClick={() => setSelectedImage(null)}>
-                   <X className="w-5 h-5" />
-                 </Button>
-              </div>
-              <div className="w-full h-full flex items-center justify-center p-2 sm:p-6">
-                <img src={selectedImage.url} alt={selectedImage.title} className="max-w-full max-h-[75vh] object-contain rounded shadow-2xl" />
-              </div>
-              <div className="w-full bg-black/80 p-4 text-center backdrop-blur-sm absolute bottom-0">
-                <p className="font-medium text-sm sm:text-base">{selectedImage.title}</p>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-};
-
-// ============================================
-// 5. Doctor Visit Card (Groups visits by doctor)
-// ============================================
-const DoctorVisitCard = ({ visits, locale, onRefill, isExternal }: { visits: any[], locale: string, onRefill?: () => void, isExternal?: boolean }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  
-  if (visits.length === 0) return null;
-  
-  const firstVisit = visits[0];
-  const sortedVisits = [...visits].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  const latestVisit = sortedVisits[0];
-  
-  return (
-    <Card className={`border rounded-lg shadow-sm ${isExternal ? 'opacity-90' : ''}`}>
-      <CardHeader className="pb-3 pt-4 px-4">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start gap-4">
-            <div className="hidden sm:flex flex-col items-center min-w-[60px] text-center border-e pe-4">
-              <span className="text-xs text-muted-foreground uppercase">{new Date(latestVisit.date).toLocaleString('default', { month: 'short' })}</span>
-              <span className="text-xl font-bold text-gray-800">{new Date(latestVisit.date).getDate()}</span>
-              <span className="text-xs text-muted-foreground">{new Date(latestVisit.date).getFullYear()}</span>
-            </div>
-
-            <div className="flex-1">
-              <h4 className="font-semibold text-base text-primary flex items-center gap-2">
-                {getLoc(firstVisit.doctorName, locale)}
-                <Badge variant="secondary" className="text-[10px] font-normal">
-                  {getLoc(firstVisit.specialty, locale)}
-                </Badge>
-                <Badge variant="outline" className="text-[10px] font-normal">
-                  {visits.length} {locale === 'ar' ? 'زيارة' : 'visits'}
-                </Badge>
-              </h4>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                <MapPin className="w-3 h-3"/> {getLoc(firstVisit.clinicName, locale)}
-              </div>
-              <div className="text-xs text-gray-500 mt-2">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
-                  {locale === 'ar' ? 'آخر زيارة: ' : 'Last visit: '}
-                  {new Date(latestVisit.date).toLocaleDateString(locale === 'ar' ? 'ar-SA' : 'en-US')}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-end gap-2">
-            {!isExternal && onRefill && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-blue-600 hover:bg-blue-50 gap-1 h-8"
-                onClick={onRefill}
-              >
-                <Repeat className="w-3 h-3" />
-                {locale === 'ar' ? 'تكرار' : 'Refill'}
-              </Button>
-            )}
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-2"
-              onClick={() => setIsExpanded(!isExpanded)}
-            >
-              {isExpanded ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
-        </div>
-
-        {/* External Badge */}
-        {isExternal && (
-          <Badge variant="outline" className="bg-gray-100 text-gray-500 border-gray-300 gap-1 absolute top-4 right-4">
-            <Lock className="w-3 h-3"/> Read-Only
-          </Badge>
-        )}
-      </CardHeader>
-
-      {isExpanded && (
-        <CardContent className="pt-0 px-4 pb-4 border-t">
-          <div className="space-y-4 mt-4">
-            {sortedVisits.map((visit) => (
-              <SingleVisitView 
-                key={visit.id} 
-                visit={visit} 
-                locale={locale} 
-                isExternal={isExternal}
-              />
-            ))}
-          </div>
-        </CardContent>
-      )}
-    </Card>
-  );
-};
-
-// ============================================
-// 6. Main Page Component
-// ============================================
-export default function PatientRecordDetail() {
-  const params = useParams();
-  const locale = (params.locale as string) || "ar";
-
-  // --- States ---
-  const [activeTab, setActiveTab] = useState("local");
-  const [viewMode, setViewMode] = useState<'list' | 'timeline'>('list');
-
-  // Modal & Forms
-  const [isNewLogOpen, setIsNewLogOpen] = useState(false);
-  const [planInput, setPlanInput] = useState("");
-  const [assessmentInput, setAssessmentInput] = useState("");
-  const [allergyWarning, setAllergyWarning] = useState<string | null>(null);
-  const [soapError, setSoapError] = useState<string | null>(null);
-
-  // Security & OTP
-  const [isExternalUnlocked, setIsExternalUnlocked] = useState(false);
-  const [sessionExpiry, setSessionExpiry] = useState<number | null>(null);
-  const [timeLeft, setTimeLeft] = useState<string>("");
-  const [otpStep, setOtpStep] = useState<'reason' | 'method' | 'verify'>('reason');
-  const [accessReason, setAccessReason] = useState("");
-  const [selectedMethod, setSelectedMethod] = useState<'sms' | 'email' | null>(null);
-  const [otpInput, setOtpInput] = useState("");
-
-  // --- Data Logic ---
-  const patient = useMemo(
-    () => dummyPatients.find((p) => p.id === params.id) || dummyPatients[0],
-    [params.id]
-  );
-
-  const localVisits = patient.visitsHistory.filter((v) => v.doctorId === CURRENT_DOCTOR_ID);
-  const externalVisits = patient.visitsHistory.filter((v) => v.doctorId !== CURRENT_DOCTOR_ID);
-  
-  // Group visits by doctor
-  const groupVisitsByDoctor = (visits: any[]) => {
-    const grouped: Record<string, any[]> = {};
-    
-    visits.forEach(visit => {
-      const doctorId = visit.doctorId;
-      if (!grouped[doctorId]) {
-        grouped[doctorId] = [];
-      }
-      grouped[doctorId].push(visit);
-    });
-    
-    return grouped;
-  };
-  
-  const groupedLocalVisits = groupVisitsByDoctor(localVisits);
-  const groupedExternalVisits = groupVisitsByDoctor(externalVisits);
-
-  // --- Clinical Priority Strip Data ---
-  const criticalAlerts = patient.alerts.filter(a => a.type === 'critical');
-  const chronicConditions = patient.alerts.filter(a => a.type === 'warning');
-
-  // --- Effect: Drug Interaction Check ---
-  useEffect(() => {
-    const lowerPlan = planInput.toLowerCase();
-    const hasPenicillinAllergy = patient.alerts.some(a => 
-      a.type === 'critical' && getLoc(a.msg, 'en').toLowerCase().includes('penicillin')
-    );
-    if (hasPenicillinAllergy && lowerPlan.includes('penicillin')) {
-      setAllergyWarning(locale === 'ar' ? "تنبيه خطير: المريض لديه حساسية من البنسلين!" : "CRITICAL: Patient has Penicillin allergy!");
-    } else {
-      setAllergyWarning(null);
-    }
-  }, [planInput, patient, locale]);
-
-  // --- Effect: Countdown Timer ---
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isExternalUnlocked && sessionExpiry) {
-      interval = setInterval(() => {
-        const now = Date.now();
-        const diff = sessionExpiry - now;
-        if (diff <= 0) handleEndSession();
-        else {
-          const minutes = Math.floor(diff / 60000);
-          const seconds = Math.floor((diff % 60000) / 1000);
-          setTimeLeft(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
-        }
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isExternalUnlocked, sessionExpiry]);
-
-  // --- Handlers ---
-  const handleVerifyOTP = () => {
-    if (otpInput === "1234") {
-      setIsExternalUnlocked(true);
-      setSessionExpiry(Date.now() + 60 * 60 * 1000);
-      setOtpStep('reason'); 
-      setOtpInput("");
-      setAccessReason("");
-    } else {
-      alert("Invalid OTP");
-    }
-  };
-
-  const handleEndSession = () => {
-    setIsExternalUnlocked(false);
-    setSessionExpiry(null);
-    setTimeLeft("");
-  };
-
-  const handleRefill = (doctorId: string, prevNotes: string) => {
-    setPlanInput(prevNotes + (locale === 'ar' ? "\n(تكرار العلاج - Refill)" : "\n(Refill)"));
-    setIsNewLogOpen(true);
-  };
-
-  const handleSaveSOAP = () => {
-      // SOAP Validation
-      if (planInput.trim().length > 0 && assessmentInput.trim().length === 0) {
-          setSoapError(locale === 'ar' ? "لا يمكن حفظ خطة علاج بدون تشخيص (Assessment)" : "Cannot save Plan without Assessment");
-          return;
-      }
-      setSoapError(null);
-      setIsNewLogOpen(false);
-  };
-
-  return (
-    <div
-      className="min-h-screen bg-gray-50/30 dark:bg-gray-950 transition-colors"
-      dir={locale === 'ar' ? 'rtl' : 'ltr'}
-    >
-      
-      {/* 🚀 CLINICAL PRIORITY STRIP (Sticky Header) */}
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b dark:border-gray-800 shadow-sm px-4 py-2 flex items-center gap-4 overflow-x-auto no-scrollbar">
-         {/* Critical Alerts */}
-         {criticalAlerts.length > 0 && (
-             <Badge
-               variant="destructive"
-               className="flex items-center gap-1 animate-pulse px-3 py-1 text-xs cursor-pointer"
-             >
-                 <AlertTriangle className="w-3 h-3" />
-                 {getLoc(criticalAlerts[0].msg, locale)}
-             </Badge>
-         )}
-         {/* Chronic Conditions */}
-         {chronicConditions.length > 0 && (
-             <Badge
-               variant="outline"
-               className="flex items-center gap-1 border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900/60 dark:bg-orange-950/40 dark:text-orange-200 px-3 py-1 text-xs cursor-pointer"
-             >
-                 <Info className="w-3 h-3" />
-                 {getLoc(chronicConditions[0].msg, locale)}
-             </Badge>
-         )}
-         {/* Medications */}
-         <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors">
-            <Pill className="w-3 h-3" />
-            <span className="font-semibold">{locale === 'ar' ? 'الأدوية الحالية:' : 'Meds:'}</span>
-            <span className="truncate max-w-[200px]">{patient.currentMedications ? patient.currentMedications.join(", ") : 'None'}</span>
-         </div>
-         {/* Last Visit */}
-         <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full ml-auto">
-             <History className="w-3 h-3" />
-             {locale === 'ar' ? 'آخر زيارة: منذ 3 أيام' : 'Last visit: 3 days ago'}
-         </div>
-         
-         {/* Enterprise Actions */}
-         <div className="flex items-center gap-1 border-l pl-2 border-gray-300">
-             <TooltipProvider>
-                 <Tooltip>
-                     <TooltipTrigger asChild>
-                         <Button variant="ghost" size="icon" className="h-7 w-7"><FileDown className="w-4 h-4 text-gray-500"/></Button>
-                     </TooltipTrigger>
-                     <TooltipContent>Export PDF</TooltipContent>
-                 </Tooltip>
-                 <Tooltip>
-                     <TooltipTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7"><Flag className="w-4 h-4 text-gray-500"/></Button>
-                     </TooltipTrigger>
-                     <TooltipContent>Flag for Follow-up</TooltipContent>
-                 </Tooltip>
-             </TooltipProvider>
-         </div>
-      </div>
-
-      <div className="p-4 md:p-6 max-w-7xl mx-auto space-y-6 w-full">
-
-      {/* Header Info */}
-      <div className="flex flex-col md:flex-row gap-6 items-start">
-            <div className="relative shrink-0">
-              <Avatar className="w-20 h-20 border-4 border-white shadow-sm">
-                <AvatarImage src={patient.avatar} />
-                <AvatarFallback>{getLoc(patient.name, locale)[0]}</AvatarFallback>
-              </Avatar>
-              <Badge className={`absolute -bottom-2 -right-2 px-2 py-0.5 text-[10px] ${getLoc(patient.status.code, 'en') === 'Stable' ? 'bg-green-500' : 'bg-red-500'}`}>
-                {getLoc(patient.status.code, locale)}
-              </Badge>
-            </div>
-            
-            <div className="flex-1 min-w-0">
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
-                    {getLoc(patient.name, locale)}
-                  </h1>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 dark:text-gray-400 mt-1">
-                      <span className="flex items-center gap-1"><User className="w-3 h-3"/> {getLoc(patient.gender, locale)}, {2024 - parseInt(patient.dateOfBirth.split('-')[0])}yo</span>
-                      <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> <span dir="ltr">{patient.contactPhone}</span></span>
-                      <span className="flex items-center gap-1"><MapPin className="w-3 h-3"/> {getLoc(patient.address, locale)}</span>
-                  </div>
-            </div>
-
-            {/* New Record Button */}
-            <div className="shrink-0">
-                <Dialog open={isNewLogOpen} onOpenChange={setIsNewLogOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="gap-2 shadow-sm bg-blue-600 hover:bg-blue-700" onClick={() => { setPlanInput(""); setAssessmentInput(""); setSoapError(null); }}>
-                      <Plus className="w-4 h-4" /> 
-                      {locale === 'ar' ? 'سجل جديد' : 'New Record'}
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0 gap-0" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-                      <div className="flex h-full overflow-hidden">
-                          {/* Sidebar */}
-                          <div className="w-[280px] bg-gray-50 dark:bg-gray-900 border-e dark:border-gray-800 p-4 overflow-y-auto hidden md:block text-sm">
-                              <h3 className="font-bold text-gray-500 dark:text-gray-300 uppercase text-xs mb-3">Patient Summary</h3>
-                              {/* Quick Allergies */}
-                              <div className="mb-4">
-                                  {patient.alerts.map((a,i) => (
-                                    <div
-                                      key={i}
-                                      className="text-xs text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900 p-2 rounded mb-1"
-                                    >
-                                      {getLoc(a.msg, locale)}
-                                    </div>
-                                  ))}
-                              </div>
-                              <Separator className="mb-4"/>
-                              <div className="space-y-2">
-                                  <div className="flex justify-between"><span>BP</span> <span className="font-mono font-bold">{patient.vitalSigns.bloodPressure}</span></div>
-                                  <div className="flex justify-between"><span>HR</span> <span className="font-mono font-bold">{patient.vitalSigns.heartRate}</span></div>
-                              </div>
-                          </div>
-                          {/* Form */}
-                          <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950">
-                              <DialogHeader className="p-5 border-b">
-                                  <DialogTitle>New SOAP Note</DialogTitle>
-                              </DialogHeader>
-                              <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                                  {/* SOAP Fields */}
-                                  <div><Label className="text-blue-600 font-bold mb-1 block">Subjective</Label><Textarea className="bg-blue-50/20"/></div>
-                                  <div><Label className="text-green-600 font-bold mb-1 block">Objective</Label><Textarea className="bg-green-50/20"/></div>
-                                  <div>
-                                      <Label className="text-purple-600 font-bold mb-1 block">Assessment <span className="text-red-500">*</span></Label>
-                                      <Input 
-                                        className="bg-purple-50/20" 
-                                        value={assessmentInput}
-                                        onChange={(e) => setAssessmentInput(e.target.value)}
-                                        placeholder="Diagnosis..."
-                                      />
-                                  </div>
-                                  <div>
-                                      <Label className="text-orange-600 font-bold mb-1 block">Plan</Label>
-                                      {allergyWarning && (
-                                        <div className="mb-2 p-2 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs rounded font-bold animate-pulse">
-                                          {allergyWarning}
-                                        </div>
-                                      )}
-                                      <Textarea 
-                                        className="bg-orange-50/20 dark:bg-orange-900/20 min-h-[100px]" 
-                                        value={planInput} 
-                                        onChange={(e) => setPlanInput(e.target.value)}
-                                      />
-                                  </div>
-                                  {soapError && (
-                                    <div className="text-red-600 dark:text-red-300 text-sm font-semibold bg-red-50 dark:bg-red-900/40 p-2 rounded">
-                                      {soapError}
-                                    </div>
-                                  )}
-                              </div>
-                              <DialogFooter className="p-4 border-t dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-                                  <Button onClick={handleSaveSOAP}>Save Record</Button>
-                              </DialogFooter>
-                          </div>
-                      </div>
-                  </DialogContent>
-                </Dialog>
-            </div>
-      </div>
-
-      <div className="grid grid-cols-12 gap-6">
-        
-        {/* LEFT COLUMN: Vitals (Sparklines) */}
-        <div className="col-span-12 lg:col-span-3 space-y-6">
-          <Card className="shadow-sm border-gray-200 dark:border-gray-800 dark:bg-gray-900">
-            <CardHeader className="pb-2 pt-4 px-4">
-               <CardTitle className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-200">
-                  <TrendingUp className="w-4 h-4 text-blue-500" />
-                  {locale === 'ar' ? 'المؤشرات الحيوية' : 'Vital Trends'}
-               </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6 px-4 pb-4">
-               {/* Heart Rate */}
-               <div>
-                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
-                    <span>Heart Rate</span>
-                  </div>
-                  <SmartSparkline data={patient.vitalSigns.history.heartRate} minNormal={60} maxNormal={100} unit="bpm" />
-               </div>
-               {/* BP */}
-               <div>
-                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
-                    <span>BP (Systolic)</span>
-                  </div>
-                  <SmartSparkline data={patient.vitalSigns.history.bloodPressure} minNormal={110} maxNormal={130} unit="mmHg" />
-               </div>
-               {/* Glucose */}
-               <div>
-                  <div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400">
-                    <span>Glucose</span>
-                  </div>
-                  <SmartSparkline data={patient.vitalSigns.history.glucose} minNormal={70} maxNormal={140} unit="mg/dL" />
-               </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* RIGHT COLUMN: Visits & Actions */}
-        <div className="col-span-12 lg:col-span-9 space-y-6">
-          
-          {/* 🧠 DECISION-ORIENTED UI: Suggested Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <Button
-                variant="outline"
-                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-950 border-blue-100 dark:border-blue-900 hover:border-blue-200 shadow-sm group"
-              >
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900 text-blue-600 rounded-full group-hover:bg-blue-200">
-                    <Repeat className="w-4 h-4"/>
-                  </div>
-                  <div className="text-start">
-                      <div className="text-sm font-semibold text-gray-900">Refill Prescriptions</div>
-                      <div className="text-[10px] text-gray-500">Metformin, Lisinopril</div>
-                  </div>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-yellow-50 dark:hover:bg-yellow-950 border-yellow-100 dark:border-yellow-900 hover:border-yellow-200 shadow-sm group"
-              >
-                  <div className="p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 rounded-full group-hover:bg-yellow-200">
-                    <Stethoscope className="w-4 h-4"/>
-                  </div>
-                  <div className="text-start">
-                      <div className="text-sm font-semibold text-gray-900">Review HR Trend</div>
-                      <div className="text-[10px] text-gray-500">Elevated in last 2 visits</div>
-                  </div>
-              </Button>
-              <Button
-                variant="outline"
-                className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm group"
-              >
-                   <div className="p-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200 rounded-full">
-                     <GitCommitHorizontal className="w-4 h-4"/>
-                   </div>
-                   <div className="text-start">
-                      <div className="text-sm font-semibold text-gray-900">Lab Results</div>
-                      <div className="text-[10px] text-gray-500">Pending from 12/12</div>
-                   </div>
-              </Button>
-          </div>
-
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-0">
-                <TabsList className="w-full sm:w-auto grid grid-cols-2">
-                    <TabsTrigger value="local">{locale === 'ar' ? 'سجلات محلية' : 'Local Records'}</TabsTrigger>
-                    <TabsTrigger value="external" className="relative">
-                        {locale === 'ar' ? 'سجلات خارجية' : 'External Records'}
-                        {isExternalUnlocked && <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-500 animate-pulse"/>}
-                    </TabsTrigger>
-                </TabsList>
-                
-                {/* Timeline Toggle */}
-                {activeTab === 'local' && (
-                    <div className="flex bg-gray-100 p-1 rounded-lg mt-2 sm:mt-0">
-                        <button
-                          type="button"
-                          aria-label={locale === 'ar' ? 'عرض قائمة' : 'List view'}
-                          onClick={() => setViewMode('list')}
-                          className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}
-                        >
-                          <List className="w-4 h-4"/>
-                        </button>
-                        <button
-                          type="button"
-                          aria-label={locale === 'ar' ? 'عرض تسلسلي زمني' : 'Timeline view'}
-                          onClick={() => setViewMode('timeline')}
-                          className={`p-1.5 rounded ${viewMode === 'timeline' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}
-                        >
-                          <LayoutList className="w-4 h-4"/>
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* LOCAL TAB */}
-            <TabsContent value="local" className="space-y-4">
-               {Object.keys(groupedLocalVisits).length > 0 ? (
-                  viewMode === 'list' ? (
-                      // List View with grouped visits by doctor
-                      Object.entries(groupedLocalVisits).map(([doctorId, visits]) => (
-                        <DoctorVisitCard 
-                            key={doctorId}
-                            visits={visits}
-                            locale={locale}
-                            onRefill={() => handleRefill(doctorId, getLoc(visits[0].notes, locale))}
-                        />
-                      ))
-                  ) : (
-                      // Timeline View
-                      <div className="relative border-s-2 border-gray-200 dark:border-gray-700 ms-4 space-y-8 py-4">
-                          {localVisits.map((visit) => (
-                              <div key={visit.id} className="ms-6 relative">
-                                  <span className="absolute -left-[33px] top-0 flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 ring-4 ring-white">
-                                      <CheckCircle2 className="h-4 w-4 text-blue-600" />
-                                  </span>
-                                  <div className="text-xs text-gray-500 mb-1 font-mono">{visit.date}</div>
-                                  <SingleVisitView visit={visit} locale={locale} />
-                              </div>
-                          ))}
-                      </div>
-                  )
-               ) : (
-                 // 🎯 Smart Empty State
-                 <div className="flex flex-col items-center justify-center py-12 text-center bg-white dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700">
-                    <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-full mb-3">
-                      <FileText className="w-8 h-8 text-gray-400"/>
-                    </div>
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                      {locale === 'ar' ? 'لا توجد سجلات محلية' : 'No Local Records Yet'}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-4">
-                      {locale === 'ar' ? 'ابدأ بإضافة أول زيارة لهذا المريض' : 'Start by creating the first consultation log for this patient.'}
-                    </p>
-                    <Button variant="outline" onClick={() => { setPlanInput(""); setIsNewLogOpen(true); }}>
-                        <Plus className="w-4 h-4 mr-2"/>
-                        {locale === 'ar' ? 'إضافة زيارة' : 'Add First Visit'}
-                    </Button>
-                 </div>
-               )}
-            </TabsContent>
-
-            {/* EXTERNAL TAB */}
-            <TabsContent value="external" className="space-y-4">
-              {!isExternalUnlocked ? (
-                 <Card className="bg-gray-50/50 dark:bg-gray-900/70 border-dashed border-2 dark:border-gray-700 p-8">
-                   <div className="flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-6">
-                      <div className="bg-white dark:bg-gray-800 p-4 rounded-full shadow-sm ring-1 ring-gray-100 dark:ring-gray-700">
-                        <Lock className="w-10 h-10 text-gray-400 dark:text-gray-300" />
-                      </div>
-                      
-                      {/* Step 1: Reason for Access (Audit Log) */}
-                      {otpStep === 'reason' && (
-                          <div className="w-full space-y-4 animate-in fade-in">
-                              <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                                Reason for Accessing External Data
-                              </h3>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                This action will be recorded in the audit log.
-                              </p>
-                              
-                              <RadioGroup value={accessReason} onValueChange={setAccessReason} className="grid grid-cols-1 gap-2 text-start">
-                                  <div className="flex items-center space-x-2 bg-white dark:bg-gray-900 p-3 rounded border dark:border-gray-700 cursor-pointer hover:border-blue-400">
-                                      <RadioGroupItem value="consultation" id="r1" />
-                                      <Label htmlFor="r1" className="cursor-pointer font-normal">Regular Consultation</Label>
-                                  </div>
-                                  <div className="flex items-center space-x-2 bg-white dark:bg-gray-900 p-3 rounded border dark:border-gray-700 cursor-pointer hover:border-blue-400">
-                                      <RadioGroupItem value="emergency" id="r2" />
-                                      <Label htmlFor="r2" className="cursor-pointer font-normal">Emergency / Urgent Care</Label>
-                                  </div>
-                              </RadioGroup>
-                              <Button className="w-full" disabled={!accessReason} onClick={() => setOtpStep('method')}>Next</Button>
-                          </div>
-                      )}
-
-                      {/* Step 2: Choose Method */}
-                      {otpStep === 'method' && (
-                        <div className="grid grid-cols-2 gap-4 w-full animate-in fade-in slide-in-from-right-4">
-                          <Button
-                            variant="outline"
-                            className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
-                            onClick={() => { setSelectedMethod('sms'); setOtpStep('verify'); }}
-                          >
-                            <MessageSquare className="w-6 h-6 text-blue-600" />
-                            <span className="text-xs font-semibold">SMS ••••890</span>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="h-24 flex flex-col gap-2 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950"
-                            onClick={() => { setSelectedMethod('email'); setOtpStep('verify'); }}
-                          >
-                            <Mail className="w-6 h-6 text-blue-600" />
-                            <span className="text-xs font-semibold">Email</span>
-                          </Button>
-                        </div>
-                      )}
-
-                      {/* Step 3: Verify */}
-                      {otpStep === 'verify' && (
-                        <div className="w-full space-y-4 animate-in fade-in">
-                           <div className="text-sm text-blue-600 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/40 py-2 rounded flex items-center justify-center gap-2">
-                              {selectedMethod === 'sms' ? <MessageSquare className="w-4 h-4"/> : <Mail className="w-4 h-4"/>}
-                              Code Sent
-                           </div>
-                           <Input 
-                              placeholder="0000" 
-                              className="text-center text-2xl tracking-[1em] font-mono h-12" 
-                              maxLength={4}
-                              value={otpInput}
-                              onChange={(e) => setOtpInput(e.target.value)}
-                            />
-                            <Button className="w-full" onClick={handleVerifyOTP}>Verify (1234)</Button>
-                            <Button
-                              variant="link"
-                              size="sm"
-                              onClick={() => setOtpStep('method')}
-                              className="text-gray-400 dark:text-gray-300"
-                            >
-                              Back
-                            </Button>
-                        </div>
-                      )}
-                   </div>
-                 </Card>
-              ) : (
-                <div className="space-y-4 animate-in fade-in">
-                   <div className="bg-green-50 dark:bg-green-900/40 border border-green-200 dark:border-green-900 rounded-lg p-3 flex justify-between items-center">
-                      <div className="flex items-center gap-3 text-green-800 dark:text-green-200">
-                        <ShieldCheck className="w-5 h-5" />
-                        <div>
-                            <span className="font-bold text-sm block">{locale === 'ar' ? 'جلسة خارجية نشطة' : 'Active External Session'}</span>
-                            <span className="text-[10px] opacity-80 block">Access Reason: {accessReason}</span>
-                        </div>
-                      </div>
-                       <div className="flex items-center gap-3">
-                         <div className="flex items-center gap-2 bg-white dark:bg-green-950 px-3 py-1 rounded border border-green-200 dark:border-green-800 text-green-700 dark:text-green-200 font-mono font-bold">
-                            <Timer className="w-4 h-4 animate-pulse" />
-                            {timeLeft}
-                         </div>
-                         <Button variant="destructive" size="sm" onClick={handleEndSession}>
-                            <LogOut className="w-4 h-4" />
-                         </Button>
-                      </div>
-                   </div>
-                   
-                   {Object.entries(groupedExternalVisits).map(([doctorId, visits]) => (
-                     <DoctorVisitCard 
-                       key={doctorId}
-                       visits={visits}
-                       locale={locale}
-                       isExternal
-                     />
-                   ))}
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
-      </div>
-    </div>
-  );
-}

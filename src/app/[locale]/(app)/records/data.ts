@@ -909,9 +909,9 @@ export const dummyPatients: Patient[] = [
     "height": "175",
     "bmi": "30.0",
     "history": {
-      "heartRate": [72, 75, 80, 95, 105],
-      "bloodPressure": [130, 135, 140, 145, 150],
-      "glucose": [140, 150, 160, 175, 185]
+      "heartRate": [72, 75, 80, 95, 105,72, 75, 80, 95, 105,72, 75, 80, 95, 105,72, 75, 80, 95, 105,72, 75, 80, 95, 105,72, 75, 80, 95, 105],
+      "bloodPressure": [130, 135, 140, 145, 150,150,150,150,150,150,150,150,150,12,12,12,12,12,13,14,15,16,17,18,19,20,21,22,50,70,80,90,100,100,100,100],
+      "glucose": [140, 150, 160, 175, 185,0,0,0,0,0,0,0,0,0,0,0,0]
     }
   },
   "auditLogs": [
@@ -948,63 +948,276 @@ export const dummyPatients: Patient[] = [
             "expiresAt": "2029-11-28"
           },
           "dataPayload": {
-            "diagnosis": "Essential hypertension stage 2",
-            "systolic": 150,
-            "diastolic": 90,
-            "heartRate": 105,
-            "findings": "BP elevated despite current medication",
-            "plan": "Increase Lisinopril to 20mg daily, follow up in 2 weeks",
-            "labResults": {
-              "creatinine": "1.2 mg/dL",
-              "egfr": "68 mL/min",
-              "potassium": "4.2 mEq/L"
-            }
-          },
-          "createdAt": "2024-11-28T10:05:00Z"
-        }
-      ]
+    "chiefComplaint": {
+      "description": {
+        "en": "Elevated blood pressure readings with occasional headaches",
+        "ar": "قراءات ضغط دم مرتفعة مع صداع متقطع",
+        "de": "Erhöhte Blutdruckwerte mit gelegentlichen Kopfschmerzen"
+      },
+      "duration": "2 weeks",
+      "severity": "Moderate"
     },
-    {
-      "id": "VIS-101",
-      "date": "2024-11-28",
-      "doctorId": "DOC-CURRENT-001",
-      "doctorName": { "en": "Dr. Ahmed Said", "ar": "د. أحمد سعيد", "de": "Dr. Ahmed Said" },
-      "specialty": { "en": "Internal Medicine", "ar": "الأمراض الباطنة", "de": "Innere Medizin" },
-      "clinicId": "CLINIC-CURRENT",
-      "clinicName": { "en": "Our Clinic", "ar": "عيادتنا", "de": "Unsere Klinik" },
-      "notes": { "en": "Follow up", "ar": "متابعة دورية", "de": "Nachverfolgung" },
-      "records": [
+    
+    "historyOfPresentIllness": {
+      "en": "Patient with known hypertension for 5 years, on Lisinopril 10mg daily. Reports increased BP readings over the past 2 weeks associated with occasional headaches. No chest pain, dyspnea, or palpitations.",
+      "ar": "مريض يعاني من ارتفاع ضغط الدم منذ 5 سنوات، ويتناول ليسينوبريل 10 مجم يومياً. يشكو من ارتفاع قراءات الضغط خلال الأسبوعين الماضيين مصحوبة بصداع متقطع. لا يوجد ألم صدر أو ضيق تنفس أو خفقان.",
+      "de": "Patient mit bekannter Hypertonie seit 5 Jahren, unter Lisinopril 10mg täglich. Berichtet über erhöhte Blutdruckwerte in den letzten 2 Wochen mit gelegentlichen Kopfschmerzen. Keine Brustschmerzen, Dyspnoe oder Palpitationen."
+    },
+    
+    "pastMedicalHistory": {
+      "chronicConditions": [
+        "Hypertension (diagnosed 2019)",
+        "Type 2 Diabetes (diagnosed 2020)",
+        "Hyperlipidemia (diagnosed 2021)"
+      ],
+      "surgeries": ["Appendectomy (2010)"],
+      "hospitalizations": ["None in past 5 years"],
+      "allergies": ["Penicillin - rash and itching"]
+    },
+    
+    "currentMedications": [
+      {
+        "name": "Lisinopril",
+        "dose": "10 mg",
+        "frequency": "Once daily",
+        "duration": "3 years",
+        "purpose": "Hypertension"
+      },
+      {
+        "name": "Metformin",
+        "dose": "500 mg",
+        "frequency": "Twice daily",
+        "duration": "2 years",
+        "purpose": "Type 2 Diabetes"
+      },
+      {
+        "name": "Atorvastatin",
+        "dose": "20 mg",
+        "frequency": "Once daily at bedtime",
+        "duration": "1 year",
+        "purpose": "Hyperlipidemia"
+      }
+    ],
+    
+    "socialHistory": {
+      "smoking": {
+        "status": "Former smoker",
+        "packYears": "10 pack-years",
+        "quitDate": "2018"
+      },
+      "alcohol": "Occasional social drinking (2-3 units/week)",
+      "diet": "High salt intake, irregular meals",
+      "exercise": "Sedentary lifestyle, walks occasionally",
+      "occupation": "Office manager (sedentary job)",
+      "stressLevel": "Moderate (work-related)"
+    },
+    
+    "familyHistory": {
+      "father": "Hypertension, CAD, died at 68 from MI",
+      "mother": "Type 2 Diabetes, alive at 72",
+      "siblings": "Brother (45) with hypertension"
+    },
+    
+    "reviewOfSystems": {
+      "constitutional": "No fever, weight stable, mild fatigue",
+      "cardiorespiratory": "No chest pain, dyspnea, orthopnea, or PND",
+      "gastrointestinal": "Appetite normal, no nausea/vomiting, regular bowel movements",
+      "genitourinary": "No dysuria, frequency normal",
+      "neurological": "Occasional headaches, no dizziness or syncope",
+      "musculoskeletal": "No joint pains or swelling"
+    },
+    
+    "physicalExamination": {
+      "vitalSigns": {
+        "bloodPressure": {
+          "sitting": "150/90 mmHg",
+          "standing": "148/92 mmHg",
+          "arm": "Right"
+        },
+        "heartRate": "105 bpm (regular)",
+        "respiratoryRate": "18 breaths/min",
+        "temperature": "36.8°C",
+        "oxygenSaturation": "98% on room air",
+        "weight": "85 kg",
+        "height": "175 cm",
+        "bmi": "27.8 kg/m²"
+      },
+      
+      "generalAppearance": "Well-developed, well-nourished, in no acute distress",
+      "headAndNeck": "No JVD, thyroid not enlarged, no lymphadenopathy",
+      "cardiovascular": "Regular rate and rhythm, no murmurs, rubs, or gallops",
+      "respiratory": "Clear to auscultation bilaterally, no wheezes or crackles",
+      "abdomen": "Soft, non-tender, non-distended, no hepatosplenomegaly",
+      "extremities": "No edema, peripheral pulses 2+ bilaterally",
+      "neurological": "Alert and oriented, cranial nerves intact"
+    },
+    
+    "investigations": {
+      "labResults": {
+        "renalFunction": {
+          "creatinine": "1.2 mg/dL",
+          "egfr": "68 mL/min/1.73m²",
+          "bun": "18 mg/dL",
+          "electrolytes": {
+            "sodium": "140 mEq/L",
+            "potassium": "4.2 mEq/L",
+            "chloride": "102 mEq/L"
+          }
+        },
+        "glucoseControl": {
+          "fastingGlucose": "140 mg/dL",
+          "hba1c": "7.2%",
+          "postprandialGlucose": "180 mg/dL"
+        },
+        "lipidProfile": {
+          "totalCholesterol": "210 mg/dL",
+          "ldl": "130 mg/dL",
+          "hdl": "45 mg/dL",
+          "triglycerides": "180 mg/dL"
+        },
+        "liverFunction": {
+          "ast": "25 U/L",
+          "alt": "30 U/L",
+          "alp": "85 U/L",
+          "totalBilirubin": "0.8 mg/dL"
+        },
+        "urinalysis": {
+          "appearance": "Clear",
+          "protein": "Trace",
+          "glucose": "Negative",
+          "microscopy": "Normal"
+        },
+        "completeBloodCount": {
+          "hemoglobin": "14.2 g/dL",
+          "hematocrit": "42%",
+          "wbc": "7.5 × 10³/µL",
+          "platelets": "250 × 10³/µL"
+        }
+      },
+      
+      "imaging": {
+        "chestXray": "Normal heart size, clear lung fields",
+        "ecg": "Sinus tachycardia, rate 105 bpm, no ST changes",
+        "echo": "Pending",
+        "abdominalUltrasound": "Normal liver, spleen, and kidneys"
+      }
+    },
+    
+    "assessment": {
+      "primaryDiagnosis": {
+        "code": "I10",
+        "description": "Essential (primary) hypertension, stage 2",
+        "severity": "Uncontrolled on current therapy"
+      },
+      "secondaryDiagnoses": [
         {
-          "id": "REC-1",
-          "type": "DIAGNOSIS",
-          "title": { "en": "Hypertension", "ar": "ارتفاع ضغط الدم", "de": "Hypertonie" },
-          "description": { "en": "Medication adjustment", "ar": "تعديل جرعات الدواء", "de": "Medikamentenanpassung" },
-          "source": {
-            "doctorId": "DOC-CURRENT-001",
-            "doctorName": { "en": "Dr. Ahmed Said", "ar": "د. أحمد سعيد", "de": "Dr. Ahmed Said" },
-            "clinicId": "CLINIC-CURRENT",
-            "clinicName": { "en": "Our Clinic", "ar": "عيادتنا", "de": "Unsere Klinik" },
-            "createdAt": "2024-11-28T10:00:00Z"
+          "code": "E11.9",
+          "description": "Type 2 diabetes mellitus without complications",
+          "control": "Suboptimal (HbA1c 7.2%)"
+        },
+        {
+          "code": "E78.5",
+          "description": "Hyperlipidemia, mixed type",
+          "control": "Partial (LDL 130 mg/dL)"
+        }
+      ],
+      "problemList": [
+        "Uncontrolled hypertension",
+        "Suboptimal diabetes control",
+        "Obesity (BMI 27.8)",
+        "Sedentary lifestyle",
+        "High salt diet"
+      ],
+      "severity": "Moderate",
+      "stability": "Stable but requires intervention"
+    },
+    
+    "plan": {
+      "pharmacological": {
+        "medicationAdjustments": [
+          {
+            "medication": "Lisinopril",
+            "currentDose": "10 mg daily",
+            "newDose": "20 mg daily",
+            "rationale": "BP remains elevated above target",
+            "monitoring": "Check BP in 2 weeks, renal function in 1 month"
           },
-          "accessControl": {
-            "visibility": "FULL",
-            "requiresOTP": false,
-            "sharedWithDoctorIds": [],
-            "expiresAt": "2029-11-28"
-          },
-          "dataPayload": {
-            "diagnosis": "Essential hypertension stage 2",
-            "systolic": 150,
-            "diastolic": 90,
-            "heartRate": 105,
-            "findings": "BP elevated despite current medication",
-            "plan": "Increase Lisinopril to 20mg daily, follow up in 2 weeks",
-            "labResults": {
-              "creatinine": "1.2 mg/dL",
-              "egfr": "68 mL/min",
-              "potassium": "4.2 mEq/L"
-            }
-          },
+          {
+            "medication": "Metformin",
+            "currentDose": "500 mg BID",
+            "newDose": "850 mg BID",
+            "rationale": "HbA1c above target (7.2%)",
+            "monitoring": "Check fasting glucose in 2 weeks"
+          }
+        ],
+        "newMedications": [
+          {
+            "medication": "Hydrochlorothiazide",
+            "dose": "12.5 mg daily",
+            "rationale": "Additive effect with ACE inhibitor for BP control",
+            "duration": "Long-term",
+            "monitoring": "Electrolytes in 1 month"
+          }
+        ],
+        "continueMedications": ["Atorvastatin 20 mg daily at bedtime"]
+      },
+      
+      "nonPharmacological": {
+        "diet": "Low salt diet (<2g sodium/day), diabetic diet, portion control",
+        "exercise": "30 minutes moderate exercise 5 days/week, start with walking",
+        "lifestyle": "Weight loss goal: 5% of body weight (4.25 kg) in 6 months",
+        "smokingCessation": "Remain smoke-free",
+        "alcohol": "Limit to 1 unit/day"
+      },
+      
+      "monitoringAndFollowup": {
+        "bloodPressure": "Home BP monitoring twice daily, log readings",
+        "glucose": "Fasting and postprandial monitoring twice weekly",
+        "labTests": [
+          "Basic metabolic panel in 1 month",
+          "HbA1c in 3 months",
+          "Lipid profile in 6 months"
+        ],
+        "followupAppointment": "2 weeks for BP check, then monthly until controlled"
+      },
+      
+      "education": {
+        "topics": [
+          "Hypertension management and complications",
+          "Diabetes self-management",
+          "Medication adherence",
+          "Importance of regular follow-up"
+        ],
+        "materialsProvided": [
+          "BP monitoring log sheet",
+          "Dietary guidelines",
+          "Exercise prescription"
+        ]
+      },
+      
+      "referrals": [
+        {
+          "specialty": "Dietitian",
+          "reason": "Medical nutrition therapy for hypertension and diabetes",
+          "urgency": "Routine"
+        },
+        {
+          "specialty": "Diabetes educator",
+          "reason": "Diabetes self-management education",
+          "urgency": "Routine"
+        }
+      ],
+      
+      "goals": {
+        "shortTerm": "BP <140/90 within 2 weeks",
+        "mediumTerm": "HbA1c <7% within 3 months",
+        "longTerm": "Weight loss of 5% within 6 months"
+      }
+    },
+    
+    "prognosis": "Good with adherence to treatment plan",
+    "visitSummary": "Patient with multiple chronic conditions requiring optimization of therapy and lifestyle modifications."
+  },
           "createdAt": "2024-11-28T10:05:00Z"
         }
       ]
@@ -1038,14 +1251,276 @@ export const dummyPatients: Patient[] = [
             "expiresAt": "2029-10-15"
           },
           "dataPayload": {
-            "fastingGlucose": "185 mg/dL",
-            "hba1c": "8.5%",
-            "randomGlucose": "210 mg/dL",
-            "urineMicroalbumin": "45 mg/g",
-            "diabeticFootExam": "Normal sensation, no ulcers",
-            "recommendations": "Increase Metformin to 1000mg twice daily, start dietary counseling",
-            "referrals": ["Nutritionist", "Ophthalmology"]
+    "chiefComplaint": {
+      "description": {
+        "en": "Elevated blood pressure readings with occasional headaches",
+        "ar": "قراءات ضغط دم مرتفعة مع صداع متقطع",
+        "de": "Erhöhte Blutdruckwerte mit gelegentlichen Kopfschmerzen"
+      },
+      "duration": "2 weeks",
+      "severity": "Moderate"
+    },
+    
+    "historyOfPresentIllness": {
+      "en": "Patient with known hypertension for 5 years, on Lisinopril 10mg daily. Reports increased BP readings over the past 2 weeks associated with occasional headaches. No chest pain, dyspnea, or palpitations.",
+      "ar": "مريض يعاني من ارتفاع ضغط الدم منذ 5 سنوات، ويتناول ليسينوبريل 10 مجم يومياً. يشكو من ارتفاع قراءات الضغط خلال الأسبوعين الماضيين مصحوبة بصداع متقطع. لا يوجد ألم صدر أو ضيق تنفس أو خفقان.",
+      "de": "Patient mit bekannter Hypertonie seit 5 Jahren, unter Lisinopril 10mg täglich. Berichtet über erhöhte Blutdruckwerte in den letzten 2 Wochen mit gelegentlichen Kopfschmerzen. Keine Brustschmerzen, Dyspnoe oder Palpitationen."
+    },
+    
+    "pastMedicalHistory": {
+      "chronicConditions": [
+        "Hypertension (diagnosed 2019)",
+        "Type 2 Diabetes (diagnosed 2020)",
+        "Hyperlipidemia (diagnosed 2021)"
+      ],
+      "surgeries": ["Appendectomy (2010)"],
+      "hospitalizations": ["None in past 5 years"],
+      "allergies": ["Penicillin - rash and itching"]
+    },
+    
+    "currentMedications": [
+      {
+        "name": "Lisinopril",
+        "dose": "10 mg",
+        "frequency": "Once daily",
+        "duration": "3 years",
+        "purpose": "Hypertension"
+      },
+      {
+        "name": "Metformin",
+        "dose": "500 mg",
+        "frequency": "Twice daily",
+        "duration": "2 years",
+        "purpose": "Type 2 Diabetes"
+      },
+      {
+        "name": "Atorvastatin",
+        "dose": "20 mg",
+        "frequency": "Once daily at bedtime",
+        "duration": "1 year",
+        "purpose": "Hyperlipidemia"
+      }
+    ],
+    
+    "socialHistory": {
+      "smoking": {
+        "status": "Former smoker",
+        "packYears": "10 pack-years",
+        "quitDate": "2018"
+      },
+      "alcohol": "Occasional social drinking (2-3 units/week)",
+      "diet": "High salt intake, irregular meals",
+      "exercise": "Sedentary lifestyle, walks occasionally",
+      "occupation": "Office manager (sedentary job)",
+      "stressLevel": "Moderate (work-related)"
+    },
+    
+    "familyHistory": {
+      "father": "Hypertension, CAD, died at 68 from MI",
+      "mother": "Type 2 Diabetes, alive at 72",
+      "siblings": "Brother (45) with hypertension"
+    },
+    
+    "reviewOfSystems": {
+      "constitutional": "No fever, weight stable, mild fatigue",
+      "cardiorespiratory": "No chest pain, dyspnea, orthopnea, or PND",
+      "gastrointestinal": "Appetite normal, no nausea/vomiting, regular bowel movements",
+      "genitourinary": "No dysuria, frequency normal",
+      "neurological": "Occasional headaches, no dizziness or syncope",
+      "musculoskeletal": "No joint pains or swelling"
+    },
+    
+    "physicalExamination": {
+      "vitalSigns": {
+        "bloodPressure": {
+          "sitting": "150/90 mmHg",
+          "standing": "148/92 mmHg",
+          "arm": "Right"
+        },
+        "heartRate": "105 bpm (regular)",
+        "respiratoryRate": "18 breaths/min",
+        "temperature": "36.8°C",
+        "oxygenSaturation": "98% on room air",
+        "weight": "85 kg",
+        "height": "175 cm",
+        "bmi": "27.8 kg/m²"
+      },
+      
+      "generalAppearance": "Well-developed, well-nourished, in no acute distress",
+      "headAndNeck": "No JVD, thyroid not enlarged, no lymphadenopathy",
+      "cardiovascular": "Regular rate and rhythm, no murmurs, rubs, or gallops",
+      "respiratory": "Clear to auscultation bilaterally, no wheezes or crackles",
+      "abdomen": "Soft, non-tender, non-distended, no hepatosplenomegaly",
+      "extremities": "No edema, peripheral pulses 2+ bilaterally",
+      "neurological": "Alert and oriented, cranial nerves intact"
+    },
+    
+    "investigations": {
+      "labResults": {
+        "renalFunction": {
+          "creatinine": "1.2 mg/dL",
+          "egfr": "68 mL/min/1.73m²",
+          "bun": "18 mg/dL",
+          "electrolytes": {
+            "sodium": "140 mEq/L",
+            "potassium": "4.2 mEq/L",
+            "chloride": "102 mEq/L"
+          }
+        },
+        "glucoseControl": {
+          "fastingGlucose": "140 mg/dL",
+          "hba1c": "7.2%",
+          "postprandialGlucose": "180 mg/dL"
+        },
+        "lipidProfile": {
+          "totalCholesterol": "210 mg/dL",
+          "ldl": "130 mg/dL",
+          "hdl": "45 mg/dL",
+          "triglycerides": "180 mg/dL"
+        },
+        "liverFunction": {
+          "ast": "25 U/L",
+          "alt": "30 U/L",
+          "alp": "85 U/L",
+          "totalBilirubin": "0.8 mg/dL"
+        },
+        "urinalysis": {
+          "appearance": "Clear",
+          "protein": "Trace",
+          "glucose": "Negative",
+          "microscopy": "Normal"
+        },
+        "completeBloodCount": {
+          "hemoglobin": "14.2 g/dL",
+          "hematocrit": "42%",
+          "wbc": "7.5 × 10³/µL",
+          "platelets": "250 × 10³/µL"
+        }
+      },
+      
+      "imaging": {
+        "chestXray": "Normal heart size, clear lung fields",
+        "ecg": "Sinus tachycardia, rate 105 bpm, no ST changes",
+        "echo": "Pending",
+        "abdominalUltrasound": "Normal liver, spleen, and kidneys"
+      }
+    },
+    
+    "assessment": {
+      "primaryDiagnosis": {
+        "code": "I10",
+        "description": "Essential (primary) hypertension, stage 2",
+        "severity": "Uncontrolled on current therapy"
+      },
+      "secondaryDiagnoses": [
+        {
+          "code": "E11.9",
+          "description": "Type 2 diabetes mellitus without complications",
+          "control": "Suboptimal (HbA1c 7.2%)"
+        },
+        {
+          "code": "E78.5",
+          "description": "Hyperlipidemia, mixed type",
+          "control": "Partial (LDL 130 mg/dL)"
+        }
+      ],
+      "problemList": [
+        "Uncontrolled hypertension",
+        "Suboptimal diabetes control",
+        "Obesity (BMI 27.8)",
+        "Sedentary lifestyle",
+        "High salt diet"
+      ],
+      "severity": "Moderate",
+      "stability": "Stable but requires intervention"
+    },
+    
+    "plan": {
+      "pharmacological": {
+        "medicationAdjustments": [
+          {
+            "medication": "Lisinopril",
+            "currentDose": "10 mg daily",
+            "newDose": "20 mg daily",
+            "rationale": "BP remains elevated above target",
+            "monitoring": "Check BP in 2 weeks, renal function in 1 month"
           },
+          {
+            "medication": "Metformin",
+            "currentDose": "500 mg BID",
+            "newDose": "850 mg BID",
+            "rationale": "HbA1c above target (7.2%)",
+            "monitoring": "Check fasting glucose in 2 weeks"
+          }
+        ],
+        "newMedications": [
+          {
+            "medication": "Hydrochlorothiazide",
+            "dose": "12.5 mg daily",
+            "rationale": "Additive effect with ACE inhibitor for BP control",
+            "duration": "Long-term",
+            "monitoring": "Electrolytes in 1 month"
+          }
+        ],
+        "continueMedications": ["Atorvastatin 20 mg daily at bedtime"]
+      },
+      
+      "nonPharmacological": {
+        "diet": "Low salt diet (<2g sodium/day), diabetic diet, portion control",
+        "exercise": "30 minutes moderate exercise 5 days/week, start with walking",
+        "lifestyle": "Weight loss goal: 5% of body weight (4.25 kg) in 6 months",
+        "smokingCessation": "Remain smoke-free",
+        "alcohol": "Limit to 1 unit/day"
+      },
+      
+      "monitoringAndFollowup": {
+        "bloodPressure": "Home BP monitoring twice daily, log readings",
+        "glucose": "Fasting and postprandial monitoring twice weekly",
+        "labTests": [
+          "Basic metabolic panel in 1 month",
+          "HbA1c in 3 months",
+          "Lipid profile in 6 months"
+        ],
+        "followupAppointment": "2 weeks for BP check, then monthly until controlled"
+      },
+      
+      "education": {
+        "topics": [
+          "Hypertension management and complications",
+          "Diabetes self-management",
+          "Medication adherence",
+          "Importance of regular follow-up"
+        ],
+        "materialsProvided": [
+          "BP monitoring log sheet",
+          "Dietary guidelines",
+          "Exercise prescription"
+        ]
+      },
+      
+      "referrals": [
+        {
+          "specialty": "Dietitian",
+          "reason": "Medical nutrition therapy for hypertension and diabetes",
+          "urgency": "Routine"
+        },
+        {
+          "specialty": "Diabetes educator",
+          "reason": "Diabetes self-management education",
+          "urgency": "Routine"
+        }
+      ],
+      
+      "goals": {
+        "shortTerm": "BP <140/90 within 2 weeks",
+        "mediumTerm": "HbA1c <7% within 3 months",
+        "longTerm": "Weight loss of 5% within 6 months"
+      }
+    },
+    
+    "prognosis": "Good with adherence to treatment plan",
+    "visitSummary": "Patient with multiple chronic conditions requiring optimization of therapy and lifestyle modifications."
+  },
           "createdAt": "2024-10-15T09:45:00Z"
         }
       ]
@@ -1079,20 +1554,259 @@ export const dummyPatients: Patient[] = [
             "expiresAt": "2029-11-10"
           },
           "dataPayload": {
-            "visualAcuity": {
-              "rightEye": "6/9",
-              "leftEye": "6/12",
-              "withCorrection": "6/6 both eyes"
-            },
-            "intraocularPressure": {
-              "rightEye": "16 mmHg",
-              "leftEye": "17 mmHg"
-            },
-            "fundusFindings": "Mild non-proliferative diabetic retinopathy, microaneurysms in both eyes",
-            "retinalPhotos": "Available in attachments",
-            "diagnosis": "Diabetic retinopathy, mild, non-proliferative",
-            "recommendations": "Annual follow-up, tight glycemic control, return if vision changes"
-          },
+    "patientHistory": {
+      "presentingComplaint": {
+        "en": "Gradual blurring of vision over the past 6 months, worse in left eye",
+        "ar": "تشوش تدريجي في الرؤية خلال الستة أشهر الماضية، أسوأ في العين اليسرى",
+        "de": "Allmähliche Verschlechterung des Sehvermögens in den letzten 6 Monaten, stärker im linken Auge"
+      },
+      "duration": "6 months",
+      "onset": "Gradual",
+      "progression": "Slowly worsening",
+      "associatedSymptoms": [
+        "Floaters",
+        "Photophobia",
+        "Difficulty with night vision"
+      ],
+      "pastOcularHistory": {
+        "surgeries": ["Cataract surgery (2015, right eye)"],
+        "laserTreatments": ["PRK (2010)"],
+        "trauma": ["None"],
+        "glassesPrescription": "-2.5 sph OU for distance"
+      },
+      "systemicHistory": {
+        "diabetes": "Type 2, diagnosed 2010, on Metformin",
+        "hypertension": "Controlled on Amlodipine",
+        "other": "Hyperlipidemia"
+      },
+      "medications": ["Metformin 1000mg BID", "Atorvastatin 20mg", "Amlodipine 5mg"],
+      "allergies": ["None known"],
+      "familyHistory": {
+        "glaucoma": "Mother (age 75)",
+        "macularDegeneration": "Paternal grandfather",
+        "diabeticRetinopathy": "None"
+      },
+      "socialHistory": {
+        "smoking": "Former smaker (quit 2010)",
+        "alcohol": "Occasional",
+        "occupation": "Retired teacher",
+        "hobbies": "Reading, gardening"
+      }
+    },
+
+    "visualFunction": {
+      "distanceVisualAcuity": {
+        "rightEye": {
+          "uncorrected": "6/12",
+          "corrected": "6/9",
+          "pinhole": "6/6"
+        },
+        "leftEye": {
+          "uncorrected": "6/18",
+          "corrected": "6/12",
+          "pinhole": "6/9"
+        }
+      },
+      "nearVisualAcuity": {
+        "rightEye": "N8",
+        "leftEye": "N10"
+      },
+      "contrastSensitivity": "Reduced (Pelli-Robson: 1.5 log units)",
+      "colorVision": "Ishihara plates: 12/14 correct (mild red-green deficiency)",
+      "visualFields": {
+        "rightEye": "Full to confrontation",
+        "leftEye": "Superior arcuate scotoma",
+        "method": "Automated perimetry (Humphrey 24-2)",
+        "reliability": "Good (fixation losses: 2/20, false positives: 1/20)"
+      }
+    },
+
+    "refraction": {
+      "subjective": {
+        "rightEye": "-2.50 DS / -0.75 DC × 180°",
+        "leftEye": "-3.00 DS / -1.25 DC × 170°"
+      },
+      "objective": {
+        "rightEye": "-2.75 DS / -0.50 DC × 175°",
+        "leftEye": "-3.25 DS / -1.00 DC × 165°"
+      },
+      "addForReading": "+2.00 DS OU",
+      "vertexDistance": "12 mm",
+      "pupillaryDistance": "64 mm (32/32)"
+    },
+
+    "anteriorSegment": {
+      "lidsAndLashes": "Normal bilaterally",
+      "conjunctiva": "Mild injection, no discharge",
+      "cornea": {
+        "rightEye": "Clear, no scars or vascularization",
+        "leftEye": "Mild superficial punctate keratopathy inferiorly"
+      },
+      "anteriorChamber": {
+        "depth": "Normal (Van Herick grade 3)",
+        "cells": "0",
+        "flare": "0"
+      },
+      "iris": "Regular, no neovascularization",
+      "pupils": {
+        "size": "4 mm in light, 6 mm in dark",
+        "reactivity": "Brisk to light and accommodation",
+        "afferentDefect": "None"
+      },
+      "lens": {
+        "rightEye": "PCIOL, clear, centered",
+        "leftEye": "Nuclear sclerosis grade 2+"
+      }
+    },
+
+    "intraocularPressure": {
+      "rightEye": {
+        "applanation": "16 mmHg",
+        "nonContact": "15 mmHg",
+        "time": "10:30 AM"
+      },
+      "leftEye": {
+        "applanation": "18 mmHg",
+        "nonContact": "17 mmHg",
+        "time": "10:30 AM"
+      },
+      "centralCornealThickness": {
+        "rightEye": "545 μm",
+        "leftEye": "540 μm"
+      },
+      "diurnalVariation": "Not assessed",
+      "previousPressures": [
+        {"date": "2024-01-15", "rightEye": "15", "leftEye": "17"},
+        {"date": "2023-10-20", "rightEye": "14", "leftEye": "16"}
+      ]
+    },
+
+    "posteriorSegment": {
+      "vitreous": "Clear, few syneresis, no pigment cells",
+      "opticNerve": {
+        "rightEye": "CD ratio 0.3, healthy neuroretinal rim, no hemorrhage",
+        "leftEye": "CD ratio 0.4, inferotemporal rim thinning"
+      },
+      "macula": {
+        "rightEye": "Normal foveal reflex, no edema",
+        "leftEye": "Few hard exudates temporal to fovea"
+      },
+      "retina": {
+        "rightEye": "Mild non-proliferative diabetic retinopathy, few microaneurysms",
+        "leftEye": "Moderate non-proliferative diabetic retinopathy, microaneurysms and dot hemorrhages"
+      },
+      "vessels": {
+        "arteries": "Mild arteriolar narrowing",
+        "veins": "Normal",
+        "neovascularization": "None"
+      },
+      "periphery": "No lattice degeneration or retinal breaks"
+    },
+
+    "diagnosticImaging": {
+      "octMacular": {
+        "rightEye": {
+          "centralSubfieldThickness": "245 μm",
+          "cubeVolume": "7.2 mm³",
+          "findings": "Normal macular architecture"
+        },
+        "leftEye": {
+          "centralSubfieldThickness": "285 μm",
+          "cubeVolume": "7.8 mm³",
+          "findings": "Mild intraretinal fluid temporal to fovea"
+        }
+      },
+      "octOpticNerve": {
+        "rightEye": "RNFL thickness: 95 μm (within normal limits)",
+        "leftEye": "RNFL thickness: 82 μm (borderline thinning inferotemporally)"
+      },
+      "fundusPhotography": {
+        "rightEye": "Mild NPDR, grade 1",
+        "leftEye": "Moderate NPDR, grade 2"
+      },
+      "fluoresceinAngiography": {
+        "indication": "Assess diabetic retinopathy",
+        "findings": "Early hyperfluorescence of microaneurysms, no leakage or neovascularization"
+      },
+      "visualField": {
+        "rightEye": "MD: -1.2 dB, PSD: 1.8 dB",
+        "leftEye": "MD: -3.5 dB, PSD: 4.2 dB",
+        "pattern": "Superior arcuate defect left eye"
+      },
+      "cornealTopography": "Regular astigmatism, no keratoconus"
+    },
+
+    "assessment": {
+      "primaryDiagnosis": {
+        "code": "E11.32",
+        "description": "Type 2 diabetes mellitus with mild nonproliferative diabetic retinopathy",
+        "eyeInvolvement": "Bilateral, worse in left eye"
+      },
+      "secondaryDiagnoses": [
+        {
+          "code": "H25.1",
+          "description": "Age-related nuclear cataract, left eye",
+          "severity": "Grade 2+"
+        },
+        {
+          "code": "H40.00",
+          "description": "Glaucoma suspect (ocular hypertension)",
+          "riskFactors": "Family history, borderline IOP, thin cornea"
+        }
+      ],
+      "prognosis": "Good with regular monitoring and glycemic control",
+      "stability": "Stable, requires monitoring"
+    },
+
+    "treatmentPlan": {
+      "medical": {
+        "diabeticRetinopathy": {
+          "monitoring": "Annual dilated fundus exam",
+          "glycemicControl": "Target HbA1c <7%",
+          "bloodPressure": "Target <130/80 mmHg",
+          "lipidControl": "Continue statin therapy"
+        },
+        "cataract": {
+          "observation": "Monitor for visual impairment",
+          "surgeryIndication": "When visual acuity drops below 6/12"
+        },
+        "glaucomaSuspect": {
+          "monitoring": "6-month IOP checks, annual visual fields",
+          "treatmentThreshold": "Start treatment if IOP >24 mmHg or progression"
+        }
+      },
+      "surgical": {
+        "indications": [
+          "Cataract surgery when visually significant",
+          "Laser photocoagulation if progression to severe NPDR/PDR"
+        ],
+        "contraindications": "Poor systemic health, uncontrolled diabetes"
+      },
+      "patientEducation": {
+        "diabetes": "Importance of glycemic control, regular eye exams",
+        "symptomsToWatch": "Sudden vision loss, floaters, flashes",
+        "lifestyle": "Healthy diet, regular exercise, smoking cessation"
+      },
+      "followUp": {
+        "diabeticRetinopathy": "6 months",
+        "glaucomaMonitoring": "6 months",
+        "cataract": "Annual unless symptomatic",
+        "nextAppointment": "2024-05-28"
+      },
+      "referrals": [
+        {
+          "specialty": "Endocrinology",
+          "reason": "Optimize diabetes control",
+          "urgency": "Routine"
+        },
+        {
+          "specialty": "Retina specialist",
+          "reason": "Moderate NPDR monitoring",
+          "urgency": "Routine"
+        }
+      ]
+    }
+  },
           "attachments": [
             {
               "id": "ATT-1",
@@ -1177,15 +1891,147 @@ export const dummyPatients: Patient[] = [
             "expiresAt": "2027-08-20"
           },
           "dataPayload": {
-            "restingECG": "Normal sinus rhythm, LVH by voltage",
-            "stressTest": "Positive for ischemia at 7 METs, ST depression 1.5mm in inferior leads",
-            "bloodPressureResponse": "Adequate",
-            "heartRateRecovery": "Delayed (12 beats in first minute)",
-            "ejectionFraction": "55% (estimated)",
-            "findings": "Mild inducible ischemia, likely due to hypertensive heart disease",
-            "recommendations": "Continue aspirin, optimize blood pressure control, consider coronary CT if symptoms worsen",
-            "medicationAdjustment": "Add atenolol 25mg daily"
-          },
+  "patientInfo": {
+    "symptoms": "Typical angina, DOE NYHA II",
+    "riskFactors": ["Hypertension", "Dyslipidemia", "Former smoker", "Family history CAD"]
+  },
+  "restingECG": {
+    "rhythm": "Normal sinus rhythm",
+    "rate": 78,
+    "axis": "Normal",
+    "intervals": {
+      "pr": 160,
+      "qrs": 100,
+      "qt": 380,
+      "qtc": 420
+    },
+    "findings": [
+      "LVH by voltage criteria",
+      "Nonspecific ST-T changes in lateral leads",
+      "Poor R wave progression V1-V3"
+    ]
+  },
+  "stressTest": {
+    "protocol": "Bruce",
+    "duration": "8:30 minutes",
+    "metsAchieved": 7.2,
+    "peakHeartRate": 142,
+    "percentPredictedMaxHR": 85,
+    "bloodPressure": {
+      "resting": "138/88",
+      "peak": "192/102",
+      "response": "Hypertensive"
+    },
+    "ecgChanges": {
+      "stDepression": {
+        "magnitude": 1.5,
+        "leads": ["II", "III", "aVF"],
+        "type": "Downsloping",
+        "recoveryTime": "5 minutes"
+      },
+      "arrhythmias": ["Occasional PVCs"]
+    },
+    "symptoms": ["Chest pain at 7 METs", "Dyspnea"]
+  },
+  "echocardiogram": {
+    "measurements": {
+      "lvidD": 5.2,
+      "lvidS": 3.4,
+      "ivsD": 1.2,
+      "pwD": 1.1,
+      "laVolume": 38,
+      "raArea": 18
+    },
+    "function": {
+      "ejectionFraction": {
+        "method": "Simpson's",
+        "value": 55,
+        "qualitative": "Mildly reduced"
+      },
+      "wallMotion": [
+        {"segment": "Anteroseptal", "score": 1},
+        {"segment": "Inferior", "score": 2},
+        {"segment": "Lateral", "score": 1}
+      ],
+      "diastolicFunction": "Grade I diastolic dysfunction"
+    },
+    "valves": {
+      "aortic": "Mild calcification, no stenosis",
+      "mitral": "Mild regurgitation",
+      "tricuspid": "Trace regurgitation",
+      "pulmonary": "Normal"
+    },
+    "findings": [
+      "Concentric LVH",
+      "Mild LA enlargement",
+      "No pericardial effusion"
+    ]
+  },
+  "coronaryImaging": {
+    "coronaryCT": {
+      "cadRads": "3",
+      "findings": [
+        "Non-calcified plaque LAD (40-50% stenosis)",
+        "Mixed plaque RCA (30-40% stenosis)"
+      ]
+    }
+  },
+  "labResults": {
+    "troponin": 0.02,
+    "bnp": 120,
+    "lipidPanel": {
+      "totalCholesterol": 210,
+      "ldl": 138,
+      "hdl": 42,
+      "triglycerides": 180
+    }
+  },
+  "assessments": {
+    "pretestProbability": "Intermediate (65%)",
+    "graceScore": 98,
+    "diamondForrester": "Intermediate risk",
+    "diagnosis": [
+      "Hypertensive heart disease",
+      "Stable coronary artery disease",
+      "Mild systolic dysfunction"
+    ]
+  },
+  "recommendations": {
+    "lifestyle": [
+      "Cardiac rehabilitation program",
+      "DASH diet, sodium <2g/day",
+      "Regular exercise 30 min daily"
+    ],
+    "medical": [
+      "Optimize BP control (target <130/80)",
+      "Maximize statin therapy",
+      "Consider coronary angiography if symptoms progress"
+    ],
+    "followUp": [
+      "Cardiology follow-up in 3 months",
+      "Repeat echo in 1 year",
+      "Stress test if new symptoms"
+    ]
+  },
+  "medications": {
+    "current": [
+      "Aspirin 81mg daily",
+      "Atorvastatin 40mg daily",
+      "Lisinopril 10mg daily",
+      "Metoprolol 25mg BID"
+    ],
+    "adjustments": [
+      "Increase metoprolol to 50mg BID",
+      "Add ezetimibe 10mg daily",
+      "Consider referral for cardiac rehab"
+    ]
+  },
+  "procedures": {
+    "recommended": "Elective coronary angiography",
+    "urgency": "Within 4-6 weeks",
+    "alternative": "CT coronary angiography if uncertain"
+  }
+},
           "attachments": [
             {
               "id": "ATT-2",
@@ -1393,22 +2239,262 @@ export const dummyPatients: Patient[] = [
             "expiresAt": "2027-04-12"
           },
           "dataPayload": {
-            "psaLevels": {
-              "totalPSA": "6.8 ng/mL",
-              "freePSA": "0.8 ng/mL",
-              "freeToTotalRatio": "11.8%"
-            },
-            "digitalRectalExam": "Prostate enlarged to approximately 40 grams, smooth, no nodules",
-            "urinarySymptoms": {
-              "ipssScore": "14 (moderate)",
-              "frequency": "8 times daily",
-              "nocturia": "2 times nightly",
-              "flow": "Weak stream, hesitancy"
-            },
-            "ultrasoundFindings": "Prostate volume 42 cc, no hypoechoic lesions, post-void residual 80 mL",
-            "interpretation": "Benign prostatic hyperplasia with elevated PSA, ratio concerning",
-            "recommendations": "Repeat PSA in 3 months, consider prostate MRI if PSA remains elevated, start tamsulosin 0.4mg for symptoms"
-          },
+  "patientHistory": {
+    "chiefComplaint": "Lower urinary tract symptoms for 6 months",
+    "duration": "6 months",
+    "hematuria": {
+      "gross": "No",
+      "microscopic": "Occasional RBCs",
+      "timing": "Initial"
+    },
+    "pain": {
+      "location": "Suprapubic and perineal",
+      "character": "Dull ache",
+      "radiation": "To scrotum",
+      "severity": "4/10"
+    },
+    "sexualHistory": {
+      "erectileFunction": "SHIM score 18 (mild ED)",
+      "libido": "Decreased",
+      "ejaculation": "Premature ejaculation"
+    },
+    "previousConditions": ["Recurrent UTIs", "Nephrolithiasis"],
+    "surgeries": ["Circumcision 2005"],
+    "medications": ["Tamsulosin 0.4mg daily", "Finasteride 5mg daily"],
+    "allergies": "Sulfa drugs",
+    "familyHistory": "Father with BPH, brother with prostate cancer at 62"
+  },
+  "lowerUrinaryTractSymptoms": {
+    "storage": {
+      "frequency": "8 times daily",
+      "nocturia": "2 times nightly",
+      "urgency": "Moderate",
+      "urgencyIncontinence": "Occasional"
+    },
+    "voiding": {
+      "hesitancy": "Yes, 30 seconds delay",
+      "intermittency": "Present",
+      "weakStream": "Severe",
+      "straining": "Required"
+    },
+    "postMicturition": {
+      "dribbling": "Post-void dribbling",
+      "incompleteEmptying": "Sensation present"
+    },
+    "scores": {
+      "ipss": {
+        "total": 14,
+        "symptomSeverity": "Moderate",
+        "storageScore": 8,
+        "voidingScore": 6,
+        "qualityOfLife": 3
+      },
+      "oabss": 8
+    }
+  },
+  "physicalExamination": {
+    "general": {
+      "vitals": {
+        "bp": "140/90 mmHg",
+        "hr": 78,
+        "temperature": 36.8
+      },
+      "abdomen": "Soft, non-tender, no masses"
+    },
+    "genitalia": {
+      "penis": "Circumcised, normal",
+      "testes": "Normal size and consistency bilaterally",
+      "epididymis": "Non-tender",
+      "varicocele": "None"
+    },
+    "digitalRectalExam": {
+      "prostateSize": "40 grams (enlarged)",
+      "consistency": "Firm, smooth",
+      "nodules": "None",
+      "symmetry": "Symmetric",
+      "tenderness": "None",
+      "findings": "BPH Grade II, no suspicious nodules"
+    }
+  },
+  "laboratoryInvestigations": {
+    "urinalysis": {
+      "appearance": "Clear",
+      "color": "Yellow",
+      "specificGravity": 1.015,
+      "ph": 6.0,
+      "leukocytes": "Negative",
+      "nitrites": "Negative",
+      "blood": "Trace",
+      "protein": "Negative",
+      "glucose": "Negative",
+      "microscopy": {
+        "rbc": "2-4/hpf",
+        "wbc": "0-2/hpf",
+        "epithelialCells": "Few",
+        "casts": "None",
+        "crystals": "None"
+      },
+      "culture": "No growth"
+    },
+    "renalFunction": {
+      "creatinine": "1.1 mg/dL",
+      "egfr": "68 mL/min/1.73m²",
+      "bun": "18 mg/dL"
+    },
+    "psa": {
+      "total": {
+        "value": 6.8,
+        "unit": "ng/mL",
+        "interpretation": "Elevated"
+      },
+      "free": {
+        "value": 0.8,
+        "unit": "ng/mL",
+        "interpretation": "Low"
+      },
+      "ratio": {
+        "value": 11.8,
+        "unit": "%",
+        "interpretation": "Concerning for malignancy"
+      },
+      "velocity": "0.8 ng/mL/year",
+      "density": "0.16 ng/mL/cc"
+    },
+    "otherMarkers": {
+      "phI": "Not performed",
+      "4kscore": "Not performed"
+    }
+  },
+  "imagingStudies": {
+    "ultrasound": {
+      "kidneys": {
+        "size": {
+          "right": "11.2 cm",
+          "left": "11.5 cm"
+        },
+        "cortex": "Normal thickness",
+        "hydronephrosis": "None"
+      },
+      "bladder": {
+        "wallThickness": "4 mm",
+        "trabeculation": "Mild",
+        "diverticula": "None",
+        "stones": "None"
+      },
+      "prostate": {
+        "volume": 42,
+        "unit": "cc",
+        "shape": "Symmetric",
+        "echogenicity": "Homogeneous",
+        "lesions": "No hypoechoic lesions",
+        "capsule": "Intact"
+      },
+      "postVoidResidual": {
+        "volume": 80,
+        "unit": "mL",
+        "interpretation": "Significant"
+      },
+      "prostateArteryDoppler": "Not performed"
+    },
+    "mriProstate": {
+      "pirads": "Not performed",
+      "recommended": "Yes, due to elevated PSA"
+    },
+    "uroflowmetry": {
+      "qmax": "8 mL/sec",
+      "voidedVolume": "250 mL",
+      "voidingTime": "45 seconds",
+      "pattern": "Obstructive",
+      "interpretation": "Severe obstruction"
+    }
+  },
+  "diagnosticAssessment": {
+    "workingDiagnosis": [
+      "Benign Prostatic Hyperplasia with LUTS (Grade II)",
+      "Elevated PSA requiring further evaluation"
+    ],
+    "differentialDiagnosis": [
+      "Prostate adenocarcinoma",
+      "Chronic prostatitis",
+      "Urethral stricture",
+      "Neurogenic bladder"
+    ],
+    "riskStratification": {
+      "prostateCancerRisk": "Intermediate (15-25%)",
+      "factors": ["PSA > 4", "Age > 60", "Family history"],
+      "psaThreshold": "4.0 ng/mL"
+    },
+    "clinicalStaging": {
+      "tStage": "T1c (PSA detected)",
+      "gleasonScore": "Pending biopsy"
+    }
+  },
+  "treatmentPlan": {
+    "pharmacological": {
+      "alphaBlockers": {
+        "drug": "Tamsulosin",
+        "dose": "0.4 mg",
+        "frequency": "Daily at bedtime",
+        "duration": "Indefinite",
+        "rationale": "Improve flow symptoms"
+      },
+      "fiveAlphaReductaseInhibitors": {
+        "drug": "Finasteride",
+        "dose": "5 mg",
+        "frequency": "Daily",
+        "duration": "Long-term",
+        "rationale": "Reduce prostate volume"
+      },
+      "pde5Inhibitors": {
+        "recommended": "Tadalafil 5mg daily",
+        "rationale": "Dual benefit for LUTS and ED"
+      },
+      "antimuscarinics": {
+        "considered": "Solifenacin 5mg",
+        "rationale": "For storage symptoms if bothersome"
+      }
+    },
+    "surgicalOptions": {
+      "recommended": "Transurethral resection of prostate (TURP)",
+      "alternatives": ["GreenLight laser", "Rezum water vapor therapy"],
+      "indications": "Failed medical therapy, PVR > 100mL, recurrent UTIs",
+      "timing": "Consider in 6-12 months if symptoms persist"
+    },
+    "lifestyleModifications": [
+      "Limit fluid intake before bedtime",
+      "Avoid caffeine and alcohol",
+      "Double voiding technique",
+      "Timed voiding every 3-4 hours"
+    ],
+    "monitoring": {
+      "psaFollowUp": "Repeat in 3 months",
+      "symptomAssessment": "IPSS every 6 months",
+      "renalFunction": "Annual creatinine",
+      "uroflowmetry": "Annual if symptomatic"
+    }
+  },
+  "patientEducation": {
+    "symptomMonitoring": "IPSS diary, bladder diary",
+    "warningSigns": [
+      "Acute urinary retention",
+      "Hematuria",
+      "Fever with urinary symptoms",
+      "Worsening renal function"
+    ],
+    "sexualHealth": "Discuss impact of medications on sexual function",
+    "supportResources": "BPH support group information"
+  },
+  "followUp": {
+    "nextAppointment": "3 months",
+    "consultation": "Urology follow-up",
+    "testsRequired": "Repeat PSA, urinalysis",
+    "referrals": [
+      "Urodynamics if indicated",
+      "Prostate MRI if PSA remains elevated",
+      "Urology oncology consult if biopsy indicated"
+    ]
+  }
+},
           "createdAt": "2024-04-12T09:45:00Z"
         }
       ]
