@@ -16,7 +16,7 @@ import { routing } from "./i18n/routing";
 import { NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware(routing);
-const publicPages = ['/login', '/signup']; 
+const publicPages = ['/login', '/signup','/']; 
 
 export default auth((req) => {
   const { nextUrl } = req;
