@@ -60,7 +60,7 @@
 //   const patients = useMemo(() => dummyPatients, []);
 //   const [searchTerm, setSearchTerm] = useState("");
 //   const [showFilters, setShowFilters] = useState(false);
-  
+
 //   const [sortConfig, setSortConfig] = useState<{
 //     key: string;
 //     direction: "asc" | "desc";
@@ -295,6 +295,7 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useTranslations } from 'next-intl';
 import { Button } from "@/components/ui/button";
 import { Search, Filter, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -330,6 +331,7 @@ export default function RecordsListPage() {
   const router = useRouter();
   const params = useParams();
   const locale = (params.locale as string) || "ar"; // اللغة الحالية من الرابط
+  const t = useTranslations('Records');
 
   const [mounted, setMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -368,15 +370,15 @@ export default function RecordsListPage() {
   if (!mounted) return null;
 
   return (
-    <div className="p-4 md:p-6 space-y-6 min-h-screen bg-gray-50/50" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="p-4 md:p-6 space-y-6 min-h-screen bg-gray-50/50 dark:bg-background" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            {locale === 'ar' ? 'سجلات المرضى' : 'Patient Records'}
+            {t('title')}
           </h1>
           <p className="text-muted-foreground text-sm">
-             {locale === 'ar' ? 'قاعدة بيانات المرضى والملفات الطبية' : 'Patient database and medical files'}
+            {t('description')}
           </p>
         </div>
         {/* ... Search Bar ... */}
@@ -387,22 +389,22 @@ export default function RecordsListPage() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-right cursor-pointer">
-                {locale === 'ar' ? 'المريض' : 'Patient'}
+                {t('patientNameColumn')}
               </TableHead>
               <TableHead className="text-right">
-                {locale === 'ar' ? 'العمر' : 'Age'}
+                {t('ageColumn')}
               </TableHead>
               <TableHead className="text-right">
-                {locale === 'ar' ? 'رقم الهاتف' : 'Phone'}
+                {t('phoneColumn')}
               </TableHead>
               <TableHead className="text-right">
-                 {locale === 'ar' ? 'الحالة' : 'Status'}
+                {t('statusColumn')}
               </TableHead>
               <TableHead className="text-center">
-                 {locale === 'ar' ? 'السجلات' : 'Records'}
+                {t('recordsColumn')}
               </TableHead>
               <TableHead className="text-left">
-                 {locale === 'ar' ? 'إجراء' : 'Action'}
+                {t('actionColumn')}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -456,17 +458,17 @@ export default function RecordsListPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex justify-center gap-2">
-                      <Badge variant="outline" className="bg-blue-50">
-                        {localCount} {locale === 'ar' ? 'محلي' : 'Local'}
+                      <Badge variant="outline" className="bg-blue-50 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800">
+                        {localCount} {t('local')}
                       </Badge>
-                      <Badge variant="outline" className="bg-purple-50">
-                        {extCount} {locale === 'ar' ? 'خارجي' : 'Ext'}
+                      <Badge variant="outline" className="bg-purple-50 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800">
+                        {extCount} {t('external')}
                       </Badge>
                     </div>
                   </TableCell>
                   <TableCell className="text-left">
                     <Button size="sm" variant="ghost">
-                      {locale === 'ar' ? 'فتح الملف' : 'Open File'}
+                      {t('viewRecord')}
                     </Button>
                   </TableCell>
                 </TableRow>

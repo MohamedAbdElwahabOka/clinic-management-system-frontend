@@ -1,8 +1,10 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
+
 import React from "react";
-import { 
-  AlertTriangle, Info, Pill, History, FileDown, Flag 
+import {
+  AlertTriangle, Info, Pill, History, FileDown, Flag
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,17 +12,18 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 
 // Helper function (You might want to move this to a shared utils file later)
 const getLoc = (content: any, locale: string) => {
-    if (!content) return "";
-    if (typeof content === "string") return content;
-    return content[locale] || content['en'] || "";
+  if (!content) return "";
+  if (typeof content === "string") return content;
+  return content[locale] || content['en'] || "";
 };
 
 type Props = {
-    patient: any; 
-    locale: string;
+  patient: any;
+  locale: string;
 };
 
 export const ClinicalPriorityStrip = ({ patient, locale }: Props) => {
+  const t = useTranslations('Records');
   const criticalAlerts = patient.alerts.filter((a: any) => a.type === 'critical');
   const chronicConditions = patient.alerts.filter((a: any) => a.type === 'warning');
 
@@ -45,16 +48,16 @@ export const ClinicalPriorityStrip = ({ patient, locale }: Props) => {
       {/* Medications */}
       <div className="flex items-center gap-2 text-xs text-blue-700 dark:text-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-colors">
         <Pill className="w-3 h-3" />
-        <span className="font-semibold">{locale === 'ar' ? 'الأدوية الحالية:' : 'Meds:'}</span>
+        <span className="font-semibold">{t('medications')}</span>
         <span className="truncate max-w-[200px]">
-          {patient.currentMedications ? patient.currentMedications.join(", ") : 'None'}
+          {patient.currentMedications ? patient.currentMedications.join(", ") : t('none')}
         </span>
       </div>
 
       {/* Last Visit */}
       <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full ml-auto">
         <History className="w-3 h-3" />
-        {locale === 'ar' ? 'آخر زيارة: منذ 3 أيام' : 'Last visit: 3 days ago'}
+        {t('lastVisit')} {t('daysAgo', { days: 3 })}
       </div>
 
       {/* Actions */}
@@ -66,7 +69,7 @@ export const ClinicalPriorityStrip = ({ patient, locale }: Props) => {
                 <FileDown className="w-4 h-4 text-gray-500" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Export PDF</TooltipContent>
+            <TooltipContent>{t('exportPdf')}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -74,7 +77,7 @@ export const ClinicalPriorityStrip = ({ patient, locale }: Props) => {
                 <Flag className="w-4 h-4 text-gray-500" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Flag for Follow-up</TooltipContent>
+            <TooltipContent>{t('flagFollowUp')}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>

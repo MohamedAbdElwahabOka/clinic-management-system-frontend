@@ -152,13 +152,13 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       positive: true,
       desc: translate("overallPatientsDesc", "Patient analysis over last 7 days."),
       icon: BarChartBig,
-      className: "bg-primary text-primary-foreground [&_*]:text-primary-foreground",
+      className: "bg-primary text-primary-foreground dark:bg-primary/5 dark:text-primary [&_*]:text-primary-foreground dark:[&_*]:text-primary",
       render: () => (
         <div className="h-20 mt-2">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={overallPatientsChartData} margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
-              <Bar dataKey="patients" fill="hsl(var(--primary-foreground))" radius={[4, 4, 0, 0]} barSize={10} />
-              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "#ffffff", fillOpacity: 1 }} dy={5} />
+              <Bar dataKey="patients" fill="currentColor" radius={[4, 4, 0, 0]} barSize={10} />
+              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: "currentColor", fillOpacity: 0.7 }} dy={5} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -210,11 +210,11 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
     },
     satisfaction: {
       id: "satisfaction",
-      title: "Patient Satisfaction",
+      title: translate("patientSatisfaction", "Patient Satisfaction"),
       value: "4.8/5",
       change: "0.2",
       positive: true,
-      desc: "Based on recent reviews",
+      desc: translate("basedOnReviews", "Based on recent reviews"),
       icon: Star,
       className: "",
       render: () => (
@@ -227,17 +227,17 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
     },
     efficiency: {
       id: "efficiency",
-      title: "Avg Wait Time",
+      title: translate("avgWaitTime", "Avg Wait Time"),
       value: "14 min",
       change: "2 min",
       positive: true,
-      desc: "Wait time better than avg",
+      desc: translate("waitTimeDesc", "Wait time better than avg"),
       icon: Clock,
       className: "",
       render: () => (
         <div className="mt-4 flex justify-center">
-             <Badge variant="outline" className="px-4 py-1 border-green-500 text-green-600 bg-green-50">
-               Optimal Range
+             <Badge variant="outline" className="px-4 py-1 border-green-500 text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
+               {translate("optimalRange", "Optimal Range")}
              </Badge>
         </div>
       )
@@ -292,7 +292,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
             </PopoverTrigger>
             <PopoverContent className="w-64 p-3" align="end">
               <div className="space-y-2">
-                <h4 className="font-medium text-sm leading-none mb-2 text-muted-foreground">Select up to 3 cards</h4>
+                <h4 className="font-medium text-sm leading-none mb-2 text-muted-foreground">{translate("selectUpTo3Cards", "Select up to 3 cards")}</h4>
                 {Object.values(ALL_CARDS).map((card) => {
                   const isSelected = selectedCardIds.includes(card.id);
                   return (
@@ -350,7 +350,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
             
             {selectedCardIds.length === 0 && (
                <div className="col-span-3 border border-dashed rounded-lg p-8 flex justify-center items-center text-muted-foreground">
-                 Select cards from the Customize menu
+                 {translate("selectFromCustomizeMenu", "Select cards from the Customize menu")}
                </div>
             )}
           </div>
@@ -460,7 +460,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                 <div className="grid grid-cols-2 gap-2 border-t border-dashed border-green-200 dark:border-green-800 pt-2 mt-2">
                    <div>
                     <p className="text-xs text-muted-foreground">{translate("reservationTypeLabel", "Type")}</p>
-                    <Badge variant="outline" className="mt-1 font-normal border-green-300 text-green-700 bg-green-50">{translate("revisitLabel", "Revisit")}</Badge>
+                    <Badge variant="outline" className="mt-1 font-normal border-green-300 text-green-700 bg-green-50 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">{translate("revisitLabel", "Revisit")}</Badge>
                   </div>
                    <div>
                     <p className="text-xs text-muted-foreground">{translate("medicalRecordLabel", "History")}</p>

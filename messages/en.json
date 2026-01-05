@@ -25,32 +25,25 @@
     "currency": "EGP",
     "billedYearly": "Billed yearly",
     "billedMonthly": "Billed monthly",
-    
     "tierFreeName": "Free",
     "tierFreeDesc": "Perfect for trial and startups.",
     "ctaFree": "Try for Free",
-    
     "tierStarterName": "Starter",
     "tierStarterDesc": "For small clinics and new doctors.",
     "ctaStarter": "Get Started",
-    
     "tierProName": "Professional",
     "tierProDesc": "For active clinics seeking growth.",
     "ctaPro": "Subscribe Now",
-    
     "tierEnterpriseName": "Enterprise",
     "tierEnterpriseDesc": "For large medical centers and chains.",
     "ctaEnterprise": "Contact Sales",
-    
     "featUsers1": "1 User",
     "featUsers2": "2 Users (Doctor + Assistant)",
     "featUsers5": "Up to 5 Users",
     "featUsersUnl": "Unlimited Users",
-    
     "featPatients100": "Up to 100 Patients",
     "featPatients2k": "Up to 2,000 Patients",
     "featPatientsUnl": "Unlimited Patients",
-    
     "featAppt": "Appointment Management",
     "featRecords": "Electronic Medical Records",
     "featBasicReports": "Basic Financial Reports",
@@ -120,7 +113,20 @@
     "viewButton": "View",
     "requestNurseButton": "Request Nurse",
     "enterPatientButton": "Enter Patient",
-    "revisitLabel": "Revisit"
+    "revisitLabel": "Revisit",
+    "customizeCards": "Customize Cards",
+    "currentPatientLabel": "Current Patient",
+    "statusInRoom": "In Room",
+    "viewFullRecord": "Open Full Record",
+    "endSessionButton": "End Session",
+    "addPrescriptionButton": "Prescribe",
+    "patientSatisfaction": "Patient Satisfaction",
+    "basedOnReviews": "Based on recent reviews",
+    "avgWaitTime": "Avg Wait Time",
+    "waitTimeDesc": "Wait time better than avg",
+    "selectUpTo3Cards": "Select up to 3 cards",
+    "selectFromCustomizeMenu": "Select cards from the Customize menu",
+    "optimalRange": "Optimal Range"
   },
   "Landing": {
     "landingHeaderNavFeatures": "Features",
@@ -297,7 +303,7 @@
     "errorTermsRequired": "You must agree to the terms and conditions.",
     "phoneNumberPlaceholder": "e.g., 555-123-4567",
     "requiredField": "{field} is required.",
-    "errorInvalidCredentials":"email or password are rongo"
+    "errorInvalidCredentials": "email or password are rongo"
   },
   "Global": {
     "loading": "Loading...",
@@ -578,15 +584,13 @@
     "filter": "Filter",
     "filterByType": "Filter by type"
   },
-
   "Clinics": {
     "title": "Clinics",
     "description": "Manage clinics and healthcare facilities."
   },
-
-   "Appointments": {
+  "Appointments": {
     "appointmentsTitle": "Appointments Management",
-    "save":"Save",
+    "save": "Save",
     "patientName": "Patient Name",
     "searchPlaceholder": "Search by name...",
     "status": "Status",
@@ -617,7 +621,77 @@
     "exportExcel": "Export Excel",
     "table": "Table",
     "cards": "Cards",
-    "timeline": "Timeline"
-}
-
+    "timeline": "Timeline",
+    "pending": "Pending",
+    "today": "Today",
+    "nextDay": "Next Day",
+    "previousDay": "Previous Day",
+    "selectDate": "Select Date",
+    "noAppointmentsToday": "No appointments for this day",
+    "consultation": "Consultation",
+    "followup": "Follow-up",
+    "emergency": "Emergency",
+    "completeAppointment": "Complete Appointment",
+    "completed": "Completed",
+    "newAppointment": "New Appointment",
+    "close": "Close",
+    "enterName": "Enter Name",
+    "phoneNumberOptional": "Phone Number (Optional)",
+    "phonePlaceholder": "01xxxxxxxxx",
+    "appointmentType": "Appointment Type",
+    "saveAppointment": "Save Appointment",
+    "pendingStats": "Pending",
+    "confirmedStats": "Confirmed"
+  },
+  "Records": {
+    "title": "Patients Records",
+    "description": "Manage and view patient medical history and visits.",
+    "medications": "Meds:",
+    "currentMedications": "Current Medications:",
+    "none": "None",
+    "lastVisit": "Last visit:",
+    "daysAgo": "{days} days ago",
+    "exportPdf": "Export PDF",
+    "flagFollowUp": "Flag for Follow-up",
+    "visits": "visits",
+    "refill": "Refill",
+    "readOnly": "Read-Only",
+    "consultation": "Consultation",
+    "examinationDetails": "Examination Details",
+    "attachments": "Attachments",
+    "local": "Local",
+    "external": "External",
+    "viewRecord": "View Record",
+    "patientSummary": "Patient Summary",
+    "newRecord": "New Record",
+    "newSoapNote": "New SOAP Note",
+    "subjective": "Subjective",
+    "objective": "Objective",
+    "assessment": "Assessment",
+    "plan": "Plan",
+    "saveRecord": "Save Record",
+    "vitalTrends": "Vital Trends",
+    "refillPrescriptions": "Refill Prescriptions",
+    "reviewHrTrend": "Review HR Trend",
+    "labResults": "Lab Results",
+    "localRecords": "Local Records",
+    "externalRecords": "External Records",
+    "noLocalRecords": "No Local Records Yet",
+    "startAddingVisit": "Start by creating the first consultation log for this patient.",
+    "addFirstVisit": "Add First Visit",
+    "securityVerification": "Security Verification",
+    "chooseMethod": "Choose a method to receive your OTP",
+    "verifyIdentity": "Verify Identity",
+    "enterCode": "Enter the 4-digit code sent to",
+    "verifyAndAccess": "Verify & Access",
+    "resendCode": "Resend Code",
+    "accessGranted": "Access Granted",
+    "redirecting": "Redirecting to records...",
+    "patientNameColumn": "Patient",
+    "ageColumn": "Age",
+    "phoneColumn": "Phone",
+    "statusColumn": "Status",
+    "recordsColumn": "Records",
+    "actionColumn": "Action"
+  }
 }
