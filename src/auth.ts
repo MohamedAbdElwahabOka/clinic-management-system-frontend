@@ -3,8 +3,8 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  session: { strategy: "jwt", maxAge: 60 * 60 }, // ساعة مثلاً
-  
+  session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 7 }, // 7 days
+
   providers: [
     Credentials({
       name: "Credentials",
@@ -13,50 +13,76 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        if (!credentials) return null;
+        if (!credentials?.email || !credentials?.password) return null;
 
-        const email = credentials.email as string;
-        const password = credentials.password as string;
 
-        // --- هنا الداتا الوهمية بذكاء ---
-        // 1. يوزر الدكتور (Admin)
-        if (email === "doctor@clinica.com" && password === "123") {
-            return { 
-                id: "1", 
-                name: "Dr. Ahmed", 
-                email: "doctor@clinica.com", 
-                role: "admin" // <--- ركز هنا
-            }
+        try {
+          const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4000/api";
+          console.log("Using backend URL:", backendUrl);
+          const res = await fetch(`${backendUrl}/auth/login`, {
+            method: "POST",
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+            headers: { "Content-Type": "application/json" },
+          });
+
+          const responseData = await res.json();
+
+          if (!res.ok || !responseData.success) {
+            console.error("Login failed:", responseData);
+            return null;
+          }
+
+          const { auth, data } = responseData;
+          if (auth?.token && data?.fhirUser) {
+            const fhirUser = data.fhirUser;
+
+            // Extract email
+            const emailObj = fhirUser.telecom?.find((t: any) => t.system === "email");
+            const email = emailObj?.value;
+
+            // Extract name (prefer English or first available)
+            const nameObj = fhirUser.name?.find((n: any) => n._language === "en") || fhirUser.name?.[0];
+            const name = nameObj?.text || "Unknown";
+
+            // Extract role
+            const roleObj = fhirUser.extension?.find((e: any) => e.url === "http://example.org/fhir/StructureDefinition/user-role");
+            const role = roleObj?.valueString || "user";
+
+            return {
+              id: fhirUser.id,
+              name: name,
+              email: email,
+              role: role,
+              accessToken: auth.token,
+            };
+          }
+
+          return null;
+
+        } catch (error) {
+          console.error("Auth error:", error);
+          return null;
         }
-
-        // 2. يوزر الاستقبال (Reception)
-        if (email === "reception@clinica.com" && password === "123") {
-            return { 
-                id: "2", 
-                name: "Sarah Reception", 
-                email: "reception@clinica.com", 
-                role: "reception" // <--- ركز هنا
-            }
-        }
-        
-        return null
       },
     }),
   ],
   callbacks: {
-    // بناخد الرول من اليوزر نحطها في التوكن
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.role = user.role // حفظ الرول في التوكن
+        token.role = user.role
+        token.accessToken = user.accessToken
       }
       return token
     },
-    // بناخد الرول من التوكن نحطها في السيشن (عشان الفرونت يشوفها)
     async session({ session, token }) {
       if (session.user) {
-         session.user.id = token.id as string
-         session.user.role = token.role as string // تمرير الرول
+        session.user.id = token.id as string
+        session.user.role = token.role as string
+        session.user.accessToken = token.accessToken as string
       }
       return session
     }
