@@ -4,6 +4,9 @@ import {
   Calendar, Clock, Search, Plus, X, Check, 
   PhoneCall, User, AlertCircle, ChevronLeft, ChevronRight
 } from "lucide-react";
+import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import { arSA, enUS, de } from "date-fns/locale";
 
 // --- Types ---
 interface Appointment {
@@ -27,9 +30,9 @@ const initialAppointments: Appointment[] = [
 ];
 
 // --- Helper Functions ---
-const formatDate = (dateStr: string) => {
+const formatDate = (dateStr: string, locale: string) => {
   const date = new Date(dateStr);
-  return date.toLocaleDateString("ar-EG", { weekday: "short", day: "numeric", month: "short" });
+  return date.toLocaleDateString(locale === 'ar' ? "ar-EG" : (locale === 'de' ? "de-DE" : "en-US"), { weekday: "short", day: "numeric", month: "short" });
 };
 
 const isToday = (dateStr: string) => {
@@ -39,6 +42,9 @@ const isToday = (dateStr: string) => {
 
 // --- Main Component ---
 export default function AppointmentsPage() {
+  const params = useParams();
+  const locale = (params.locale as string) || "ar";
+  const t = useTranslations('Appointments');
   const [appointments, setAppointments] = useState<Appointment[]>(initialAppointments);
   const [searchText, setSearchText] = useState("");
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -104,18 +110,18 @@ export default function AppointmentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-20 transition-colors" dir="rtl">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-20 transition-colors" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800 sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">المواعيد</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">{t('appointmentsTitle')}</h1>
           
           {/* Search */}
           <div className="relative">
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
-              placeholder="ابحث عن مريض..."
+              placeholder={t('searchPlaceholder')}
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
               className="w-full pr-10 pl-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white dark:focus:bg-gray-900"
@@ -130,15 +136,15 @@ export default function AppointmentsPage() {
           <div className="grid grid-cols-3 gap-3">
             <div className="bg-white dark:bg-gray-900 rounded-xl p-3 text-center border dark:border-gray-800">
               <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{todayStats.total}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">الإجمالي</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('total')}</div>
             </div>
             <div className="bg-amber-50 dark:bg-amber-900/30 rounded-xl p-3 text-center border border-amber-100 dark:border-amber-900/60">
               <div className="text-2xl font-bold text-amber-600 dark:text-amber-300">{todayStats.pending}</div>
-              <div className="text-xs text-amber-600 dark:text-amber-200 mt-1">قيد الانتظار</div>
+              <div className="text-xs text-amber-600 dark:text-amber-200 mt-1">{t('pendingStats')}</div>
             </div>
             <div className="bg-green-50 dark:bg-green-900/30 rounded-xl p-3 text-center border border-green-100 dark:border-green-900/60">
               <div className="text-2xl font-bold text-green-600 dark:text-green-300">{todayStats.confirmed}</div>
-              <div className="text-xs text-green-600 dark:text-green-200 mt-1">مؤكدة</div>
+              <div className="text-xs text-green-600 dark:text-green-200 mt-1">{t('confirmedStats')}</div>
             </div>
           </div>
         )}
@@ -147,7 +153,7 @@ export default function AppointmentsPage() {
         <div className="bg-white dark:bg-gray-900 rounded-xl p-3 border dark:border-gray-800 flex items-center justify-between">
           <button 
             type="button"
-            aria-label="اليوم التالي"
+            aria-label={t('nextDay')}
             onClick={() => changeDate(1)}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
           >
@@ -160,19 +166,19 @@ export default function AppointmentsPage() {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              aria-label="اختر التاريخ"
+              aria-label={t('selectDate')}
               className="text-center font-medium text-gray-900 dark:text-gray-100 border-none outline-none bg-transparent"
             />
             {isToday(selectedDate) && (
               <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-200 px-2 py-0.5 rounded-full">
-                اليوم
+                {t('today')}
               </span>
             )}
           </div>
 
           <button 
             type="button"
-            aria-label="اليوم السابق"
+            aria-label={t('previousDay')}
             onClick={() => changeDate(-1)}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
           >
@@ -185,7 +191,7 @@ export default function AppointmentsPage() {
           {filteredAppointments.length === 0 ? (
             <div className="bg-white dark:bg-gray-900 rounded-xl p-8 text-center border dark:border-gray-800">
               <AlertCircle className="w-12 h-12 text-gray-300 dark:text-gray-500 mx-auto mb-3" />
-              <p className="text-gray-500 dark:text-gray-400 text-sm">لا توجد مواعيد في هذا اليوم</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm">{t('noAppointmentsToday')}</p>
             </div>
           ) : (
             filteredAppointments.map(appt => (
@@ -207,7 +213,7 @@ export default function AppointmentsPage() {
                   <div className="text-left">
                     <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{appt.time}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                      {appt.type === 'consultation' ? 'كشف' : appt.type === 'followup' ? 'متابعة' : 'طوارئ'}
+                      {appt.type === 'consultation' ? t('consultation') : appt.type === 'followup' ? t('followup') : t('emergency')}
                     </div>
                   </div>
                 </div>
@@ -221,14 +227,14 @@ export default function AppointmentsPage() {
                         className="flex-1 py-2 px-3 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-200 rounded-lg text-sm font-medium hover:bg-green-100 dark:hover:bg-green-900 flex items-center justify-center gap-1.5"
                       >
                         <Check className="w-4 h-4" />
-                        تأكيد
+                        {t('confirm')}
                       </button>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleStatusChange(appt.id, 'canceled'); }}
                         className="flex-1 py-2 px-3 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-200 rounded-lg text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900 flex items-center justify-center gap-1.5"
                       >
                         <X className="w-4 h-4" />
-                        إلغاء
+                        {t('cancel')}
                       </button>
                     </>
                   )}
@@ -237,17 +243,17 @@ export default function AppointmentsPage() {
                       onClick={(e) => { e.stopPropagation(); handleStatusChange(appt.id, 'completed'); }}
                       className="w-full py-2 px-3 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 rounded-lg text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900"
                     >
-                      إكمال الموعد
+                      {t('completeAppointment')}
                     </button>
                   )}
                   {appt.status === 'completed' && (
                     <div className="w-full py-2 px-3 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-lg text-sm text-center">
-                      تم الإكمال ✓
+                      {t('completed')} ✓
                     </div>
                   )}
                   {appt.status === 'canceled' && (
                     <div className="w-full py-2 px-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-200 rounded-lg text-sm text-center">
-                      ملغي
+                      {t('canceled')}
                     </div>
                   )}
                 </div>
@@ -263,7 +269,7 @@ export default function AppointmentsPage() {
         className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-2 font-bold hover:bg-blue-700 active:scale-95 transition-all z-20"
       >
         <Plus className="w-5 h-5" />
-        موعد جديد
+        {t('newAppointment')}
       </button>
 
       {/* Add Appointment Modal */}
@@ -271,10 +277,10 @@ export default function AppointmentsPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
           <div className="bg-white dark:bg-gray-900 rounded-t-3xl sm:rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="sticky top-0 bg-white dark:bg-gray-900 border-b dark:border-gray-800 px-4 py-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">موعد جديد</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('newAppointment')}</h2>
               <button
                 type="button"
-                aria-label="إغلاق"
+                aria-label={t('close')}
                 onClick={() => setShowAddModal(false)}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
               >
@@ -284,24 +290,24 @@ export default function AppointmentsPage() {
 
             <div className="p-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">اسم المريض</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{t('patientName')}</label>
                 <input
                   type="text"
                   value={newAppt.patientName}
                   onChange={(e) => setNewAppt({...newAppt, patientName: e.target.value})}
                   className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="أدخل الاسم"
+                  placeholder={t('enterName')}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">رقم الهاتف (اختياري)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{t('phoneNumberOptional')}</label>
                 <input
                   type="tel"
                   value={newAppt.phone}
                   onChange={(e) => setNewAppt({...newAppt, phone: e.target.value})}
                   className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="01xxxxxxxxx"
+                  placeholder={t('phonePlaceholder')}
                 />
               </div>
 
@@ -311,7 +317,7 @@ export default function AppointmentsPage() {
                     htmlFor="new-appointment-date"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
                   >
-                    التاريخ
+                    {t('date')}
                   </label>
                   <input
                     type="date"
@@ -327,7 +333,7 @@ export default function AppointmentsPage() {
                     htmlFor="new-appointment-time"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
                   >
-                    الوقت
+                    {t('time')}
                   </label>
                   <input
                     type="time"
@@ -340,12 +346,12 @@ export default function AppointmentsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">نوع الموعد</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">{t('appointmentType')}</label>
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: 'consultation', label: 'كشف' },
-                    { value: 'followup', label: 'متابعة' },
-                    { value: 'emergency', label: 'طوارئ' }
+                    { value: 'consultation', label: t('consultation') },
+                    { value: 'followup', label: t('followup') },
+                    { value: 'emergency', label: t('emergency') }
                   ].map(type => (
                     <button
                       key={type.value}
@@ -367,7 +373,7 @@ export default function AppointmentsPage() {
                 disabled={!newAppt.patientName}
                 className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                حفظ الموعد
+                {t('saveAppointment')}
               </button>
             </div>
           </div>
@@ -391,7 +397,7 @@ export default function AppointmentsPage() {
                 </div>
                 <button
                   type="button"
-                  aria-label="إغلاق"
+                  aria-label={t('close')}
                   onClick={() => setSelectedAppt(null)}
                   className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
                 >
@@ -403,7 +409,7 @@ export default function AppointmentsPage() {
             <div className="p-4 space-y-3">
               <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
                 <Calendar className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-                <span>{formatDate(selectedAppt.date)}</span>
+                <span>{formatDate(selectedAppt.date, locale)}</span>
               </div>
               <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
                 <Clock className="w-5 h-5 text-gray-400 dark:text-gray-500" />
@@ -411,7 +417,7 @@ export default function AppointmentsPage() {
               </div>
               <div className="flex items-center gap-3 text-gray-700 dark:text-gray-200">
                 <User className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-                <span>{selectedAppt.type === 'consultation' ? 'كشف' : selectedAppt.type === 'followup' ? 'متابعة' : 'طوارئ'}</span>
+                <span>{selectedAppt.type === 'consultation' ? t('consultation') : selectedAppt.type === 'followup' ? t('followup') : t('emergency')}</span>
               </div>
             </div>
           </div>

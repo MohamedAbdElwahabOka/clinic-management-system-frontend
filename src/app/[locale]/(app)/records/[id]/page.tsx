@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from 'next-intl';
 import { 
   ArrowLeft, Lock, ShieldCheck, MapPin, 
   Phone, User, Plus, Mail, MessageSquare, Timer, 
@@ -37,6 +38,7 @@ import { DoctorVisitCard } from "../components/visits/DoctorVisitCard"; // Visit
 export default function PatientRecordDetail() { 
   const params = useParams(); 
   const locale = (params.locale as string) || "ar"; 
+  const t = useTranslations('Records');
 
   // --- Logic & Hooks ---
   const externalAccess = useExternalAccess(locale);
@@ -93,7 +95,7 @@ export default function PatientRecordDetail() {
   }; 
 
   return ( 
-    <div className="min-h-screen bg-gray-50/30 dark:bg-gray-950 transition-colors" dir={locale === 'ar' ? 'rtl' : 'ltr'}> 
+    <div className="min-h-screen bg-gray-50/30 dark:bg-background transition-colors" dir={locale === 'ar' ? 'rtl' : 'ltr'}> 
        
       <ClinicalPriorityStrip patient={patient} locale={locale} />
 
@@ -128,14 +130,14 @@ export default function PatientRecordDetail() {
                   <DialogTrigger asChild> 
                     <Button className="gap-2 shadow-sm bg-blue-600 hover:bg-blue-700" onClick={() => { setPlanInput(""); setAssessmentInput(""); setSoapError(null); }}> 
                       <Plus className="w-4 h-4" />  
-                      {locale === 'ar' ? 'سجل جديد' : 'New Record'} 
+                      {t('newRecord')} 
                     </Button> 
                   </DialogTrigger> 
                   <DialogContent className="max-w-5xl h-[90vh] flex flex-col p-0 gap-0" dir={locale === 'ar' ? 'rtl' : 'ltr'}> 
                       <div className="flex h-full overflow-hidden"> 
                           {/* Sidebar */} 
                           <div className="w-[280px] bg-gray-50 dark:bg-gray-900 border-e dark:border-gray-800 p-4 overflow-y-auto hidden md:block text-sm"> 
-                              <h3 className="font-bold text-gray-500 dark:text-gray-300 uppercase text-xs mb-3">Patient Summary</h3> 
+                              <h3 className="font-bold text-gray-500 dark:text-gray-300 uppercase text-xs mb-3">{t('patientSummary')}</h3> 
                               <div className="mb-4"> 
                                   {patient.alerts.map((a,i) => ( 
                                     <div key={i} className="text-xs text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 border border-red-100 dark:border-red-900 p-2 rounded mb-1"> 
@@ -150,26 +152,26 @@ export default function PatientRecordDetail() {
                               </div> 
                           </div> 
                           {/* Form */} 
-                          <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-950"> 
-                              <DialogHeader className="p-5 border-b"> 
-                                  <DialogTitle>New SOAP Note</DialogTitle> 
+                          <div className="flex-1 flex flex-col h-full bg-white dark:bg-background"> 
+                              <DialogHeader className="p-5 border-b dark:border-border"> 
+                                  <DialogTitle>{t('newSoapNote')}</DialogTitle> 
                               </DialogHeader> 
                               <div className="flex-1 overflow-y-auto p-6 space-y-6"> 
-                                  <div><Label className="text-blue-600 font-bold mb-1 block">Subjective</Label><Textarea className="bg-blue-50/20"/></div> 
-                                  <div><Label className="text-green-600 font-bold mb-1 block">Objective</Label><Textarea className="bg-green-50/20"/></div> 
+                                  <div><Label className="text-blue-600 font-bold mb-1 block">{t('subjective')}</Label><Textarea className="bg-blue-50/20 dark:bg-blue-900/10"/></div> 
+                                  <div><Label className="text-green-600 font-bold mb-1 block">{t('objective')}</Label><Textarea className="bg-green-50/20 dark:bg-green-900/10"/></div> 
                                   <div> 
-                                      <Label className="text-purple-600 font-bold mb-1 block">Assessment <span className="text-red-500">*</span></Label> 
+                                      <Label className="text-purple-600 font-bold mb-1 block">{t('assessment')} <span className="text-red-500">*</span></Label> 
                                       <Input className="bg-purple-50/20" value={assessmentInput} onChange={(e) => setAssessmentInput(e.target.value)} placeholder="Diagnosis..." /> 
                                   </div> 
                                   <div> 
-                                      <Label className="text-orange-600 font-bold mb-1 block">Plan</Label> 
+                                      <Label className="text-orange-600 font-bold mb-1 block">{t('plan')}</Label> 
                                       {allergyWarning && <div className="mb-2 p-2 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 text-xs rounded font-bold animate-pulse">{allergyWarning}</div>} 
-                                      <Textarea className="bg-orange-50/20 dark:bg-orange-900/20 min-h-[100px]" value={planInput} onChange={(e) => setPlanInput(e.target.value)} /> 
+                                      <Textarea className="bg-orange-50/20 dark:bg-orange-900/10 min-h-[100px]" value={planInput} onChange={(e) => setPlanInput(e.target.value)} /> 
                                   </div> 
                                   {soapError && <div className="text-red-600 dark:text-red-300 text-sm font-semibold bg-red-50 dark:bg-red-900/40 p-2 rounded">{soapError}</div>} 
                               </div> 
                               <DialogFooter className="p-4 border-t dark:border-gray-800 bg-gray-50 dark:bg-gray-900"> 
-                                  <Button onClick={handleSaveSOAP}>Save Record</Button> 
+                                  <Button onClick={handleSaveSOAP}>{t('saveRecord')}</Button> 
                               </DialogFooter> 
                           </div> 
                       </div> 
@@ -183,12 +185,12 @@ export default function PatientRecordDetail() {
         {/* LEFT COLUMN: Vitals */} 
         <div className="col-span-12 lg:col-span-3 space-y-6"> 
           <Card className="shadow-sm border-gray-200 dark:border-gray-800 dark:bg-gray-900"> 
-            <CardHeader className="pb-2 pt-4 px-4"> 
-               <CardTitle className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-200"> 
-                  <TrendingUp className="w-4 h-4 text-blue-500" /> 
-                  {locale === 'ar' ? 'المؤشرات الحيوية' : 'Vital Trends'} 
-               </CardTitle> 
-            </CardHeader> 
+              <CardHeader className="pb-2 pt-4 px-4"> 
+                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-gray-700 dark:text-gray-200"> 
+                    <TrendingUp className="w-4 h-4 text-blue-500" /> 
+                    {t('vitalTrends')} 
+                 </CardTitle> 
+              </CardHeader> 
             <CardContent className="space-y-6 px-4 pb-4"> 
                <div><div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400"><span>Heart Rate</span></div><SmartSparkline data={patient.vitalSigns.history.heartRate} minNormal={60} maxNormal={100} unit="bpm" /></div> 
                <div><div className="flex justify-between text-xs mb-1 text-gray-500 dark:text-gray-400"><span>BP (Systolic)</span></div><SmartSparkline data={patient.vitalSigns.history.bloodPressure} minNormal={110} maxNormal={130} unit="mmHg" /></div> 
@@ -204,32 +206,32 @@ export default function PatientRecordDetail() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3"> 
               <Button variant="outline" className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-950 border-blue-100 dark:border-blue-900 hover:border-blue-200 shadow-sm group"> 
                   <div className="p-2 bg-blue-100 dark:bg-blue-900 text-blue-600 rounded-full group-hover:bg-blue-200"><Repeat className="w-4 h-4"/></div> 
-                  <div className="text-start"><div className="text-sm font-semibold text-gray-900">Refill Prescriptions</div><div className="text-[10px] text-gray-500">Metformin, Lisinopril</div></div> 
+                  <div className="text-start"><div className="text-sm font-semibold text-gray-900">{t('refillPrescriptions')}</div><div className="text-[10px] text-gray-500">Metformin, Lisinopril</div></div> 
               </Button> 
               <Button variant="outline" className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-yellow-50 dark:hover:bg-yellow-950 border-yellow-100 dark:border-yellow-900 hover:border-yellow-200 shadow-sm group"> 
                   <div className="p-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 rounded-full group-hover:bg-yellow-200"><Stethoscope className="w-4 h-4"/></div> 
-                  <div className="text-start"><div className="text-sm font-semibold text-gray-900">Review HR Trend</div><div className="text-[10px] text-gray-500">Elevated in last 2 visits</div></div> 
+                  <div className="text-start"><div className="text-sm font-semibold text-gray-900">{t('reviewHrTrend')}</div><div className="text-[10px] text-gray-500">Elevated in last 2 visits</div></div> 
               </Button> 
               <Button variant="outline" className="h-auto py-3 px-4 justify-start gap-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm group"> 
                    <div className="p-2 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-200 rounded-full"><GitCommitHorizontal className="w-4 h-4"/></div> 
-                   <div className="text-start"><div className="text-sm font-semibold text-gray-900">Lab Results</div><div className="text-[10px] text-gray-500">Pending from 12/12</div></div> 
+                   <div className="text-start"><div className="text-sm font-semibold text-gray-900">{t('labResults')}</div><div className="text-[10px] text-gray-500">Pending from 12/12</div></div> 
               </Button> 
           </div> 
  
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full"> 
             <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-3 sm:gap-0"> 
                 <TabsList className="w-full sm:w-auto grid grid-cols-2"> 
-                    <TabsTrigger value="local">{locale === 'ar' ? 'سجلات محلية' : 'Local Records'}</TabsTrigger> 
+                    <TabsTrigger value="local">{t('localRecords')}</TabsTrigger> 
                     <TabsTrigger value="external" className="relative"> 
-                        {locale === 'ar' ? 'سجلات خارجية' : 'External Records'} 
+                        {t('externalRecords')} 
                         {externalAccess.isUnlocked && <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-green-500 animate-pulse"/>} 
                     </TabsTrigger> 
                 </TabsList> 
                  
                 {activeTab === 'local' && ( 
-                    <div className="flex bg-gray-100 p-1 rounded-lg mt-2 sm:mt-0"> 
-                        <button onClick={() => setViewMode('list')} className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}><List className="w-4 h-4"/></button> 
-                        <button onClick={() => setViewMode('timeline')} className={`p-1.5 rounded ${viewMode === 'timeline' ? 'bg-white shadow text-black dark:bg-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-300'}`}><LayoutList className="w-4 h-4"/></button> 
+                    <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg mt-2 sm:mt-0"> 
+                        <button onClick={() => setViewMode('list')} className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white shadow text-black dark:bg-background dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}><List className="w-4 h-4"/></button> 
+                        <button onClick={() => setViewMode('timeline')} className={`p-1.5 rounded ${viewMode === 'timeline' ? 'bg-white shadow text-black dark:bg-background dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}><LayoutList className="w-4 h-4"/></button> 
                     </div> 
                 )} 
             </div> 
@@ -262,9 +264,9 @@ export default function PatientRecordDetail() {
                ) : ( 
                  <div className="flex flex-col items-center justify-center py-12 text-center bg-white dark:bg-gray-900 rounded-lg border border-dashed border-gray-300 dark:border-gray-700"> 
                     <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-full mb-3"><FileText className="w-8 h-8 text-gray-400"/></div> 
-                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">{locale === 'ar' ? 'لا توجد سجلات محلية' : 'No Local Records Yet'}</h3> 
-                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-4">{locale === 'ar' ? 'ابدأ بإضافة أول زيارة لهذا المريض' : 'Start by creating the first consultation log for this patient.'}</p> 
-                    <Button variant="outline" onClick={() => { setPlanInput(""); setIsNewLogOpen(true); }}><Plus className="w-4 h-4 mr-2"/> {locale === 'ar' ? 'إضافة زيارة' : 'Add First Visit'}</Button> 
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('noLocalRecords')}</h3> 
+                    <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-4">{t('startAddingVisit')}</p> 
+                    <Button variant="outline" onClick={() => { setPlanInput(""); setIsNewLogOpen(true); }}><Plus className="w-4 h-4 mr-2"/> {t('addFirstVisit')}</Button> 
                  </div> 
                )} 
             </TabsContent> 
@@ -281,8 +283,8 @@ export default function PatientRecordDetail() {
                               <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" /> 
                           </div> 
                           <div className="space-y-1"> 
-                              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{locale === 'ar' ? 'التحقق الأمني' : 'Security Verification'}</h3> 
-                              <p className="text-sm text-gray-500 dark:text-gray-400">{locale === 'ar' ? 'اختر طريقة لاستلام رمز التحقق' : 'Choose a method to receive your OTP'}</p> 
+                              <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t('securityVerification')}</h3> 
+                              <p className="text-sm text-gray-500 dark:text-gray-400">{t('chooseMethod')}</p> 
                           </div> 
                           <div className="grid grid-cols-2 gap-4 w-full mt-4"> 
                               <button className="flex flex-col items-center justify-center gap-3 p-4 rounded-xl border-2 border-transparent bg-white dark:bg-gray-800 shadow-sm hover:border-blue-500 hover:shadow-md transition-all group" 
@@ -311,9 +313,9 @@ export default function PatientRecordDetail() {
                                </Button> 
                            </div> 
                            <div className="space-y-2"> 
-                               <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{locale === 'ar' ? 'أدخل الرمز' : 'Enter Code'}</h3> 
+                               <h3 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('verifyIdentity')}</h3> 
                                <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1"> 
-                                  <span>{locale === 'ar' ? 'تم الإرسال إلى' : 'Sent to'}</span> 
+                                  <span>{t('enterCode')}</span> 
                                   <span className="font-semibold text-gray-900 dark:text-gray-200">{externalAccess.selectedMethod === 'sms' ? '+20 10••••890' : 'dr••••@hospital.com'}</span> 
                                </div> 
                            </div> 
@@ -328,12 +330,12 @@ export default function PatientRecordDetail() {
                                <input type="text" inputMode="numeric" autoFocus maxLength={6} value={externalAccess.otpInput} onChange={(e) => { const val = e.target.value.replace(/[^0-9]/g, ''); if (val.length <= 6) externalAccess.setOtpInput(val); }} className="w-full h-full opacity-0 cursor-text text-center text-transparent bg-transparent" style={{ letterSpacing: '1rem' }} /> 
                            </div> 
                            <Button className="w-full h-11 text-base shadow-lg shadow-blue-500/20" onClick={externalAccess.verifyOTP} disabled={externalAccess.otpInput.length < 6}> 
-                               {locale === 'ar' ? 'تحقق (123456)' : 'Verify Access'} 
+                               {t('verifyAndAccess')} 
                            </Button> 
                            <div className="flex items-center justify-center gap-2 text-sm"> 
-                               <span className="text-gray-500">{locale === 'ar' ? 'لم يصلك الرمز؟' : "Didn't receive code?"}</span> 
+                               <span className="text-gray-500">{t('resendCode')}</span> 
                                <button onClick={externalAccess.resendCode} disabled={externalAccess.resendTimer > 0} className={`font-semibold ${externalAccess.resendTimer > 0 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-600 hover:underline'}`}> 
-                                  {externalAccess.resendTimer > 0 ? `${locale === 'ar' ? 'إعادة إرسال خلال' : 'Resend in'} ${externalAccess.resendTimer}s` : (locale === 'ar' ? 'إعادة الإرسال' : 'Resend Code')} 
+                                  {externalAccess.resendTimer > 0 ? `${locale === 'ar' ? 'إعادة إرسال خلال' : 'Resend in'} ${externalAccess.resendTimer}s` : t('resendCode')} 
                                </button> 
                            </div> 
                         </div> 
@@ -343,7 +345,7 @@ export default function PatientRecordDetail() {
               ) : ( 
                 <div className="space-y-4 animate-in fade-in"> 
                    <div className="bg-green-50 dark:bg-green-900/40 border border-green-200 dark:border-green-900 rounded-lg p-3 flex justify-between items-center"> 
-                      <div className="flex items-center gap-3 text-green-800 dark:text-green-200"> 
+                        <div className="flex items-center gap-3 text-green-800 dark:text-green-200"> 
                         <ShieldCheck className="w-5 h-5" /> 
                         <div> 
                             <span className="font-bold text-sm block">{locale === 'ar' ? 'جلسة خارجية نشطة' : 'Active External Session'}</span> 

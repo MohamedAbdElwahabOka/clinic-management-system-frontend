@@ -1,18 +1,23 @@
 "use client";
 
-import * as React from 'react';
-import { HeroSection } from '@/components/landing/hero-section';
-import { FeatureSection } from '@/components/landing/feature-section';
-import { TestimonialCard } from '@/components/landing/testimonial-card';
-import { CtaSection } from '@/components/landing/cta-section';
-import { LandingFooter } from '@/components/landing/landing-footer';
+import * as React from "react";
+import { HeroSection } from "@/components/landing/hero-section";
+import { FeatureSection } from "@/components/landing/feature-section";
+import { TestimonialCard } from "@/components/landing/testimonial-card";
+import { CtaSection } from "@/components/landing/cta-section";
+import { LandingFooter } from "@/components/landing/landing-footer";
 // import { useLanguage } from '@/context/language-context';
-import { DollarSign, BarChart, ShieldCheck, Users, FileText as FileTextIcon } from 'lucide-react';
-import { useLocale, useTranslations } from 'next-intl';
-import CircularGallery from '@/components/Ogl/CircularGallery'
-import { PricingSection } from '@/components/landing/pricing-section';
+import {
+  DollarSign,
+  BarChart,
+  ShieldCheck,
+  Users,
+  FileText as FileTextIcon,
+} from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import CircularGallery from "@/components/Ogl/CircularGallery";
+import { PricingSection } from "@/components/landing/pricing-section";
 // import CurvedLoop from '@/components/Ogl/CurvedLoop';
-
 
 export default function LandingPage() {
   const t = useTranslations("Landing");
@@ -31,42 +36,43 @@ export default function LandingPage() {
       titleKey: "landingFeatureFinancialSubItem1Title",
       defaultTitle: "Expense Tracking",
       descriptionKey: "landingFeatureFinancialSubItem1Desc",
-      defaultDescription: "Easily log and categorize all clinic expenses."
+      defaultDescription: "Easily log and categorize all clinic expenses.",
     },
     {
       icon: BarChart,
       titleKey: "landingFeatureFinancialSubItem2Title",
       defaultTitle: "Income Reports",
       descriptionKey: "landingFeatureFinancialSubItem2Desc",
-      defaultDescription: "Generate comprehensive reports on revenue streams."
+      defaultDescription: "Generate comprehensive reports on revenue streams.",
     },
   ];
 
   const clinicManagementFeatures = [
-     {
+    {
       icon: ShieldCheck,
-      titleKey: "landingFeatureClinicMgmtSubItem1Title", 
+      titleKey: "landingFeatureClinicMgmtSubItem1Title",
       defaultTitle: "Efficient Patient Management Made Simple",
       descriptionKey: "landingFeatureClinicMgmtSubItem1Desc",
-      defaultDescription: "Simplify patient registration, scheduling, and communication.",
+      defaultDescription:
+        "Simplify patient registration, scheduling, and communication.",
     },
     {
       icon: Users,
-      titleKey: "landingFeatureClinicMgmtSubItem2Title", 
+      titleKey: "landingFeatureClinicMgmtSubItem2Title",
       defaultTitle: "Optimize Your Receptionist Operations Today",
       descriptionKey: "landingFeatureClinicMgmtSubItem2Desc",
       defaultDescription: "Automate tasks and improve front-desk efficiency.",
     },
     {
       icon: FileTextIcon, // Use aliased icon
-      titleKey: "landingFeatureClinicMgmtSubItem3Title", 
+      titleKey: "landingFeatureClinicMgmtSubItem3Title",
       defaultTitle: "Access Medical Records Anytime, Anywhere",
       descriptionKey: "landingFeatureClinicMgmtSubItem3Desc",
       defaultDescription: "Securely manage patient data with ease.",
     },
     {
-      icon: DollarSign, 
-      titleKey: "landingFeatureClinicMgmtSubItem4Title", 
+      icon: DollarSign,
+      titleKey: "landingFeatureClinicMgmtSubItem4Title",
       defaultTitle: "Stay on Top of Payment Tracking",
       descriptionKey: "landingFeatureClinicMgmtSubItem4Desc",
       defaultDescription: "Monitor payment statuses and send reminders.",
@@ -76,7 +82,7 @@ export default function LandingPage() {
   const testimonials = [
     {
       quoteKey: "landingTestimonial1Quote",
-      defaultQuote: "I'm impressed with the support & engagement!", 
+      defaultQuote: "I'm impressed with the support & engagement!",
       authorKey: "landingTestimonial1Author",
       defaultAuthor: "Dr. Anna K.",
       roleKey: "landingTestimonial1Role",
@@ -85,7 +91,7 @@ export default function LandingPage() {
     },
     {
       quoteKey: "landingTestimonial2Quote",
-      defaultQuote: "Efficient and user-friendly, a real time saver!", 
+      defaultQuote: "Efficient and user-friendly, a real time saver!",
       authorKey: "landingTestimonial2Author",
       defaultAuthor: "Dr. Mark S.",
       roleKey: "landingTestimonial2Role",
@@ -94,7 +100,7 @@ export default function LandingPage() {
     },
     {
       quoteKey: "landingTestimonial3Quote",
-      defaultQuote: "A game changer for patient management!", 
+      defaultQuote: "A game changer for patient management!",
       authorKey: "landingTestimonial3Author",
       defaultAuthor: "Dr. Sarah L.",
       roleKey: "landingTestimonial3Role",
@@ -105,7 +111,6 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
-
       <main className="flex-grow">
         <HeroSection
           titleKey="landingHeroTitle"
@@ -121,12 +126,10 @@ export default function LandingPage() {
           defaultImageAlt="Clinic management software interface"
           imageHint="software interface"
         />
-       
 
-      
-{/* <CurvedLoop marqueeText="222 " /> */}
+        {/* <CurvedLoop marqueeText="222 " /> */}
 
-{/* 
+        {/* 
 <CurvedLoop 
   marqueeText="fgfhfgh"
   speed={3}
@@ -136,7 +139,7 @@ export default function LandingPage() {
   className="custom-text-style"
 /> */}
 
-{/* 
+        {/* 
 <CurvedLoop 
   marqueeText="Smooth Curved Animation"
   speed={1}
@@ -149,10 +152,10 @@ export default function LandingPage() {
           descriptionKey="landingFeatureFinancialDesc"
           defaultDescription="Our intuitive tools make it easy to track income, manage expenses, and gain clear insights into your clinic's financial health. Simplify bookkeeping and make informed decisions."
           features={financialFeatures}
-          gridCols="md:grid-cols-2" 
+          gridCols="md:grid-cols-2"
           sectionId="financial-features"
         />
-        
+
         <FeatureSection
           titleKey="landingFeaturePaymentsTitle"
           defaultTitle="Effortless Management of Appointment Payments"
@@ -162,7 +165,7 @@ export default function LandingPage() {
           imageAltKey="landingFeaturePaymentsImageAlt"
           defaultImageAlt="Secure payment processing interface"
           imageHint="payment interface"
-          reverseLayout={false} 
+          reverseLayout={false}
           cta1Key="landingFeaturePaymentsCtaExplore"
           defaultCta1="Explore Features"
           cta1Href="#"
@@ -173,12 +176,12 @@ export default function LandingPage() {
         />
 
         <FeatureSection
-          titleKey="landingFeatureClinicMgmtTitle" 
-          defaultTitle="Streamline Your Clinic Management Effortlessly" 
-          descriptionKey="landingFeatureClinicMgmtDesc" 
+          titleKey="landingFeatureClinicMgmtTitle"
+          defaultTitle="Streamline Your Clinic Management Effortlessly"
+          descriptionKey="landingFeatureClinicMgmtDesc"
           defaultDescription="Our comprehensive platform streamlines daily operations from patient check-in to medical records management. Reduce administrative burden, improve workflow efficiency, and focus on providing exceptional patient care."
           features={clinicManagementFeatures}
-          gridCols="md:grid-cols-2" 
+          gridCols="md:grid-cols-2"
           cta1Key="landingFeatureClinicMgmtCtaLearnMore"
           defaultCta1="Learn More"
           cta1Href="#"
@@ -187,19 +190,27 @@ export default function LandingPage() {
           cta2Href={`/${locale}/signup`}
           sectionId="management-features"
         />
-        
 
-        <section id="testimonials" className="py-16 lg:py-24 bg-secondary dark:bg-secondary/10 text-secondary-foreground">
+        <section
+          id="testimonials"
+          className="py-16 lg:py-24 bg-secondary dark:bg-secondary/10 text-secondary-foreground"
+        >
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
-              {translate('landingTestimonialsTitle', "Customer Testimonials")}
+              {translate("landingTestimonialsTitle", "Customer Testimonials")}
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
                 <TestimonialCard
                   key={index}
-                  quote={translate(testimonial.quoteKey, testimonial.defaultQuote)}
-                  author={translate(testimonial.authorKey, testimonial.defaultAuthor)}
+                  quote={translate(
+                    testimonial.quoteKey,
+                    testimonial.defaultQuote
+                  )}
+                  author={translate(
+                    testimonial.authorKey,
+                    testimonial.defaultAuthor
+                  )}
                   role={translate(testimonial.roleKey, testimonial.defaultRole)}
                   stars={testimonial.stars}
                 />
@@ -207,10 +218,10 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-            {/* <div style={{ height: '600px', position: 'relative' }}>
+        {/* <div style={{ height: '600px', position: 'relative' }}>
             <CircularGallery bend={3} textColor="#000" borderRadius={0.05} scrollEase={0.02}/>
             </div>   */}
-            <PricingSection globalDiscount={0} />
+        <PricingSection globalDiscount={0} />
 
         <CtaSection
           titleKey="landingCtaBottomTitle"
@@ -229,4 +240,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
