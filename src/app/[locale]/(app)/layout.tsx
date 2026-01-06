@@ -29,7 +29,7 @@ export default async function LocaleLayout({
             - hidden md:block: يختفي في الموبايل ويظهر في الشاشات الأكبر
             - z-30: عشان يظهر تحت الـ Modal بتاع الموبايل لو فتح
         */}
-        <aside className=" hidden md:block h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-30 flex-shrink-0">
+        <aside className=" hidden md:block h-full border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-50 relative flex-shrink-0">
           <Sidebar />
         </aside>
 

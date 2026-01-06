@@ -126,7 +126,32 @@
     "waitTimeDesc": "Wait time better than avg",
     "selectUpTo3Cards": "Select up to 3 cards",
     "selectFromCustomizeMenu": "Select cards from the Customize menu",
-    "optimalRange": "Optimal Range"
+    "optimalRange": "Optimal Range",
+    "cardActions": {
+      "viewReport": "View Report",
+      "downloadPDF": "Download PDF",
+      "refresh": "Refresh Data",
+      "addPatient": "Add Patient",
+      "viewPatients": "View All Patients",
+      "viewAppointments": "View Appointments"
+    },
+    "filters": {
+      "title": "Filter By",
+      "status": "Status",
+      "all": "All",
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "arrived": "Arrived"
+    },
+    "appointmentActions": {
+      "viewDetails": "View Details",
+      "edit": "Edit Appointment",
+      "cancel": "Cancel Appointment",
+      "reschedule": "Reschedule",
+      "markCompleted": "Mark as Completed"
+    },
+    "noAppointmentsFound": "No appointments found."
   },
   "Landing": {
     "landingHeaderNavFeatures": "Features",

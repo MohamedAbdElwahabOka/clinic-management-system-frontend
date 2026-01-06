@@ -112,7 +112,7 @@ export default function Sidebar({ onMobileClose }: SidebarProps) {
   };
 
   return (
-    <aside className={`h-full bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out z-50 ${collapsed ? 'w-16' : 'w-full md:w-60'}`}>
+    <aside className={`h-full bg-gray-900 text-white flex flex-col transition-all duration-300 ease-in-out z-50 relative border-gray-800 ${isRTL ? 'border-l' : 'border-r'} ${collapsed ? 'w-16' : 'w-full md:w-60'}`}>
       
       {/* Header Section */}
       <div className="flex-shrink-0 relative">
