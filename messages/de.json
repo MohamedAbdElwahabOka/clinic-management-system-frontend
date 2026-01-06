@@ -693,5 +693,20 @@
     "statusColumn": "Status",
     "recordsColumn": "Akten",
     "actionColumn": "Aktion"
+  },
+  "NotFound": {
+    "title": "404 - Seite nicht gefunden",
+    "heading": "Seite nicht gefunden",
+    "description": "Die gesuchte Seite konnte leider nicht gefunden werden. Sie wurde möglicherweise verschoben oder gelöscht.",
+    "backHome": "Zurück zum Dashboard",
+    "contactSupport": "Support kontaktieren",
+    "searchPlaceholder": "Suche nach dem, was Sie brauchen...",
+    "suggestedPages": "Vorgeschlagene Seiten",
+    "dashboard": "Dashboard",
+    "patients": "Patienten",
+    "appointments": "Termine",
+    "clinics": "Kliniken",
+    "helpText": "Hier sind stattdessen einige hilfreiche Links",
+    "visitPage": "Seite besuchen"
   }
 }

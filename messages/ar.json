@@ -692,5 +692,20 @@
     "statusColumn": "الحالة",
     "recordsColumn": "السجلات",
     "actionColumn": "إجراء"
+  },
+  "NotFound": {
+    "title": "404 - الصفحة غير موجودة",
+    "heading": "الصفحة غير موجودة",
+    "description": "عذرًا، لم نتمكن من العثور على الصفحة التي تبحث عنها. ربما تم نقلها أو حذفها.",
+    "backHome": "العودة إلى لوحة التحكم",
+    "contactSupport": "اتصل بالدعم",
+    "searchPlaceholder": "ابحث عما تحتاج...",
+    "suggestedPages": "صفحات مقترحة",
+    "dashboard": "لوحة التحكم",
+    "patients": "المرضى",
+    "appointments": "المواعيد",
+    "clinics": "العيادات",
+    "helpText": "إليك بعض الروابط المفيدة بدلاً من ذلك",
+    "visitPage": "زيارة الصفحة"
   }
 }

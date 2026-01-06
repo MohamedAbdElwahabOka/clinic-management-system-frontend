@@ -41,6 +41,7 @@
     "date-fns": "^3.6.0",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.23.12",
+    "fuse.js": "^7.1.0",
     "html2canvas": "^1.4.1",
     "input-otp": "^1.4.2",
     "jspdf": "^3.0.4",
