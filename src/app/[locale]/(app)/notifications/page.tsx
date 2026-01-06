@@ -137,7 +137,7 @@ export default function NotificationsPage() {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const dateLocale = locale === 'ar' ? 'ar-SA' : (locale === 'de' ? 'de-DE' : 'en-US');
-    
+
     return date.toLocaleDateString(dateLocale, {
       weekday: 'long',
       year: 'numeric',
@@ -149,7 +149,7 @@ export default function NotificationsPage() {
   return (
     <div className="p-4 md:p-6 max-w-2xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
       <Card className="shadow-lg border-0">
-        <CardHeader className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
+        <CardHeader className="flex flex-col gap-4 md:flex-row md:justify-between md:items-center bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-t-lg">
           <div className="flex items-center gap-2">
             <div className="p-2 bg-primary rounded-full">
               <Bell className="h-5 w-5 text-white" />
@@ -161,11 +161,11 @@ export default function NotificationsPage() {
               </Badge>
             )}
           </div>
-          
+
           <div className="flex flex-wrap gap-2">
-            <Button 
-              onClick={markAllAsRead} 
-              variant="outline" 
+            <Button
+              onClick={markAllAsRead}
+              variant="outline"
               size="sm"
               className="flex items-center gap-1"
               disabled={unreadCount === 0}
@@ -173,9 +173,9 @@ export default function NotificationsPage() {
               <CheckCircle className="h-4 w-4" />
               {t.markAllRead}
             </Button>
-            <Button 
-              onClick={() => setShowSettings(!showSettings)} 
-              variant="outline" 
+            <Button
+              onClick={() => setShowSettings(!showSettings)}
+              variant="outline"
               size="sm"
               className="flex items-center gap-1"
             >
@@ -189,41 +189,41 @@ export default function NotificationsPage() {
           <div className="p-4 border-b bg-gray-50">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-medium">{t.settingsTitle}</h3>
-              <ChevronUp 
-                className="h-4 w-4 cursor-pointer" 
-                onClick={() => setShowSettings(false)} 
+              <ChevronUp
+                className="h-4 w-4 cursor-pointer"
+                onClick={() => setShowSettings(false)}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               <div className={`flex items-center space-x-2 ${isRTL ? 'space-x-reverse' : ''}`}>
-                <Switch 
-                  id="appointments" 
+                <Switch
+                  id="appointments"
                   checked={notificationSettings.appointments}
-                  onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, appointments: checked})}
+                  onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, appointments: checked })}
                 />
                 <Label htmlFor="appointments">{t.config.newAppt}</Label>
               </div>
               <div className={`flex items-center space-x-2 ${isRTL ? 'space-x-reverse' : ''}`}>
-                <Switch 
-                  id="reminders" 
+                <Switch
+                  id="reminders"
                   checked={notificationSettings.reminders}
-                  onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, reminders: checked})}
+                  onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, reminders: checked })}
                 />
                 <Label htmlFor="reminders">{t.config.reminders}</Label>
               </div>
               <div className={`flex items-center space-x-2 ${isRTL ? 'space-x-reverse' : ''}`}>
-                <Switch 
-                  id="confirmations" 
+                <Switch
+                  id="confirmations"
                   checked={notificationSettings.confirmations}
-                  onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, confirmations: checked})}
+                  onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, confirmations: checked })}
                 />
                 <Label htmlFor="confirmations">{t.config.confirm}</Label>
               </div>
               <div className={`flex items-center space-x-2 ${isRTL ? 'space-x-reverse' : ''}`}>
-                <Switch 
-                  id="cancellations" 
+                <Switch
+                  id="cancellations"
                   checked={notificationSettings.cancellations}
-                  onCheckedChange={(checked) => setNotificationSettings({...notificationSettings, cancellations: checked})}
+                  onCheckedChange={(checked) => setNotificationSettings({ ...notificationSettings, cancellations: checked })}
                 />
                 <Label htmlFor="cancellations">{t.config.cancel}</Label>
               </div>
@@ -261,31 +261,31 @@ export default function NotificationsPage() {
               {filteredNotifications.map((n) => (
                 <div
                   key={n.id}
-                  className={`p-4 transition-colors ${n.read ? "bg-white" : "bg-blue-50"}`}
+                  className={`p-4 transition-colors ${n.read ? "bg-white dark:bg-gray-800" : "bg-blue-50 dark:bg-blue-950/30"}`}
                 >
                   <div className="flex justify-between items-start gap-3">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <Badge 
-                          variant="outline" 
+                        <Badge
+                          variant="outline"
                           className={
-                            n.type === "appointment" ? "bg-blue-100 text-blue-800" :
-                            n.type === "confirmation" ? "bg-green-100 text-green-800" :
-                            n.type === "cancellation" ? "bg-red-100 text-red-800" :
-                            "bg-yellow-100 text-yellow-800"
+                            n.type === "appointment" ? "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-400" :
+                              n.type === "confirmation" ? "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-400" :
+                                n.type === "cancellation" ? "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-400" :
+                                  "bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-400"
                           }
                         >
                           {/* ترجمة نوع الإشعار */}
                           {t.types[n.type]}
                         </Badge>
                         {!n.read && (
-                          <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                          <span className="h-2 w-2 rounded-full bg-blue-500 dark:bg-blue-400"></span>
                         )}
                       </div>
-                      
+
                       {/* استدعاء الرسالة المترجمة من JSONB */}
                       <p className="font-medium mb-1">{getLocalizedText(n.message)}</p>
-                      
+
                       <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500">
                         {/* تنسيق التاريخ حسب اللغة */}
                         <span>{formatDate(n.date)}</span>
@@ -294,9 +294,9 @@ export default function NotificationsPage() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => toggleRead(n.id)}
                         className="h-8 w-8"
                         title={n.read ? t.actions.readToggleOff : t.actions.readToggleOn}
@@ -307,9 +307,9 @@ export default function NotificationsPage() {
                           <CheckCircle className="h-4 w-4 text-green-500" />
                         )}
                       </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => deleteNotification(n.id)}
                         className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
                         title={t.actions.delete}
@@ -326,9 +326,9 @@ export default function NotificationsPage() {
 
         {notifications.some(n => n.read) && (
           <CardFooter className="flex justify-center p-4 border-t">
-            <Button 
-              onClick={clearAllRead} 
-              variant="outline" 
+            <Button
+              onClick={clearAllRead}
+              variant="outline"
               className="text-red-500 border-red-200 hover:bg-red-50"
             >
               {t.clearRead}

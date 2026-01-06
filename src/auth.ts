@@ -22,7 +22,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const res = await fetch(`${backendUrl}/auth/login`, {
             method: "POST",
             body: JSON.stringify({
-              email: credentials.email,
+              identifier: credentials.email,
               password: credentials.password,
             }),
             headers: { "Content-Type": "application/json" },
@@ -35,7 +35,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
+
           const { auth, data } = responseData;
+
+          // Handle FHIR response
           if (auth?.token && data?.fhirUser) {
             const fhirUser = data.fhirUser;
 
@@ -60,6 +63,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             };
           }
 
+          // Handle Standard Response (Non-FHIR)
+          if (auth?.token && data?.id) {
+            // Helper to format name from MultiLangName object if needed
+            let formattedName = "User";
+            if (data.name && typeof data.name === 'object') {
+              const enName = data.name.en ? `${data.name.en.given.join(" ")} ${data.name.en.family}` : null;
+              const arName = data.name.ar ? `${data.name.ar.given.join(" ")} ${data.name.ar.family}` : null;
+              formattedName = enName || arName || "User";
+            } else if (typeof data.name === 'string') {
+              formattedName = data.name;
+            }
+
+            return {
+              id: data.id,
+              name: formattedName,
+              email: data.email,
+              role: data.role,
+              accessToken: auth.token,
+            };
+          }
+
+          console.error("Login response format not recognized:", responseData);
           return null;
 
         } catch (error) {

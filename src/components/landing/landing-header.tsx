@@ -100,7 +100,7 @@ export function LandingHeader() {
             </div>
 
             <div className="relative border border-blue-500 p-1.5 rounded-full">
-              <Bell className="h-5 w-5 text-gray-500 dark:text-gray-300 cursor-pointer" />
+              <Bell className="h-5 w-5 text-gray-500 dark:text-blue-400 cursor-pointer" />
               <span className="absolute top-0 right-0 h-1.5 w-1.5 bg-red-500 rounded-full"></span>
             </div>
 
