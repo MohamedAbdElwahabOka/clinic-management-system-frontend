@@ -126,7 +126,32 @@
     "waitTimeDesc": "Wartezeit besser als der Durchschnitt",
     "selectUpTo3Cards": "Wählen Sie bis zu 3 Karten",
     "selectFromCustomizeMenu": "Wählen Sie Karten aus dem Anpassungsmenü",
-    "optimalRange": "Optimaler Bereich"
+    "optimalRange": "Optimaler Bereich",
+    "cardActions": {
+      "viewReport": "Bericht anzeigen",
+      "downloadPDF": "PDF herunterladen",
+      "refresh": "Daten aktualisieren",
+      "addPatient": "Patient hinzufügen",
+      "viewPatients": "Alle Patienten anzeigen",
+      "viewAppointments": "Termine anzeigen"
+    },
+    "filters": {
+      "title": "Filtern nach",
+      "status": "Status",
+      "all": "Alle",
+      "scheduled": "Geplant",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert",
+      "arrived": "Angekommen"
+    },
+    "appointmentActions": {
+      "viewDetails": "Details anzeigen",
+      "edit": "Termin bearbeiten",
+      "cancel": "Termin absagen",
+      "reschedule": "Verschieben",
+      "markCompleted": "Als abgeschlossen markieren"
+    },
+    "noAppointmentsFound": "Keine Termine gefunden."
   },
   "Landing": {
     "landingHeaderNavFeatures": "Funktionen",

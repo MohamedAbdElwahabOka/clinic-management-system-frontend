@@ -126,7 +126,32 @@
     "waitTimeDesc": "وقت الانتظار أفضل من المتوسط",
     "selectUpTo3Cards": "اختر ما يصل إلى 3 بطاقات",
     "selectFromCustomizeMenu": "اختر البطاقات من قائمة التخصيص",
-    "optimalRange": "النطاق الأمثل"
+    "optimalRange": "النطاق الأمثل",
+    "cardActions": {
+      "viewReport": "عرض التقرير",
+      "downloadPDF": "تحميل PDF",
+      "refresh": "تحديث البيانات",
+      "addPatient": "إضافة مريض",
+      "viewPatients": "عرض كل المرضى",
+      "viewAppointments": "عرض المواعيد"
+    },
+    "filters": {
+      "title": "تصفية حسب",
+      "status": "الحالة",
+      "all": "الكل",
+      "scheduled": "مجدول",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "arrived": "وصل"
+    },
+    "appointmentActions": {
+      "viewDetails": "عرض التفاصيل",
+      "edit": "تعديل الموعد",
+      "cancel": "إلغاء الموعد",
+      "reschedule": "إعادة جدولة",
+      "markCompleted": "تحديد كمكتمل"
+    },
+    "noAppointmentsFound": "لم يتم العثور على مواعيد."
   },
   "Landing": {
     "landingHeaderNavFeatures": "الميزات",

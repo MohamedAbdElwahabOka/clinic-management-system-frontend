@@ -12,6 +12,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -31,7 +41,16 @@ import {
   Clock,
   Check,
   User,     // أيقونة للمريض الحالي
-  Calendar  // أيقونة للمريض القادم
+  Calendar,  // أيقونة للمريض القادم
+  FileText,
+  RefreshCw,
+  UserPlus,
+  CalendarDays,
+  Eye,
+  Edit,
+  Trash2,
+  CalendarClock,
+  Filter
 } from "lucide-react";
 import {
   ResponsiveContainer,
@@ -86,6 +105,12 @@ const labTestsData = [
 ];
 
 // --- مكون الكارت ---
+interface DashboardStatCardAction {
+  label: string;
+  icon: React.ElementType;
+  onClick: () => void;
+}
+
 interface DashboardStatCardProps {
   title: string;
   value: string;
@@ -96,6 +121,7 @@ interface DashboardStatCardProps {
   children?: React.ReactNode;
   className?: string;
   footerText?: string;
+  actions?: DashboardStatCardAction[];
 }
 
 const DashboardStatCard: React.FC<DashboardStatCardProps> = ({
@@ -107,7 +133,8 @@ const DashboardStatCard: React.FC<DashboardStatCardProps> = ({
   icon: Icon,
   children,
   className,
-  footerText
+  footerText,
+  actions
 }) => {
   return (
     <Card className={cn("shadow-lg flex flex-col h-full transition-all duration-300 animate-in fade-in zoom-in-95", className)}>
@@ -117,9 +144,27 @@ const DashboardStatCard: React.FC<DashboardStatCardProps> = ({
             <Icon className="h-5 w-5" />
             {title}
           </div>
-          <Button variant="ghost" size="icon" className="h-6 w-6">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          {actions && actions.length > 0 ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-6 w-6 hover:bg-black/10 dark:hover:bg-white/10">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {actions.map((action, index) => (
+                  <DropdownMenuItem key={index} onClick={(e) => { e.stopPropagation(); action.onClick(); }} className="cursor-pointer">
+                    <action.icon className="mr-2 h-4 w-4" />
+                    <span>{action.label}</span>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+             <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 pointer-events-none">
+               <MoreHorizontal className="h-4 w-4" />
+             </Button>
+          )}
         </div>
         <div className="flex items-baseline gap-2 pt-2">
           <p className="text-3xl font-bold">{value}</p>
@@ -153,6 +198,11 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       desc: translate("overallPatientsDesc", "Patient analysis over last 7 days."),
       icon: BarChartBig,
       className: "bg-primary text-primary-foreground [&_*]:text-primary-foreground",
+      actions: [
+        { label: translate("cardActions.viewPatients", "View All Patients"), icon: User, onClick: () => router.push(`/${locale}/patients`) },
+        { label: translate("cardActions.addPatient", "Add Patient"), icon: UserPlus, onClick: () => router.push(`/${locale}/patients/new`) },
+        { label: translate("cardActions.downloadPDF", "Download PDF"), icon: FileText, onClick: () => console.log("Download PDF") }
+      ],
       render: () => (
         <div className="h-20 mt-2">
           <ResponsiveContainer width="100%" height="100%">
@@ -173,6 +223,10 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       desc: translate("labTestRequestedDesc", "Lab tests statistics."),
       icon: FlaskConical,
       className: "",
+      actions: [
+        { label: translate("cardActions.viewReport", "View Report"), icon: FileText, onClick: () => console.log("View Report") },
+        { label: translate("cardActions.refresh", "Refresh Data"), icon: RefreshCw, onClick: () => console.log("Refresh") }
+      ],
       render: () => (
         <div className="space-y-2 mt-2 flex-grow">
           {labTestsData.slice(0, 3).map(test => (
@@ -194,6 +248,10 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       desc: translate("revenueEarnedDesc", "Total revenue generated."),
       icon: DollarSign,
       className: "",
+      actions: [
+        { label: translate("cardActions.viewReport", "View Report"), icon: FileText, onClick: () => router.push(`/${locale}/financials`) },
+        { label: translate("cardActions.downloadPDF", "Download PDF"), icon: Download, onClick: () => console.log("Download PDF") }
+      ],
       render: () => (
         <div className="h-24 mt-2">
           <ResponsiveContainer width="100%" height="100%">
@@ -217,6 +275,9 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       desc: translate("basedOnReviews", "Based on recent reviews"),
       icon: Star,
       className: "",
+      actions: [
+         { label: translate("cardActions.viewReport", "View Report"), icon: Star, onClick: () => console.log("View Ratings") }
+      ],
       render: () => (
         <div className="flex gap-1 mt-4 justify-center">
           {[1, 2, 3, 4, 5].map(i => (
@@ -234,6 +295,9 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       desc: translate("waitTimeDesc", "Wait time better than avg"),
       icon: Clock,
       className: "",
+      actions: [
+        { label: translate("cardActions.viewAppointments", "View Appointments"), icon: CalendarDays, onClick: () => router.push(`/${locale}/appointments`) }
+      ],
       render: () => (
         <div className="mt-4 flex justify-center">
              <Badge variant="outline" className="px-4 py-1 border-green-500 text-green-600 bg-green-50 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800">
@@ -271,10 +335,17 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
     return status === "Completed" || status === "Confirmed" ? "default" : status === "Cancelled" ? "destructive" : "outline";
   };
 
+  const [filterStatus, setFilterStatus] = React.useState<string>("all");
+
   const upcomingAppointmentsToday = dummyAppointments
     .filter(app => new Date(app.dateTime) >= new Date(new Date().setHours(0, 0, 0, 0)))
     .sort((a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime())
     .slice(0, 5);
+
+  const filteredAppointments = upcomingAppointmentsToday.filter(app => {
+    if (filterStatus === "all") return true;
+    return app.status.toLowerCase() === filterStatus.toLowerCase(); // Simple case-insensitive match
+  });
 
   return (
     <div className="flex flex-col gap-6 p-4 md:p-5 w-full max-w-[100vw] overflow-x-hidden">
@@ -342,6 +413,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                   description={cardData.desc}
                   icon={cardData.icon}
                   className={cardData.className}
+                  actions={cardData.actions}
                 >
                   {cardData.render()}
                 </DashboardStatCard>
@@ -367,10 +439,24 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                     <Search className="absolute left-2.5 rtl:right-2.5 rtl:left-auto top-2.5 h-4 w-4 text-muted-foreground" />
                     <Input placeholder={translate("searchPatientPlaceholder", "Search Patient")} className="pl-8 rtl:pr-8 w-full" />
                   </div>
-                  <Button variant="outline" className="w-full sm:w-auto">
-                    <ListFilter className="mr-2 h-4 w-4" />
-                    {translate("filterButton", "Filter")}
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full sm:w-auto gap-2">
+                        <ListFilter className="h-4 w-4" />
+                        {translate("filterButton", "Filter")}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuLabel>{translate("filters.title", "Filter By")}</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuRadioGroup value={filterStatus} onValueChange={setFilterStatus}>
+                        <DropdownMenuRadioItem value="all">{translate("filters.all", "All")}</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="scheduled">{translate("filters.scheduled", "Scheduled")}</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="completed">{translate("filters.completed", "Completed")}</DropdownMenuRadioItem>
+                        <DropdownMenuRadioItem value="cancelled">{translate("filters.cancelled", "Cancelled")}</DropdownMenuRadioItem>
+                      </DropdownMenuRadioGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             </CardHeader>
@@ -388,28 +474,65 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {upcomingAppointmentsToday.map((app) => (
-                      <TableRow key={app.id}>
-                        <TableCell className="font-medium">{app.patientId}</TableCell>
-                        <TableCell>{app.patientName}</TableCell>
-                        <TableCell>{formatDate(app.dateTime)}</TableCell>
-                        <TableCell>{formatTime(app.dateTime)}</TableCell>
-                        <TableCell className="flex items-center justify-center">
-                          <Badge variant={getStatusBadgeVariant(app.status)} className={cn(
-                            app.status === "Completed"
-                            ? 'bg-green-500 hover:bg-green-600 text-white'
-                            : getStatusBadgeVariant(app.status) === 'default' && 'bg-blue-500 hover:bg-blue-600 text-white'
-                          )}>
-                            {app.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right rtl:text-left">
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
+                    {filteredAppointments.length > 0 ? (
+                      filteredAppointments.map((app) => (
+                        <TableRow key={app.id}>
+                          <TableCell className="font-medium">{app.patientId}</TableCell>
+                          <TableCell>{app.patientName}</TableCell>
+                          <TableCell>{formatDate(app.dateTime)}</TableCell>
+                          <TableCell>{formatTime(app.dateTime)}</TableCell>
+                          <TableCell className="flex items-center justify-center">
+                            <Badge variant={getStatusBadgeVariant(app.status)} className={cn(
+                              app.status === "Completed"
+                              ? 'bg-green-500 hover:bg-green-600 text-white'
+                              : getStatusBadgeVariant(app.status) === 'default' && 'bg-blue-500 hover:bg-blue-600 text-white'
+                            )}>
+                              {app.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right rtl:text-left">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-muted">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48">
+                                <DropdownMenuItem onClick={() => router.push(`/${locale}/appointments?id=${app.id}`)}>
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  <span>{translate("appointmentActions.viewDetails", "View Details")}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => console.log("Edit", app.id)}>
+                                  <Edit className="mr-2 h-4 w-4" />
+                                  <span>{translate("appointmentActions.edit", "Edit Appointment")}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => console.log("Reschedule", app.id)}>
+                                  <CalendarClock className="mr-2 h-4 w-4" />
+                                  <span>{translate("appointmentActions.reschedule", "Reschedule")}</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                {app.status !== 'Completed' && (
+                                  <DropdownMenuItem onClick={() => console.log("Complete", app.id)}>
+                                    <Check className="mr-2 h-4 w-4 text-green-600" />
+                                    <span>{translate("appointmentActions.markCompleted", "Mark as Completed")}</span>
+                                  </DropdownMenuItem>
+                                )}
+                                <DropdownMenuItem onClick={() => console.log("Cancel", app.id)} className="text-destructive focus:text-destructive">
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  <span>{translate("appointmentActions.cancel", "Cancel Appointment")}</span>
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={6} className="h-24 text-center">
+                          {translate("noAppointmentsFound", "No appointments found.")}
                         </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </div>
