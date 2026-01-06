@@ -3,6 +3,7 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { notFound } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { 
   ArrowLeft, Lock, ShieldCheck, MapPin, 
@@ -50,7 +51,14 @@ export default function PatientRecordDetail() {
   const [allergyWarning, setAllergyWarning] = useState<string | null>(null); 
   const [soapError, setSoapError] = useState<string | null>(null); 
 
-  const patient = useMemo(() => dummyPatients.find((p) => p.id === params.id) || dummyPatients[0], [params.id]); 
+  // Find patient and trigger 404 if not found
+  const patient = useMemo(() => {
+    const foundPatient = dummyPatients.find((p) => p.id === params.id);
+    if (!foundPatient) {
+      notFound(); // Trigger 404 page for invalid patient IDs
+    }
+    return foundPatient;
+  }, [params.id]); 
 
   const localVisits = patient.visitsHistory.filter((v) => v.doctorId === CURRENT_DOCTOR_ID); 
   const externalVisits = patient.visitsHistory.filter((v) => v.doctorId !== CURRENT_DOCTOR_ID); 

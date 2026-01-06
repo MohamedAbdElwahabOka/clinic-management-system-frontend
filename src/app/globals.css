@@ -167,3 +167,11 @@
 .text-rotate-space {
   white-space: pre;
 }
+
+.stroke-text {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .stroke-text {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+}

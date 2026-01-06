@@ -1,7 +1,7 @@
+export type UserRole = "Doctor" | "Assistant";
 
-export type UserRole = 'Doctor' | 'Assistant';
-
-export interface User { // Added for conceptual clarity, not deeply integrated yet
+export interface User {
+  // Added for conceptual clarity, not deeply integrated yet
   id: string;
   name: string;
   email: string;
@@ -22,11 +22,11 @@ export interface Patient {
   id: string;
   name: string;
   dateOfBirth: string; // ISO date
-  gender: 'Male' | 'Female';
+  gender: "Male" | "Female";
   contactPhone: string;
   contactEmail: string;
   address: string;
-  avatar?: string; 
+  avatar?: string;
 
   // ===================== 1. Patient Info =====================
   personalInfo?: {
@@ -56,9 +56,21 @@ export interface Patient {
 
   // ===================== 3. Pediatrics =====================
   pediatrics?: {
-    growthChart?: { height: string; weight: string; headCircumference: string }[];
-    vaccinationSchedule?: { vaccine: string; date: string; status: 'Done' | 'Pending' }[];
-    developmentalMilestones?: { age: string; milestone: string; status: string }[];
+    growthChart?: {
+      height: string;
+      weight: string;
+      headCircumference: string;
+    }[];
+    vaccinationSchedule?: {
+      vaccine: string;
+      date: string;
+      status: "Done" | "Pending";
+    }[];
+    developmentalMilestones?: {
+      age: string;
+      milestone: string;
+      status: string;
+    }[];
   };
 
   // ===================== 4. Obstetrics & Gynecology =====================
@@ -80,7 +92,7 @@ export interface Patient {
   // ===================== 6. Pulmonology =====================
   pulmonology?: {
     pulmonaryFunctionTest?: string;
-    imagingReports?: { type: 'X-ray' | 'CT'; result: string }[];
+    imagingReports?: { type: "X-ray" | "CT"; result: string }[];
     chronicDiseases?: string[]; // Asthma, COPD
   };
 
@@ -93,7 +105,7 @@ export interface Patient {
 
   // ===================== 8. Orthopedics =====================
   orthopedics?: {
-    imaging?: { type: 'X-ray' | 'MRI'; report: string }[];
+    imaging?: { type: "X-ray" | "MRI"; report: string }[];
     fractures?: string[];
     surgeries?: string[];
   };
@@ -158,10 +170,10 @@ export interface Patient {
 
   // ===================== 16. Radiology =====================
   radiology?: {
-     type: 'X-ray' | 'CT' | 'MRI' | 'Ultrasound';
-  report: string;
-  reportDate?: string; // ISO date
-  dicomFiles?: string[];
+    type: "X-ray" | "CT" | "MRI" | "Ultrasound";
+    report: string;
+    reportDate?: string; // ISO date
+    dicomFiles?: string[];
   }[];
 
   // ===================== 17. Surgery =====================
@@ -205,8 +217,19 @@ export interface VisitNote {
   notes: string;
 }
 
-export type AppointmentStatus = 'Scheduled' | 'Confirmed' | 'Cancelled' | 'Completed' | 'Arrived' | 'No Show';
-export type VisitType = 'Examination' | 'Consultation' | 'Follow-up' | 'Procedure' | 'Other';
+export type AppointmentStatus =
+  | "Scheduled"
+  | "Confirmed"
+  | "Cancelled"
+  | "Completed"
+  | "Arrived"
+  | "No Show";
+export type VisitType =
+  | "Examination"
+  | "Consultation"
+  | "Follow-up"
+  | "Procedure"
+  | "Other";
 
 export interface Appointment {
   id: string;
@@ -219,7 +242,12 @@ export interface Appointment {
   status: AppointmentStatus;
 }
 
-export type QueueStatus = 'Waiting' | 'In Consultation' | 'Checked Out' | 'No Show' | 'Notified';
+export type QueueStatus =
+  | "Waiting"
+  | "In Consultation"
+  | "Checked Out"
+  | "No Show"
+  | "Notified";
 
 export interface QueueItem {
   id: string; // Usually same as appointment ID
@@ -230,8 +258,8 @@ export interface QueueItem {
   doctorName: string;
 }
 
-export type Locale = 'en' | 'ar' | 'de';
-export type Direction = 'ltr' | 'rtl';
+export type Locale = "en" | "ar" | "de";
+export type Direction = "ltr" | "rtl";
 
 export interface NavItem {
   title: string; // This might become a key for translation
@@ -251,7 +279,7 @@ export interface ServicePrice {
 }
 
 // Financial Ledger Types
-export type LedgerEntryType = 'income' | 'expense';
+export type LedgerEntryType = "income" | "expense";
 
 export interface LedgerCategory {
   id: string;
@@ -279,11 +307,6 @@ export type LanguageDictionary = {
   [locale in Locale]: Translations;
 };
 
-
-
-
-
-
 // أضف هذا للكود الموجود في ملف types.ts أو أنشئ ملف جديد
 
 export type LocalizedText = {
@@ -292,7 +315,11 @@ export type LocalizedText = {
   de: string;
 };
 
-export type NotificationType = "appointment" | "confirmation" | "cancellation" | "reminder";
+export type NotificationType =
+  | "appointment"
+  | "confirmation"
+  | "cancellation"
+  | "reminder";
 
 export interface Notification {
   id: number;
@@ -303,17 +330,15 @@ export interface Notification {
   type: NotificationType;
 }
 
-
 // types.ts
-
 
 // types.ts
 export type ClinicStatus = "active" | "maintenance" | "closed" | "busy";
 export type StaffRoleType = "doctor" | "nurse" | "admin" | "technician";
 export type StaffStatus = "on-duty" | "off" | "leave";
 export type PaymentStatus = "paid" | "pending" | "overdue";
-export type InventoryStatus = "good" | "low" | "critical";
 export type ClinicSpecialty = "dental" | "cardio" | "general" | "eye"; // مفتاح التخصص للاقتراحات الذكية
+export type InventoryStatus = "good" | "low" | "critical";
 
 // --- HR & Payroll ---
 export type PayrollInfo = {
