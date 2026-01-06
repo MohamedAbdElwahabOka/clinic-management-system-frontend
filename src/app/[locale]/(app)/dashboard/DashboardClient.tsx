@@ -152,7 +152,7 @@ export default function DashboardClient({ locale }: { locale: Locale }) {
       positive: true,
       desc: translate("overallPatientsDesc", "Patient analysis over last 7 days."),
       icon: BarChartBig,
-      className: "bg-primary text-primary-foreground dark:bg-primary/5 dark:text-primary [&_*]:text-primary-foreground dark:[&_*]:text-primary",
+      className: "bg-primary text-primary-foreground [&_*]:text-primary-foreground",
       render: () => (
         <div className="h-20 mt-2">
           <ResponsiveContainer width="100%" height="100%">
