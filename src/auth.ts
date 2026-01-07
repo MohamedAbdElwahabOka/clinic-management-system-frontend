@@ -9,11 +9,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        identifier: { label: "Identifier", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.identifier || !credentials?.password) return null;
 
 
         try {
@@ -22,7 +22,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const res = await fetch(`${backendUrl}/auth/login`, {
             method: "POST",
             body: JSON.stringify({
-              identifier: credentials.email,
+              identifier: credentials.identifier,
               password: credentials.password,
             }),
             headers: { "Content-Type": "application/json" },
@@ -68,8 +68,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // Helper to format name from MultiLangName object if needed
             let formattedName = "User";
             if (data.name && typeof data.name === 'object') {
-              const enName = data.name.en ? `${data.name.en.given.join(" ")} ${data.name.en.family}` : null;
-              const arName = data.name.ar ? `${data.name.ar.given.join(" ")} ${data.name.ar.family}` : null;
+              const enName = (data.name.en && Array.isArray(data.name.en.given)) ? `${data.name.en.given.join(" ")} ${data.name.en.family || ""}` : null;
+              const arName = (data.name.ar && Array.isArray(data.name.ar.given)) ? `${data.name.ar.given.join(" ")} ${data.name.ar.family || ""}` : null;
               formattedName = enName || arName || "User";
             } else if (typeof data.name === 'string') {
               formattedName = data.name;

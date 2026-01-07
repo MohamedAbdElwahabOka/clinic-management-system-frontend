@@ -1,6 +1,8 @@
 "use client";
+
 import React, { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { Search, Send, Paperclip, MoreVertical, Phone, Video, ArrowRight, Check, CheckCheck, Smile, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 // --- Types ---
 interface User {
@@ -31,37 +33,37 @@ interface ChatSession {
 }
 
 // --- Mock Data ---
-const currentUser = { id: 99, name: "الاستقبال", role: "Reception" };
+const currentUser = { id: 99, name: "Reception", role: "Reception" };
 
 const contacts: User[] = [
-  { id: 1, name: "د. نبيل", role: "جراحة عامة", avatar: "N", status: "online" },
-  { id: 2, name: "د. سارة", role: "أطفال", avatar: "S", status: "busy", lastSeen: "منذ 5د" },
-  { id: 3, name: "المعمل", role: "Lab", avatar: "L", status: "offline", lastSeen: "منذ 1س" },
-  { id: 4, name: "د. أحمد", role: "قلب", avatar: "A", status: "online" },
+  { id: 1, name: "Dr. Nabil", role: "General Surgery", avatar: "N", status: "online" },
+  { id: 2, name: "Dr. Sarah", role: "Pediatrics", avatar: "S", status: "busy", lastSeen: "5m ago" },
+  { id: 3, name: "Lab", role: "Lab", avatar: "L", status: "offline", lastSeen: "1h ago" },
+  { id: 4, name: "Dr. Ahmed", role: "Cardiology", avatar: "A", status: "online" },
 ];
 
 const initialChats: Record<number, ChatSession> = {
   1: {
     userId: 1,
     unreadCount: 2,
-    lastMessage: "تمام، هعدي عليكي كمان شوية",
-    lastMessageTime: "10:30 ص",
+    lastMessage: "OK, I'll stop by shortly",
+    lastMessageTime: "10:30 AM",
     messages: [
-      { id: 1, senderId: 99, text: "دكتور، الحالة رقم 45 موجودة في الانتظار", time: "10:15 ص", status: "read", type: "text" },
-      { id: 2, senderId: 1, text: "أنا بخلص كشف حالياً، 5 دقايق بالظبط", time: "10:20 ص", status: "read", type: "text" },
-      { id: 3, senderId: 99, text: "تمام يا دكتور، هبلغهم", time: "10:21 ص", status: "read", type: "text" },
-      { id: 4, senderId: 1, text: "المريض دفع الكشف ولا لسه؟", time: "10:25 ص", status: "read", type: "text" },
-      { id: 5, senderId: 1, text: "تمام، هعدي عليكي كمان شوية", time: "10:30 ص", status: "delivered", type: "text" },
+      { id: 1, senderId: 99, text: "Doctor, patient #45 is waiting.", time: "10:15 AM", status: "read", type: "text" },
+      { id: 2, senderId: 1, text: "I'm finishing up a checkup, 5 mins exactly.", time: "10:20 AM", status: "read", type: "text" },
+      { id: 3, senderId: 99, text: "Understood doctor, informing them.", time: "10:21 AM", status: "read", type: "text" },
+      { id: 4, senderId: 1, text: "Has the patient paid yet?", time: "10:25 AM", status: "read", type: "text" },
+      { id: 5, senderId: 1, text: "OK, I'll stop by shortly", time: "10:30 AM", status: "delivered", type: "text" },
     ]
   },
   2: {
     userId: 2,
     unreadCount: 0,
-    lastMessage: "شكراً يا أستاذة",
-    lastMessageTime: "أمس",
+    lastMessage: "Thanks",
+    lastMessageTime: "Yesterday",
     messages: [
-      { id: 1, senderId: 99, text: "د. سارة، نتيجة التحاليل وصلت", time: "أمس", status: "read", type: "text" },
-      { id: 2, senderId: 2, text: "شكراً يا أستاذة", time: "أمس", status: "read", type: "text" },
+      { id: 1, senderId: 99, text: "Dr. Sarah, results are here.", time: "Yesterday", status: "read", type: "text" },
+      { id: 2, senderId: 2, text: "Thanks", time: "Yesterday", status: "read", type: "text" },
     ]
   }
 };
@@ -93,7 +95,7 @@ const ContactAvatar = ({ contact, size = "md" }: { contact: User; size?: "sm" | 
         {contact.avatar}
       </div>
       {contact.status === 'online' && (
-        <div className={`absolute bottom-0 right-0 ${size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} ${statusColors[contact.status]} border-2 border-white rounded-full`} />
+        <div className={`absolute bottom-0 right-0 ${size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'} ${statusColors[contact.status]} border-2 border-white dark:border-gray-800 rounded-full`} />
       )}
     </div>
   );
@@ -111,7 +113,8 @@ const ContactListItem = React.memo(({
   isSelected: boolean; 
   onClick: () => void;
 }) => {
-  const lastMsg = chat?.lastMessage || "ابدأ محادثة جديدة";
+  const t = useTranslations('Chat');
+  const lastMsg = chat?.lastMessage || t('startNewChat');
   const time = chat?.lastMessageTime || "";
 
   return (
@@ -119,20 +122,20 @@ const ContactListItem = React.memo(({
       onClick={onClick}
       className={`flex items-center gap-3 p-4 cursor-pointer transition-all duration-200 border-r-4 ${
         isSelected 
-          ? 'bg-gradient-to-l from-blue-50 to-transparent border-blue-500' 
-          : 'hover:bg-gray-50 border-transparent'
+          ? 'bg-gradient-to-l from-blue-50 to-transparent border-blue-500 dark:from-blue-900/20' 
+          : 'hover:bg-gray-50 dark:hover:bg-gray-800 border-transparent'
       }`}
     >
       <ContactAvatar contact={contact} />
       
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-baseline mb-1">
-          <h3 className={`font-semibold text-sm truncate ${isSelected ? 'text-blue-600' : 'text-gray-900'}`}>
+          <h3 className={`font-semibold text-sm truncate ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>
             {contact.name}
           </h3>
-          <span className="text-xs text-gray-500 flex-shrink-0 mr-2">{time}</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 flex-shrink-0 mx-2">{time}</span>
         </div>
-        <p className="text-sm text-gray-600 truncate">{lastMsg}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400 truncate text-start">{lastMsg}</p>
       </div>
 
       {(chat?.unreadCount ?? 0) > 0 && (
@@ -150,20 +153,20 @@ ContactListItem.displayName = 'ContactListItem';
 const MessageBubble = React.memo(({ message, isMe }: { message: Message; isMe: boolean }) => {
   return (
     <div className={`flex ${isMe ? 'justify-end' : 'justify-start'} mb-3 animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-      <div className={`max-w-[75%] ${isMe ? 'order-2' : 'order-1'}`}>
+      <div className={`max-w-[75%] ${isMe ? 'order-2' : 'order-1'} flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
         <div
           className={`px-4 py-2.5 rounded-2xl shadow-sm ${
             isMe
               ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-sm'
-              : 'bg-white text-gray-800 rounded-bl-sm border border-gray-100'
+              : 'bg-white text-gray-800 dark:bg-gray-800 dark:text-white rounded-bl-sm border border-gray-100 dark:border-gray-700'
           }`}
         >
-          <p className="text-sm leading-relaxed break-words">{message.text}</p>
-          <div className={`flex items-center gap-1 justify-end mt-1 ${isMe ? 'text-blue-100' : 'text-gray-500'}`}>
-            <span className="text-xs">{message.time}</span>
+          <p className="text-sm leading-relaxed break-words text-start">{message.text}</p>
+        </div>
+          <div className={`flex items-center gap-1 mt-1 px-1 ${isMe ? 'text-gray-500' : 'text-gray-500 dark:text-gray-400'}`}>
+            <span className="text-[10px]">{message.time}</span>
             {isMe && <MessageStatus status={message.status} />}
           </div>
-        </div>
       </div>
     </div>
   );
@@ -172,6 +175,7 @@ const MessageBubble = React.memo(({ message, isMe }: { message: Message; isMe: b
 MessageBubble.displayName = 'MessageBubble';
 
 export default function ChatPage() {
+  const t = useTranslations('Chat');
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [chats, setChats] = useState<Record<number, ChatSession>>(initialChats);
   const [messageInput, setMessageInput] = useState("");
@@ -228,7 +232,7 @@ export default function ChatPage() {
       id: Date.now(),
       senderId: currentUser.id,
       text: messageInput.trim(),
-      time: new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+      time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       status: "sent",
       type: "text"
     };
@@ -280,13 +284,13 @@ export default function ChatPage() {
   );
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 overflow-hidden">
       {/* Sidebar */}
-      <div className={`${isMobileListVisible ? 'flex' : 'hidden'} md:flex flex-col w-full md:w-96 bg-white border-l border-gray-200 flex-shrink-0`}>
+      <div className={`${isMobileListVisible ? 'flex' : 'hidden'} md:flex flex-col w-full md:w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 flex-shrink-0`}>
         {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-blue-700">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-600 to-blue-700">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold text-white">المحادثات</h1>
+            <h1 className="text-xl font-bold text-white">{t('title')}</h1>
             <div className="flex gap-2">
               <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
                 <MoreVertical className="w-5 h-5 text-white" />
@@ -299,16 +303,15 @@ export default function ChatPage() {
             <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="ابحث عن محادثة..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pr-10 pl-4 py-2.5 bg-white/90 backdrop-blur-sm rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-300 transition-all"
-              dir="rtl"
+              className="w-full pr-10 pl-4 py-2.5 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-lg text-sm text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-300 transition-all placeholder-gray-500 dark:placeholder-gray-400"
             />
             {searchQuery && (
               <button 
                 onClick={() => setSearchQuery("")}
-                className="absolute left-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full"
+                className="absolute left-3 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
               >
                 <X className="w-3 h-3 text-gray-500" />
               </button>
@@ -329,18 +332,18 @@ export default function ChatPage() {
               />
             ))
           ) : (
-            <div className="flex flex-col items-center justify-center h-full text-gray-500 p-8">
-              <Search className="w-12 h-12 mb-3 text-gray-300" />
-              <p className="text-sm">لا توجد نتائج</p>
+            <div className="flex flex-col items-center justify-center h-full text-gray-500 dark:text-gray-400 p-8">
+              <Search className="w-12 h-12 mb-3 text-gray-300 dark:text-gray-600" />
+              <p className="text-sm">{t('noResults')}</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Chat Area */}
-      <div className={`${isMobileListVisible ? 'hidden' : 'flex'} md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden`}>
+      <div className={`${isMobileListVisible ? 'hidden' : 'flex'} md:flex flex-1 flex-col bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 relative overflow-hidden`}>
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="absolute inset-0 opacity-5 dark:opacity-5 pointer-events-none filter dark:invert">
           <div className="absolute inset-0" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }} />
@@ -349,32 +352,32 @@ export default function ChatPage() {
         {selectedUserId && selectedContact ? (
           <>
             {/* Chat Header */}
-            <div className="flex items-center gap-3 p-4 bg-white border-b border-gray-200 shadow-sm relative z-10">
+            <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm relative z-10">
               <button
                 onClick={() => setIsMobileListVisible(true)}
-                className="md:hidden p-2 -mr-2 hover:bg-gray-100 rounded-full transition-colors"
+                className="md:hidden p-2 -mr-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
               >
-                <ArrowRight className="w-5 h-5 text-gray-600" />
+                <ArrowRight className="w-5 h-5 text-gray-600 dark:text-gray-300 rtl:rotate-180" />
               </button>
               
               <ContactAvatar contact={selectedContact} />
               
               <div className="flex-1 min-w-0">
-                <h2 className="font-semibold text-gray-900">{selectedContact.name}</h2>
-                <p className="text-xs text-gray-500">
-                  {selectedContact.status === 'online' ? 'متصل الآن' : selectedContact.lastSeen}
+                <h2 className="font-semibold text-gray-900 dark:text-white">{selectedContact.name}</h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {selectedContact.status === 'online' ? t('online') : t('lastSeen', {time: selectedContact.lastSeen || ''})}
                 </p>
               </div>
 
               <div className="flex gap-1">
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <Video className="w-5 h-5 text-gray-600" />
+                <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <Video className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <Phone className="w-5 h-5 text-gray-600" />
+                <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <Phone className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                  <MoreVertical className="w-5 h-5 text-gray-600" />
+                <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <MoreVertical className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
             </div>
@@ -383,8 +386,8 @@ export default function ChatPage() {
             <div className="flex-1 overflow-y-auto p-4 space-y-2 relative z-10 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
               {/* Date Divider */}
               <div className="flex justify-center my-4">
-                <span className="bg-white/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs text-gray-600 shadow-sm">
-                  اليوم
+                <span className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs text-gray-600 dark:text-gray-300 shadow-sm">
+                  {t('today')}
                 </span>
               </div>
 
@@ -400,23 +403,23 @@ export default function ChatPage() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white border-t border-gray-200 relative z-10">
+            <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 relative z-10">
               <div className="flex items-end gap-2">
                 <button 
                   onClick={(e) => e.preventDefault()}
-                  className="p-2.5 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+                  className="p-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors flex-shrink-0"
                 >
-                  <Smile className="w-5 h-5 text-gray-500" />
+                  <Smile className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                 </button>
                 
                 <button 
                   onClick={(e) => e.preventDefault()}
-                  className="p-2.5 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+                  className="p-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors flex-shrink-0"
                 >
-                  <Paperclip className="w-5 h-5 text-gray-500" />
+                  <Paperclip className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                 </button>
 
-                <div className="flex-1 bg-gray-100 rounded-2xl px-4 py-2.5 focus-within:ring-2 focus-within:ring-blue-300 transition-all">
+                <div className="flex-1 bg-gray-100 dark:bg-gray-700 rounded-2xl px-4 py-2.5 focus-within:ring-2 focus-within:ring-blue-300 dark:focus-within:ring-blue-500 transition-all">
                   <input
                     ref={inputRef}
                     type="text"
@@ -428,9 +431,8 @@ export default function ChatPage() {
                         handleSendMessage();
                       }
                     }}
-                    placeholder="اكتب رسالة..."
-                    className="w-full bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400"
-                    dir="rtl"
+                    placeholder={t('typeMessage')}
+                    className="w-full bg-transparent outline-none text-sm text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
                   />
                 </div>
 
@@ -440,10 +442,10 @@ export default function ChatPage() {
                   className={`p-3 rounded-full transition-all flex-shrink-0 ${
                     messageInput.trim()
                       ? 'bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl'
-                      : 'bg-gray-200 cursor-not-allowed'
+                      : 'bg-gray-200 dark:bg-gray-700 cursor-not-allowed'
                   }`}
                 >
-                  <Send className={`w-5 h-5 ${messageInput.trim() ? 'text-white' : 'text-gray-400'}`} />
+                  <Send className={`w-5 h-5 ${messageInput.trim() ? 'text-white' : 'text-gray-400 dark:text-gray-500'} rtl:rotate-180`} />
                 </button>
               </div>
             </div>
@@ -452,20 +454,20 @@ export default function ChatPage() {
           // Empty State
           <div className="flex-1 flex items-center justify-center p-8 relative z-10">
             <div className="text-center max-w-md">
-              <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center shadow-lg">
-                <svg className="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+              <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-full flex items-center justify-center shadow-lg">
+                <svg className="w-12 h-12 text-blue-600 dark:text-blue-300" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-3">Clinica Chat</h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                أرسل واستقبل الرسائل من الأطباء والموظفين فوراً
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-3">{t('welcomeTitle')}</h2>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                {t('welcomeSubtitle')}
               </p>
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd"/>
                 </svg>
-                <span>رسائلك محمية ومشفرة داخل النظام</span>
+                <span>{t('encryptedMessage')}</span>
               </div>
             </div>
           </div>
