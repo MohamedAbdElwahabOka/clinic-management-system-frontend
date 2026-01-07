@@ -20,7 +20,6 @@ const publicPages = ["/login", "/signup", "/"];
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  // هنا بنجيب الرول من التوكن اللي جوه الريكويست
   const userRole = req.auth?.user?.role;
 
   let pathWithoutLocale = nextUrl.pathname.replace(/^\/(ar|en|de)/, "");
@@ -29,24 +28,46 @@ export default auth((req) => {
   const isPublicPage = publicPages.includes(pathWithoutLocale);
   const isAuthPage = pathWithoutLocale === "/login";
 
-  // 1. حماية الصفحات (زي ما هي)
+  // 1. Protect pages (redirect to login if not logged in and page is not public)
   if (!isPublicPage && !isLoggedIn) {
     const locale = nextUrl.pathname.split("/")[1] || "en";
     return NextResponse.redirect(new URL(`/${locale}/login`, nextUrl));
   }
 
-  // 2. التوجيه الذكي بعد تسجيل الدخول (الجديد هنا)
+  // 2. Role-Based Access Control (RBAC)
+  if (isLoggedIn) {
+    const locale = nextUrl.pathname.split("/")[1] || "en";
+
+    // Define route patterns
+    const isReceptionRoute = pathWithoutLocale.startsWith("/reception");
+    const isDoctorRoute = pathWithoutLocale.startsWith("/dashboard"); // Assuming 'dashboard' is for doctors/admins
+
+    // Logic for Receptionist (ASSISTANT)
+    if (userRole === "ASSISTANT" || userRole === "reception") {
+      // Prevent access to doctor routes
+      if (isDoctorRoute) {
+        return NextResponse.redirect(new URL(`/${locale}/reception/appointments`, nextUrl));
+      }
+    }
+    // Logic for Doctor (or other roles)
+    else if (userRole === "DOCTOR") {
+      // Prevent access to reception routes
+      if (isReceptionRoute) {
+        return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
+      }
+    }
+  }
+
+  // 3. Smart Redirect on Login Page (if already logged in)
   if (isAuthPage && isLoggedIn) {
     const locale = nextUrl.pathname.split("/")[1] || "en";
 
-    // لو الرول "reception" وديه على المواعيد
-    if (userRole === "reception") {
+    if (userRole === "ASSISTANT" || userRole === "reception") {
       return NextResponse.redirect(
         new URL(`/${locale}/reception/appointments`, nextUrl)
       );
     }
-
-    // أي حد تاني (admin مثلاً) وديه الداشبورد
+    // Default to dashboard for everyone else (Doctors, Admins)
     return NextResponse.redirect(new URL(`/${locale}/dashboard`, nextUrl));
   }
 

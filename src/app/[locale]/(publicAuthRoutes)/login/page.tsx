@@ -30,7 +30,7 @@ export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
 
   const t = useTranslations('Auth');
   const tHeader = useTranslations('Header');
-  const tLanding= useTranslations('Landing');
+  const tLanding = useTranslations('Landing');
   const [isLoading, setIsLoading] = React.useState(false);
   const translate = React.useCallback((key: string, defaultValue?: string) => {
     const translation = t(key);
@@ -50,7 +50,7 @@ export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
   const { toast } = useToast();
 
   const getLoginFormSchema = () => z.object({
-    email: z.string().email(translate('errorEmailInvalid')).min(1, translate('errorEmailRequired')),
+    identifier: z.string().min(1, translate('errorEmailRequired')), // Using generic error or new one
     password: z.string().min(1, translate('errorPasswordRequired')),
   });
 
@@ -59,7 +59,7 @@ export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(getLoginFormSchema()),
     defaultValues: {
-      email: "",
+      identifier: "",
       password: "",
     },
   });
@@ -68,14 +68,14 @@ export default function LoginPage({ params: paramsPromise }: LoginPageProps) {
     form.reset(undefined, { keepValues: false });
   }, [locale, form, translate]);
 
-async function onSubmit(data: LoginFormValues) {
+  async function onSubmit(data: LoginFormValues) {
     setIsLoading(true);
 
     try {
       // 1. محاولة تسجيل الدخول
       const result = await signIn("credentials", {
         redirect: false,
-        email: data.email,
+        identifier: data.identifier,
         password: data.password,
       });
 
@@ -87,24 +87,24 @@ async function onSubmit(data: LoginFormValues) {
           variant: "destructive",
         });
       } else {
-        // 2. الدخول نجح، دلوقتي نجيب بيانات السيشن عشان نعرف الـ Role
+        // 2. Login successful, fetch session to determine role
         const session = await getSession();
-        
+
         toast({
           title: translate('loginSuccessToast'),
           description: translate('loginSuccessDesc'),
         });
 
-        // بنعمل ريفرش عشان الراوتر يحس بالتغيير
+        // Refresh router to ensure auth state is up to date
         router.refresh();
 
-        // 3. التوجيه بناءً على الـ Role اللي جاي من السيشن
-        // (لاحظ: لازم تكون ضفت الـ role في ملف next-auth.d.ts زي ما اتفقنا قبل كده)
-        if (session?.user?.role === "reception") {
-             router.push("/reception/appointments");
+        // 3. Redirect based on role
+        // Backend returns "DOCTOR" or "ASSISTANT"
+        if (session?.user?.role === "ASSISTANT" || session?.user?.role === "reception") {
+          router.push("/reception/appointments");
         } else {
-             // للدكتور (admin) أو أي دور تاني
-             router.push("/dashboard");
+          // For doctors, admins, or other roles, redirect to dashboard
+          router.push("/dashboard");
         }
       }
     } catch (error) {
@@ -132,21 +132,21 @@ async function onSubmit(data: LoginFormValues) {
         </h2>
         <p className="text-sm text-muted-foreground">
           {translate('authSmartManagementCare', 'Smart management, exceptional care.')}
-          
+
         </p>
-        <p> use reception@clinica.com and pass:123</p>
-        <p> use doctor@clinica.com and pass:123</p>
+        <p> use reception@clinica.com (123) or phone </p>
+        <p> use doctor@clinica.com (123) or phone </p>
       </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="email"
+            name="identifier"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="email" placeholder={translate('authEmailPlaceholder', 'Email account')} {...field} disabled={isLoading} className="h-12"/>
+                  <Input type="text" placeholder={translate('authEmailPlaceholder', 'Email or Phone Number')} {...field} disabled={isLoading} className="h-12" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -158,7 +158,7 @@ async function onSubmit(data: LoginFormValues) {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input type="password" placeholder={translate('authPasswordPlaceholder', 'Password')} {...field} disabled={isLoading} className="h-12"/>
+                  <Input type="password" placeholder={translate('authPasswordPlaceholder', 'Password')} {...field} disabled={isLoading} className="h-12" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -199,20 +199,20 @@ async function onSubmit(data: LoginFormValues) {
           <Facebook className="h-5 w-5" /> <span className="sr-only">{translate('authFacebook', 'Facebook')}</span>
         </Button>
         <Button variant="outline" className="w-full h-12 aspect-square p-0" title={translate('authLoginWithGoogle', 'Log in with Google')} disabled>
-          <svg className="h-5 w-5" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.08-2.34 2.08-4.36 2.08-5.17 0-9.42-4.22-9.42-9.42s4.25-9.42 9.42-9.42c2.61 0 4.88 1.01 6.4 2.52l2.58-2.58C19.16 1.18 16.14 0 12.48 0 5.81 0 0 5.81 0 12.48s5.81 12.48 12.48 12.48c3.58 0 6.27-1.21 8.31-3.43 2.19-2.38 2.93-5.75 2.93-9.13A12.86 12.86 0 0012.48 10.92z" fill="currentColor"/></svg>
+          <svg className="h-5 w-5" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Google</title><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.85 3.18-1.73 4.1-1.02 1.08-2.34 2.08-4.36 2.08-5.17 0-9.42-4.22-9.42-9.42s4.25-9.42 9.42-9.42c2.61 0 4.88 1.01 6.4 2.52l2.58-2.58C19.16 1.18 16.14 0 12.48 0 5.81 0 0 5.81 0 12.48s5.81 12.48 12.48 12.48c3.58 0 6.27-1.21 8.31-3.43 2.19-2.38 2.93-5.75 2.93-9.13A12.86 12.86 0 0012.48 10.92z" fill="currentColor" /></svg>
           <span className="sr-only">{translate('authGoogle', 'Google')}</span>
         </Button>
       </div>
 
-       <p className="mt-8 text-center text-sm">
-          {translate('dontHaveAccount')}{" "}
-          <Button variant="link" asChild className="p-0 h-auto">
-            <Link href="/signup">{translate('signUpLink')}</Link>
-          </Button>
-        </p>
-         <p className="mt-2 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} {translateHeader('name', 'Clinica')}. {translateLanding('allRightsReserved', 'All rights reserved.')}
-        </p>
+      <p className="mt-8 text-center text-sm">
+        {translate('dontHaveAccount')}{" "}
+        <Button variant="link" asChild className="p-0 h-auto">
+          <Link href="/signup">{translate('signUpLink')}</Link>
+        </Button>
+      </p>
+      <p className="mt-2 text-center text-xs text-muted-foreground">
+        © {new Date().getFullYear()} {translateHeader('name', 'Clinica')}. {translateLanding('allRightsReserved', 'All rights reserved.')}
+      </p>
     </div>
   );
 }
