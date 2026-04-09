@@ -1,20 +1,24 @@
 "use client";
 
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import Sidebar from "@/components/Sidebar"; 
+import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden'; 
 // 1. استيراد useLocale عشان نعرف اللغة
-import { useLocale } from 'next-intl';
+import { useLocale } from "next-intl";
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false);
-  
+
   // 2. تحديد اتجاه اللغة
   const locale = useLocale();
-  const isRTL = locale === 'ar';
+  const isRTL = locale === "ar";
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -24,18 +28,16 @@ export default function MobileNav() {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      
+
       {/* 3. التعديل هنا:
           غيرنا side="left" لشرط ديناميكي
           لو عربي (isRTL) يفتح من right، غير كدة يفتح من left
       */}
-      <SheetContent 
-        side={isRTL ? "right" : "left"} 
+      <SheetContent
+        side={isRTL ? "right" : "left"}
         className="p-0 w-64 bg-gray-900 border-none [&>button]:hidden text-white z-[1000]"
       >
-        <VisuallyHidden.Root>
-          <SheetTitle>Menu</SheetTitle>
-        </VisuallyHidden.Root>
+        <SheetTitle className="sr-only">Menu</SheetTitle>
 
         <Sidebar onMobileClose={() => setOpen(false)} />
       </SheetContent>
@@ -43,26 +45,12 @@ export default function MobileNav() {
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // "use client";
 
 // import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 // import { Button } from "@/components/ui/button";
 // import { Menu } from "lucide-react";
-// import Sidebar from "@/components/Sidebar"; 
+// import Sidebar from "@/components/Sidebar";
 // import { useState } from "react";
 
 // export default function MobileNav() {
