@@ -1,19 +1,37 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Home, Users, Calendar, Building2, Search, ArrowRight, Stethoscope, Pill, Activity, Dna, FileHeart, FileText, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { motion, AnimatePresence } from 'framer-motion';
-import { performSearch, groupResultsByCategory, SearchItem } from '@/lib/search-service';
+import { useState, useEffect, useRef } from "react";
+import { useTranslations, useLocale } from "next-intl";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Home,
+  Users,
+  Calendar,
+  Building2,
+  Search,
+  ArrowRight,
+  Stethoscope,
+  Pill,
+  Activity,
+  Dna,
+  FileHeart,
+  FileText,
+  User,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  performSearch,
+  groupResultsByCategory,
+  SearchItem,
+} from "@/lib/search-service";
 
 export default function NotFound() {
-  const t = useTranslations('NotFound');
+  const t = useTranslations("NotFound");
   const locale = useLocale();
   const router = useRouter();
-  const isRtl = locale === 'ar';
+  const isRtl = locale === "ar";
 
   // Search State
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +52,10 @@ export default function NotFound() {
   // Handle Click Outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setShowSearchResults(false);
       }
     }
@@ -50,11 +71,16 @@ export default function NotFound() {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'Patients': return <User className="h-4 w-4" />;
-      case 'Appointments': return <Calendar className="h-4 w-4" />;
-      case 'Clinics': return <Building2 className="h-4 w-4" />;
-      case 'Staff': return <Users className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
+      case "Patients":
+        return <User className="h-4 w-4" />;
+      case "Appointments":
+        return <Calendar className="h-4 w-4" />;
+      case "Clinics":
+        return <Building2 className="h-4 w-4" />;
+      case "Staff":
+        return <Users className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
     }
   };
 
@@ -64,49 +90,48 @@ export default function NotFound() {
     {
       href: `/${locale}/dashboard`,
       icon: Home,
-      label: t('dashboard'),
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/10',
-      borderColor: 'border-blue-500/20',
+      label: t("dashboard"),
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/20",
     },
     {
       href: `/${locale}/patients`,
       icon: Users,
-      label: t('patients'),
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
-      borderColor: 'border-green-500/20',
+      label: t("patients"),
+      color: "text-green-500",
+      bgColor: "bg-green-500/10",
+      borderColor: "border-green-500/20",
     },
     {
       href: `/${locale}/appointments`,
       icon: Calendar,
-      label: t('appointments'),
-      color: 'text-purple-500',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      label: t("appointments"),
+      color: "text-purple-500",
+      bgColor: "bg-purple-500/10",
+      borderColor: "border-purple-500/20",
     },
     {
       href: `/${locale}/clinics`,
       icon: Building2,
-      label: t('clinics'),
-      color: 'text-orange-500',
-      bgColor: 'bg-orange-500/10',
-      borderColor: 'border-orange-500/20',
+      label: t("clinics"),
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      borderColor: "border-orange-500/20",
     },
   ];
 
   // Floating background icons configuration
   const floatingIcons = [
-    { Icon: Stethoscope, delay: 0, x: -100, y: -50, color: 'text-blue-400' },
-    { Icon: Pill, delay: 2, x: 120, y: -80, color: 'text-green-400' },
-    { Icon: Dna, delay: 4, x: -80, y: 100, color: 'text-purple-400' },
-    { Icon: Activity, delay: 1, x: 100, y: 60, color: 'text-red-400' },
-    { Icon: FileHeart, delay: 3, x: 0, y: -120, color: 'text-pink-400' },
+    { Icon: Stethoscope, delay: 0, x: -100, y: -50, color: "text-blue-400" },
+    { Icon: Pill, delay: 2, x: 120, y: -80, color: "text-green-400" },
+    { Icon: Dna, delay: 4, x: -80, y: 100, color: "text-purple-400" },
+    { Icon: Activity, delay: 1, x: 100, y: 60, color: "text-red-400" },
+    { Icon: FileHeart, delay: 3, x: 0, y: -120, color: "text-pink-400" },
   ];
 
   return (
     <div className="h-screen w-full relative overflow-hidden bg-background flex items-center justify-center p-4">
-
       {/* Background Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {floatingIcons.map((item, index) => (
@@ -117,13 +142,13 @@ export default function NotFound() {
             animate={{
               y: [item.y - 20, item.y + 20, item.y - 20],
               rotate: [0, 10, -10, 0],
-              scale: [0.8, 1, 0.8]
+              scale: [0.8, 1, 0.8],
             }}
             transition={{
               duration: 5 + index,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: item.delay
+              delay: item.delay,
             }}
           >
             <item.Icon size={120} strokeWidth={1} />
@@ -134,7 +159,6 @@ export default function NotFound() {
       </div>
 
       <div className="max-w-7xl w-full relative z-10 flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20">
-
         {/* Left Side: Creative 404 Visuals */}
         <div className="flex-1 flex flex-col items-center justify-center">
           <div className="relative mb-8 text-center flex flex-col items-center justify-center">
@@ -143,8 +167,13 @@ export default function NotFound() {
               <motion.div
                 initial={{ opacity: 0, y: -50, rotate: -10 }}
                 animate={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
-                whileHover={{ scale: 1.2, rotate: 5, color: '#3b82f6' }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                  delay: 0.1,
+                }}
+                whileHover={{ scale: 1.2, rotate: 5, color: "#3b82f6" }}
                 className="relative group cursor-default"
               >
                 <h1 className="text-[8rem] sm:text-[10rem] lg:text-[12rem] font-black leading-none text-transparent bg-clip-text bg-gradient-to-b from-blue-500/80 to-blue-500/10 stroke-text select-none z-10 relative transition-colors duration-300">
@@ -159,7 +188,12 @@ export default function NotFound() {
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.3 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                  delay: 0.3,
+                }}
                 whileHover={{ scale: 1.1, rotate: 180 }}
                 className="relative group cursor-pointer"
               >
@@ -180,8 +214,13 @@ export default function NotFound() {
               <motion.div
                 initial={{ opacity: 0, y: -50, rotate: 10 }}
                 animate={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.5 }}
-                whileHover={{ scale: 1.2, rotate: -5, color: '#ec4899' }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                  delay: 0.5,
+                }}
+                whileHover={{ scale: 1.2, rotate: -5, color: "#ec4899" }}
                 className="relative group cursor-default"
               >
                 <h1 className="text-[8rem] sm:text-[10rem] lg:text-[12rem] font-black leading-none text-transparent bg-clip-text bg-gradient-to-b from-pink-500/80 to-pink-500/10 stroke-text select-none z-10 transition-colors duration-300">
@@ -195,7 +234,10 @@ export default function NotFound() {
 
             {/* ECG/Heartbeat Line Animation */}
             <div className="relative w-64 h-24 -mt-6 sm:-mt-10 pointer-events-none opacity-80 mix-blend-multiply dark:mix-blend-screen">
-              <svg viewBox="0 0 500 150" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]">
+              <svg
+                viewBox="0 0 500 150"
+                className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+              >
                 <motion.path
                   d="M0,75 L50,75 L60,40 L80,110 L100,20 L120,130 L140,75 L500,75"
                   fill="none"
@@ -204,7 +246,12 @@ export default function NotFound() {
                   className="text-primary"
                   initial={{ pathLength: 0, opacity: 0 }}
                   animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear", repeatDelay: 1 }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "linear",
+                    repeatDelay: 1,
+                  }}
                 />
               </svg>
             </div>
@@ -213,7 +260,6 @@ export default function NotFound() {
 
         {/* Right Side: Content & Actions */}
         <div className="flex-1 max-w-lg w-full flex flex-col items-center lg:items-start text-center lg:text-start space-y-8">
-
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -221,11 +267,9 @@ export default function NotFound() {
             className="space-y-4"
           >
             <h2 className="text-4xl font-bold tracking-tight text-foreground">
-              {t('heading')}
+              {t("heading")}
             </h2>
-            <p className="text-muted-foreground text-lg">
-              {t('description')}
-            </p>
+            <p className="text-muted-foreground text-lg">{t("description")}</p>
           </motion.div>
 
           {/* Search Bar Container */}
@@ -242,7 +286,7 @@ export default function NotFound() {
                 <Search className="w-5 h-5 text-muted-foreground mr-3" />
                 <input
                   type="text"
-                  placeholder={t('searchPlaceholder')}
+                  placeholder={t("searchPlaceholder")}
                   className="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -262,11 +306,14 @@ export default function NotFound() {
                 >
                   {filteredItems.length === 0 ? (
                     <div className="p-8 text-center text-muted-foreground">
-                      No results found
+                      No Results Found
                     </div>
                   ) : (
                     Object.entries(groupedResults).map(([category, items]) => (
-                      <div key={category} className="border-b border-border/50 last:border-0">
+                      <div
+                        key={category}
+                        className="border-b border-border/50 last:border-0"
+                      >
                         <div className="px-4 py-2 bg-muted/50 text-xs font-semibold text-muted-foreground uppercase sticky top-0 backdrop-blur-sm z-10">
                           {category} ({items.length})
                         </div>
@@ -310,17 +357,21 @@ export default function NotFound() {
                   key={link.href}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + (i * 0.1) }}
+                  transition={{ delay: 0.5 + i * 0.1 }}
                 >
                   <Link href={link.href} className="block h-full">
-                    <div className={`
+                    <div
+                      className={`
                       h-full flex items-center gap-3 rounded-xl border border-border/50
                       bg-card/30 hover:bg-card/80 backdrop-blur-sm p-4
                       transition-all duration-300 hover:shadow-md hover:scale-[1.02] group
-                    `}>
-                      <div className={`
+                    `}
+                    >
+                      <div
+                        className={`
                         w-10 h-10 rounded-lg ${link.bgColor} flex items-center justify-center shrink-0
-                      `}>
+                      `}
+                      >
                         <Icon className={`w-5 h-5 ${link.color}`} />
                       </div>
 
@@ -329,8 +380,10 @@ export default function NotFound() {
                           {link.label}
                         </h3>
                         <div className="flex items-center text-[10px] text-muted-foreground">
-                          <span className="truncate">{t('visitPage')}</span>
-                          <ArrowRight className={`w-3 h-3 ml-1 opacity-0 transition-all duration-300 ${isRtl ? 'translate-x-2 group-hover:translate-x-0 group-hover:rotate-180' : '-translate-x-2 group-hover:translate-x-0'} group-hover:opacity-100`} />
+                          <span className="truncate">{t("visitPage")}</span>
+                          <ArrowRight
+                            className={`w-3 h-3 ml-1 opacity-0 transition-all duration-300 ${isRtl ? "translate-x-2 group-hover:translate-x-0 group-hover:rotate-180" : "-translate-x-2 group-hover:translate-x-0"} group-hover:opacity-100`}
+                          />
                         </div>
                       </div>
                     </div>
@@ -348,18 +401,24 @@ export default function NotFound() {
             className="flex flex-wrap justify-center lg:justify-start gap-4 pt-4"
           >
             <Link href={`/${locale}/dashboard`}>
-              <Button size="lg" className="rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all font-semibold">
+              <Button
+                size="lg"
+                className="rounded-full px-8 shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all font-semibold"
+              >
                 <Home className="w-4 h-4 mr-2" />
-                {t('backHome')}
+                {t("backHome")}
               </Button>
             </Link>
             <Link href={`/${locale}/support`}>
-              <Button size="lg" variant="outline" className="rounded-full px-8 hover:bg-accent font-semibold">
-                {t('contactSupport')}
+              <Button
+                size="lg"
+                variant="outline"
+                className="rounded-full px-8 hover:bg-accent font-semibold"
+              >
+                {t("contactSupport")}
               </Button>
             </Link>
           </motion.div>
-
         </div>
       </div>
     </div>
