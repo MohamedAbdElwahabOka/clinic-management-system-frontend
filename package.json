@@ -1,7 +1,24 @@
 {
   "name": "clinic-management-system-frontend",
   "version": "0.1.1",
-  "private": true,
+  "description": "Frontend for the Clinic Management System",
+  "author": "MohamedAbdElwahabOka",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MohamedAbdElwahabOka/clinic-management-system-frontend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MohamedAbdElwahabOka/clinic-management-system-frontend/issues"
+  },
+  "keywords": [
+    "clinic",
+    "management",
+    "system",
+    "nextjs",
+    "react",
+    "frontend"
+  ],
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
