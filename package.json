@@ -77,5 +77,10 @@
     "postcss": "^8.5.14",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "postcss": "latest"
+    }
   }
 }
