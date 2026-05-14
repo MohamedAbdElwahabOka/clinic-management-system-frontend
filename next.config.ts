@@ -4,7 +4,8 @@ import { NextConfig } from 'next';
 const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
-    // eslint block removed here to fix the warning
+    // Allow dev access from network IPs (fixes JS hydration on non-localhost)
+    allowedDevOrigins: ['172.26.144.1'],
 
     typescript: {
         // Allow production builds even if there are TypeScript type errors.

@@ -38,7 +38,7 @@ export default async function LocaleLayout({
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/x-icon" href="/logo/logo.svg" />
         <title>Clinica</title>
