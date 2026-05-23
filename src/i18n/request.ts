@@ -3,10 +3,6 @@ import { routing } from "./routing";
 
 const modules: Array<{ namespace: string; path: string }> = [
   { namespace: "Landing", path: "../modules/Landing/locales" },
-
-  // أضف هنا الـ modules الجديدة مع الوقت:
-  // { namespace: 'Auth',        path: '../modules/Auth/locales' },
-  // { namespace: 'Dashboard',   path: '../modules/Dashboard/locales' },
 ];
 
 export default getRequestConfig(async ({ requestLocale }) => {
