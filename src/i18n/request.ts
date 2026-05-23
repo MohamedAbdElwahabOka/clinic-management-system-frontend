@@ -1,21 +1,46 @@
-import { getRequestConfig } from 'next-intl/server';
-import { routing } from './routing';
+import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
+
+const modules: Array<{ namespace: string; path: string }> = [
+  { namespace: "Landing", path: "../modules/Landing/locales" },
+
+  // أضف هنا الـ modules الجديدة مع الوقت:
+  // { namespace: 'Auth',        path: '../modules/Auth/locales' },
+  // { namespace: 'Dashboard',   path: '../modules/Dashboard/locales' },
+];
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const localeFromRequest = await requestLocale;
 
-  // Type guard للتحقق من أن locale صالح
-  const isValidLocale = (loc: string): loc is 'en' | 'ar' | 'de' =>
-    routing.locales.includes(loc as 'en' | 'ar' | 'de');
+  const isValidLocale = (loc: string): loc is "en" | "ar" | "de" =>
+    routing.locales.includes(loc as "en" | "ar" | "de");
 
-  // استخدام type guard لتحديد قيمة locale
   const typedLocale =
     localeFromRequest && isValidLocale(localeFromRequest)
       ? localeFromRequest
       : routing.defaultLocale;
 
+  const baseMessages = (await import(`../../messages/${typedLocale}.json`))
+    .default;
+
+  for (const mod of modules) {
+    try {
+      const moduleMessages = (await import(`${mod.path}/${typedLocale}.json`))
+        .default;
+
+      baseMessages[mod.namespace] = {
+        ...(baseMessages[mod.namespace] ?? {}),
+        ...moduleMessages,
+      };
+    } catch {
+      console.warn(
+        `[i18n] Missing module locale: ${mod.path}/${typedLocale}.json`,
+      );
+    }
+  }
+
   return {
     locale: typedLocale,
-    messages: (await import(`../../messages/${typedLocale}.json`)).default
+    messages: baseMessages,
   };
 });
